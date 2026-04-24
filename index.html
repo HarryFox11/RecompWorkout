@@ -126,6 +126,40 @@ button{outline:none;cursor:pointer;font-family:inherit}
 .hist-exs{font-size:13px;color:#888880;line-height:1.7}
 .empty{text-align:center;padding:40px 20px;color:#888880;font-size:14px}
 .empty-icon{font-size:36px;margin-bottom:10px}
+/* Plate Calculator */
+.plate-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;background:#1a1a18;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;margin-bottom:20px;cursor:pointer}
+.plate-calc-wrap{background:#f7f7f5;border:1.5px solid #e0ddd8;border-radius:12px;padding:16px;margin-bottom:20px}
+.plate-calc-title{font-family:monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#888880;margin-bottom:12px}
+.plate-input-row{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+.plate-input{background:#fff;border:1.5px solid #e0ddd8;border-radius:8px;padding:10px 14px;font-family:monospace;font-size:20px;font-weight:600;color:#1a1a18;width:100%;text-align:center;-webkit-appearance:none}
+.bar-toggle{display:flex;gap:6px}
+.bar-opt{padding:7px 12px;background:#fff;border:1.5px solid #e0ddd8;border-radius:8px;font-size:12px;font-weight:600;color:#888880;cursor:pointer;font-family:monospace}
+.bar-opt.active{background:#1a1a18;border-color:#1a1a18;color:#fff}
+.plate-result{margin-top:4px}
+.plate-result-label{font-size:13px;color:#888880;margin-bottom:8px}
+.plate-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.plate-chip{font-family:monospace;font-size:13px;font-weight:700;padding:6px 12px;border-radius:8px;border:2px solid}
+.plate-chip.p45{background:#fdf2f1;border-color:#c0392b;color:#c0392b}
+.plate-chip.p35{background:#fff8ed;border-color:#b86e00;color:#b86e00}
+.plate-chip.p25{background:#eef4fc;border-color:#1d5fa8;color:#1d5fa8}
+.plate-chip.p10{background:#edf7f1;border-color:#2d7a4f;color:#2d7a4f}
+.plate-chip.p5{background:#f3eefa;border-color:#6b3fa0;color:#6b3fa0}
+.plate-chip.p25s{background:#f7f7f5;border-color:#888880;color:#888880}
+.plate-total{font-family:monospace;font-size:12px;color:#888880;margin-top:6px}
+.plate-impossible{font-size:13px;color:#c0392b;margin-top:4px}
+/* Strength Graphs */
+.graph-wrap{margin-bottom:24px}
+.graph-title{font-size:14px;font-weight:700;margin-bottom:4px}
+.graph-sub{font-family:monospace;font-size:11px;color:#888880;margin-bottom:8px}
+.graph-svg{width:100%;overflow:visible}
+.graph-empty{font-size:12px;color:#b0ada6;font-style:italic;padding:8px 0}
+/* Bodyweight */
+.bw-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.bw-input{background:#fff;border:1.5px solid #e0ddd8;border-radius:8px;padding:9px 12px;font-family:monospace;font-size:15px;font-weight:500;color:#1a1a18;flex:1;text-align:center;-webkit-appearance:none}
+.bw-save-btn{padding:9px 16px;background:#1a1a18;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.bw-entry{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0ede8;font-size:13px}
+.bw-entry-date{color:#888880;font-family:monospace;font-size:11px}
+.bw-entry-val{font-family:monospace;font-weight:600}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:flex-end}
 .modal-sheet{background:#fff;border-radius:16px 16px 0 0;width:100%;max-height:80vh;overflow-y:auto;padding:24px 20px 40px}
 .modal-handle{width:36px;height:4px;background:#e0ddd8;border-radius:2px;margin:0 auto 20px}
@@ -310,11 +344,16 @@ function startElapsed() {
 if (S.session) { S.elapsed=Math.floor((Date.now()-S.session.startTime)/1000); startElapsed(); }
 
 // ── REST TIMERS ───────────────────────────────────────────────────
-function startRest(key) {
+const COMPOUND_IDS = new Set(['squat','deadlift','hip_thrust','bulgarian','walking_lunge',
+  'pullup_assisted','chest_sup_row_a','chest_sup_row_b','chest_sup_row_c',
+  'lat_pulldown','incline_db','incline_db_c','landmine_press']);
+const restDur = exId => COMPOUND_IDS.has(exId) ? 180 : 90;
+
+function startRest(key, dur=90) {
   stopRest(key);
-  const end=Date.now()+90000;
+  const end=Date.now()+(dur*1000);
   const ctx=getAC();
-  if(ctx){if(ctx.state==='suspended')ctx.resume().catch(()=>{});beep(ctx,ctx.currentTime+90);}
+  if(ctx){if(ctx.state==='suspended')ctx.resume().catch(()=>{});beep(ctx,ctx.currentTime+dur);}
   const iv=setInterval(()=>{
     const rem=Math.max(0,Math.round((end-Date.now())/1000));
     const tel=document.getElementById('rt-'+key),bel=document.getElementById('rb-'+key),lel=document.getElementById('rl-'+key);
@@ -327,7 +366,7 @@ function startRest(key) {
       setTimeout(()=>skipRest(key),2500);
     } else { if(tel)tel.textContent=fmtTime(rem); }
   },500);
-  S.restTimers[key]={end,iv,done:false};
+  S.restTimers[key]={end,iv,done:false,dur};
 }
 function stopRest(key){if(S.restTimers[key]){clearInterval(S.restTimers[key].iv);delete S.restTimers[key];}}
 function skipRest(key){stopRest(key);const el=document.getElementById('rb-'+key);if(el)el.style.display='none';}
@@ -349,11 +388,11 @@ function updSet(exId,idx,f,v){S.session.setData[exId][idx][f]=v;saveS(S.session)
 function updDrop(exId,f,v){S.session.dropData[exId][f]=v;saveS(S.session);}
 function togSet(exId,idx){
   const s=S.session.setData[exId][idx];s.done=!s.done;saveS(S.session);
-  if(s.done)startRest(exId+'_'+idx);else stopRest(exId+'_'+idx);render();
+  if(s.done)startRest(exId+'_'+idx, restDur(exId));else stopRest(exId+'_'+idx);render();
 }
 function togDrop(exId){
   const d=S.session.dropData[exId];d.done=!d.done;saveS(S.session);
-  if(d.done)startRest(exId+'_drop');else stopRest(exId+'_drop');render();
+  if(d.done)startRest(exId+'_drop', 90);else stopRest(exId+'_drop');render();
 }
 function togSub(exId){const s=S.session.activeSubs;s[exId]!==undefined?delete s[exId]:s[exId]=0;saveS(S.session);render();}
 
@@ -415,9 +454,10 @@ function handleDayTap(dayId){
 function restBannerHTML(key){
   const t=S.restTimers[key];if(!t)return'';
   const rem=Math.max(0,Math.round((t.end-Date.now())/1000));
+  const durLabel=t.dur===180?'3 min rest':'90s rest';
   return `<div class="rest-banner${t.done?' done-rest':''}" id="rb-${key}">
     <span class="rest-time" id="rt-${key}">${t.done?'✓':fmtTime(rem)}</span>
-    <span class="rest-lbl" id="rl-${key}">${t.done?'Rest done — go!':'Rest'}</span>
+    <span class="rest-lbl" id="rl-${key}">${t.done?'Rest done — go!':durLabel}</span>
     ${!t.done?`<button class="rest-skip" onclick="skipRest('${key}')">Skip</button>`:''}
   </div>`;
 }
@@ -478,6 +518,172 @@ function exCardHTML(ex, dayId){
   h+=`</div>`;return h;
 }
 
+// ── PLATE CALCULATOR ──────────────────────────────────────────────
+const PLATES = [45,35,25,10,5,2.5];
+const PLATE_CLASS = {45:'p45',35:'p35',25:'p25',10:'p10',5:'p5',2.5:'p25s'};
+
+function calcPlates(target, barWeight) {
+  let remaining = (target - barWeight) / 2;
+  if (remaining < 0) return null;
+  const result = [];
+  for (const plate of PLATES) {
+    const count = Math.floor(remaining / plate);
+    if (count > 0) { result.push({plate, count}); remaining = Math.round((remaining - plate*count)*100)/100; }
+  }
+  if (remaining > 0.1) return null; // can't make exact weight
+  return result;
+}
+
+function platesHTML() {
+  const target = S.plateTarget || '';
+  const bar = S.plateBar || 45;
+  let resultHTML = '';
+  if (target) {
+    const t = parseFloat(target);
+    if (t < bar) {
+      resultHTML = `<div class="plate-impossible">Target must be heavier than the bar (${bar}lbs)</div>`;
+    } else {
+      const plates = calcPlates(t, bar);
+      if (!plates) {
+        resultHTML = `<div class="plate-impossible">Can't make exactly ${t}lbs with standard plates — try ${Math.round(t/2.5)*2.5}lbs</div>`;
+      } else if (plates.length === 0) {
+        resultHTML = `<div class="plate-result-label">Just the bar! (${bar}lbs)</div>`;
+      } else {
+        const chips = plates.map(({plate,count}) =>
+          `<span class="plate-chip ${PLATE_CLASS[plate]}">${count}×${plate}</span>`
+        ).join('');
+        resultHTML = `<div class="plate-result">
+          <div class="plate-result-label">Each side:</div>
+          <div class="plate-chips">${chips}</div>
+          <div class="plate-total">Bar ${bar}lbs + ${(t-bar)/2}lbs per side = ${t}lbs total</div>
+        </div>`;
+      }
+    }
+  }
+  return `<div class="plate-calc-wrap">
+    <div class="plate-calc-title">🏋️ Plate Calculator</div>
+    <div class="plate-input-row">
+      <input class="plate-input" type="number" inputmode="decimal" placeholder="Target lbs"
+        value="${target}" onchange="S.plateTarget=this.value;render()">
+      <div class="bar-toggle">
+        <button class="bar-opt${bar===45?' active':''}" onclick="S.plateBar=45;render()">45lb bar</button>
+        <button class="bar-opt${bar===35?' active':''}" onclick="S.plateBar=35;render()">35lb bar</button>
+      </div>
+    </div>
+    ${resultHTML}
+  </div>`;
+}
+
+// ── STRENGTH GRAPHS ───────────────────────────────────────────────
+const GRAPH_LIFTS = [
+  {label:'Squat',         ids:['squat']},
+  {label:'Deadlift',      ids:['deadlift']},
+  {label:'Landmine Press',ids:['landmine_press']},
+  {label:'Chest Row',     ids:['chest_sup_row_a','chest_sup_row_b','chest_sup_row_c']},
+  {label:'Lat Pulldown',  ids:['lat_pulldown']},
+  {label:'DB Curl',       ids:['db_curl_a','db_curl_c']},
+];
+
+function strengthGraphHTML() {
+  let h = `<div class="sec-label" style="margin-top:28px">Strength Trends · Est. 1RM</div>`;
+  GRAPH_LIFTS.forEach(lift => {
+    // Collect data points: {date, rm}
+    const points = [];
+    S.history.forEach(entry => {
+      let bestRM = null;
+      lift.ids.forEach(id => {
+        const rm = best1RM((entry.sets?.[id]||[]).filter(s=>s.done||s.weight));
+        if (rm && (!bestRM||rm>bestRM)) bestRM = rm;
+      });
+      if (bestRM) points.push({date: new Date(entry.date).getTime(), rm: bestRM});
+    });
+    // Sort by date
+    points.sort((a,b)=>a.date-b.date);
+
+    h += `<div class="graph-wrap">`;
+    h += `<div class="graph-title">${lift.label}</div>`;
+
+    if (points.length < 2) {
+      const latest = points[0];
+      h += `<div class="graph-sub">${latest?`Current: ${latest.rm}lbs est. 1RM`:'No data yet'}</div>`;
+      if (!latest) { h += `</div>`; return; }
+    }
+
+    const latest = points[points.length-1];
+    const first = points[0];
+    const change = points.length > 1 ? latest.rm - first.rm : 0;
+    const changeStr = change > 0 ? `+${Math.round(change*10)/10}lbs` : change < 0 ? `${Math.round(change*10)/10}lbs` : 'No change';
+    const changeColor = change > 0 ? '#2d7a4f' : change < 0 ? '#c0392b' : '#888880';
+
+    h += `<div class="graph-sub" style="display:flex;justify-content:space-between">
+      <span>Latest: <strong>${latest.rm}lbs</strong></span>
+      <span style="color:${changeColor}">${changeStr} overall</span>
+    </div>`;
+
+    if (points.length >= 2) {
+      // SVG line graph
+      const W=300, H=70, PAD=4;
+      const minRM = Math.min(...points.map(p=>p.rm)) * 0.95;
+      const maxRM = Math.max(...points.map(p=>p.rm)) * 1.05;
+      const minDate = points[0].date, maxDate = points[points.length-1].date;
+      const xScale = maxDate===minDate ? 0 : (W-PAD*2)/(maxDate-minDate);
+      const yScale = maxRM===minRM ? 0 : (H-PAD*2)/(maxRM-minRM);
+      const toX = d => PAD + (d-minDate)*xScale;
+      const toY = rm => H-PAD - (rm-minRM)*yScale;
+
+      const pathD = points.map((p,i)=>`${i===0?'M':'L'}${toX(p.date).toFixed(1)},${toY(p.rm).toFixed(1)}`).join(' ');
+      const dots = points.map(p=>`<circle cx="${toX(p.date).toFixed(1)}" cy="${toY(p.rm).toFixed(1)}" r="3" fill="#1a1a18"/>`).join('');
+
+      h += `<svg class="graph-svg" viewBox="0 0 ${W} ${H}" height="${H}">
+        <path d="${pathD}" fill="none" stroke="#1a1a18" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+        ${dots}
+      </svg>`;
+    }
+    h += `</div>`;
+  });
+  return h;
+}
+
+// ── BODYWEIGHT LOG ────────────────────────────────────────────────
+const BWK = 'recomp_bw';
+const loadBW = () => { try{return JSON.parse(localStorage.getItem(BWK)||'[]');}catch{return[];} };
+const saveBW = w => localStorage.setItem(BWK,JSON.stringify(w));
+S.bwLog = loadBW();
+S.bwInput = '';
+
+function logBodyweight() {
+  const val = parseFloat(S.bwInput);
+  if (!val||val<50||val>500){alert('Enter a valid weight in lbs');return;}
+  S.bwLog = [{date:new Date().toISOString(),weight:val}, ...S.bwLog].slice(0,52);
+  saveBW(S.bwLog); S.bwInput=''; render();
+}
+
+function bodweightHTML() {
+  let h = `<div class="sec-label" style="margin-top:28px">Bodyweight Log</div>`;
+  h += `<div class="bw-row">
+    <input class="bw-input" type="number" inputmode="decimal" placeholder="lbs today"
+      value="${S.bwInput}" onchange="S.bwInput=this.value">
+    <button class="bw-save-btn" onclick="logBodyweight()">Log</button>
+  </div>`;
+  if (!S.bwLog.length) {
+    h += `<div style="font-size:13px;color:#888880">No weigh-ins yet — log weekly for best results</div>`;
+  } else {
+    // Mini trend
+    if (S.bwLog.length >= 2) {
+      const latest = S.bwLog[0].weight, oldest = S.bwLog[S.bwLog.length-1].weight;
+      const diff = Math.round((latest-oldest)*10)/10;
+      const col = diff<0?'#2d7a4f':diff>0?'#c0392b':'#888880';
+      const txt = diff<0?`↓ ${Math.abs(diff)}lbs since first entry`:diff>0?`↑ ${diff}lbs since first entry`:'No change';
+      h += `<div style="font-family:monospace;font-size:12px;color:${col};margin-bottom:10px">${txt}</div>`;
+    }
+    h += S.bwLog.slice(0,8).map(e=>`<div class="bw-entry">
+      <span class="bw-entry-date">${fmtLong(e.date)}</span>
+      <span class="bw-entry-val">${e.weight}lbs</span>
+    </div>`).join('');
+  }
+  return h;
+}
+
 function volumeHTML(){
   const now=Date.now(),wk=7*24*60*60*1000;
   const recent=S.history.filter(e=>now-new Date(e.date).getTime()<wk);
@@ -497,7 +703,10 @@ function volumeHTML(){
       if(rm&&(!prMap[ex.id]||rm>prMap[ex.id].rm))prMap[ex.id]={rm,date:e.date,exName:ex.name};
     });
   });
-  let h=`<div class="sec-label">Weekly Volume · Past 7 Days</div>`;
+
+  let h = platesHTML();
+
+  h+=`<div class="sec-label">Weekly Volume · Past 7 Days</div>`;
   if(!recent.length)h+=`<div class="empty"><div class="empty-icon">📊</div>Complete a workout to see volume</div>`;
   else Object.keys(MUSCLE_TARGETS).forEach(m=>{
     const sets=ms[m]||0,t=MUSCLE_TARGETS[m];
@@ -510,10 +719,15 @@ function volumeHTML(){
       <div class="vol-bar-minmax"><span>${t.min} min</span><span>${t.max} max</span></div>
     </div>`;
   });
+
   h+=`<div class="sec-label" style="margin-top:24px">Personal Records · Est. 1RM</div>`;
   const prs=Object.entries(prMap).sort((a,b)=>b[1].rm-a[1].rm);
   if(!prs.length)h+=`<div class="empty"><div class="empty-icon">🏆</div>No PRs yet — get lifting</div>`;
   else prs.forEach(([,pr])=>h+=`<div class="pr-row"><div><div class="pr-row-name">${pr.exName}</div><div class="pr-row-date">${fmtShort(pr.date)}</div></div><div><div class="pr-row-val">${pr.rm}lbs</div><div class="pr-row-unit">est. 1RM</div></div></div>`);
+
+  h += strengthGraphHTML();
+  h += bodweightHTML();
+
   return h;
 }
 
@@ -628,6 +842,7 @@ window.togDrop=togDrop;window.togSub=togSub;window.updSet=updSet;window.updDrop=
 window.confirmFinish=confirmFinish;window.discard=discard;window.skipRest=skipRest;
 window.unlockAudio=unlockAudio;window.openForm=id=>{S.formModal=id;render();};
 window.closeForm=()=>{S.formModal=null;render();};
+window.logBodyweight=logBodyweight;
 
 // ── SERVICE WORKER ────────────────────────────────────────────────
 if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
