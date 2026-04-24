@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Recomp">
+<meta name="theme-color" content="#1a1a18">
+<title>Recomp Workout</title>
+<link rel="manifest" href="manifest.json">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:#fff;color:#1a1a18;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.5;min-height:100vh;padding-bottom:48px}
+input{outline:none;-webkit-appearance:none;appearance:none}
+button{outline:none;cursor:pointer;font-family:inherit}
+.header{background:#fff;border-bottom:1.5px solid #e0ddd8;padding:18px 20px 14px;position:sticky;top:0;z-index:100}
+.header-row{display:flex;justify-content:space-between;align-items:flex-start}
+.logo{font-family:monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#888880}
+.day-label{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-top:4px}
+.badge{font-family:monospace;font-size:11px;background:#1a1a18;color:#fff;padding:4px 10px;border-radius:20px;letter-spacing:.05em}
+.timer-txt{font-family:monospace;font-size:12px;color:#888880;margin-top:4px;text-align:right}
+.prog-bar-wrap{margin-top:12px;height:3px;background:#efefec;border-radius:2px;overflow:hidden}
+.prog-bar-fill{height:100%;background:#1a1a18;border-radius:2px;transition:width .4s}
+.prog-lbl{font-family:monospace;font-size:10px;color:#b0ada6;margin-top:5px;letter-spacing:.05em}
+.pad{padding:20px}
+.nav-tabs{display:flex;gap:8px;margin-bottom:4px}
+.nav-tab{flex:1;padding:10px;background:#f7f7f5;border:1.5px solid #e0ddd8;border-radius:8px;font-size:13px;font-weight:500;color:#888880;text-align:center}
+.nav-tab.active{background:#1a1a18;border-color:#1a1a18;color:#fff}
+.sec-label{font-family:monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#888880;margin:24px 0 12px}
+.day-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.day-card{background:#f7f7f5;border:1.5px solid #e0ddd8;border-radius:12px;padding:18px 16px;cursor:pointer;position:relative;overflow:hidden}
+.day-card.has-history{background:#edf7f1;border-color:#b8ddc9}
+.day-card.is-active{background:#1a1a18;border-color:#1a1a18}
+.day-card-type{font-family:monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#888880;margin-bottom:4px}
+.day-card.is-active .day-card-type,.day-card.is-active .day-card-sub,.day-card.is-active .day-card-last{color:rgba(255,255,255,.65)}
+.day-card.is-active .day-card-name{color:#fff}
+.day-card-name{font-size:17px;font-weight:700}
+.day-card-sub{font-size:12px;color:#888880;margin-top:3px}
+.day-card-last{font-size:11px;color:#2d7a4f;margin-top:6px}
+.green-dot{position:absolute;top:12px;right:12px;width:8px;height:8px;border-radius:50%;background:#2d7a4f}
+.session-banner{margin:16px 0 0;padding:12px 16px;background:#1a1a18;border-radius:12px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.session-banner-title{font-size:13px;font-weight:700;color:#fff}
+.session-banner-sub{font-size:12px;color:rgba(255,255,255,.6);margin-top:1px}
+.session-banner-arrow{font-size:20px;color:#fff;flex-shrink:0}
+.ex-card{background:#f7f7f5;border:1.5px solid #e0ddd8;border-radius:12px;margin-bottom:14px;overflow:hidden}
+.ex-card.any-done{border-color:#1a1a18}
+.ex-card.all-done{background:#edf7f1;border-color:#b8ddc9;opacity:.78}
+.ex-header{padding:14px 16px 10px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.ex-name{font-size:16px;font-weight:700;flex:1}
+.ex-header-right{display:flex;gap:6px;align-items:center;flex-shrink:0}
+.ex-badge{font-family:monospace;font-size:11px;background:#efefec;padding:3px 8px;border-radius:20px;color:#888880;white-space:nowrap}
+.form-btn{font-family:monospace;font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:#888880;background:#efefec;border:1px solid #e0ddd8;border-radius:20px;padding:3px 9px}
+.ex-note{font-size:12px;color:#888880;padding:0 16px 10px}
+.sub-btn-wrap{padding:0 16px 12px}
+.sub-btn{font-size:12px;font-weight:500;color:#1d5fa8;background:#eef4fc;border:1.5px solid #b8d0f0;border-radius:20px;padding:5px 14px}
+.target-box{margin:0 16px 12px;padding:10px 14px;background:#f3eefa;border:1.5px solid #c9aff0;border-radius:8px}
+.target-label{font-family:monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#6b3fa0;margin-bottom:4px;font-weight:500}
+.target-text{font-size:14px;font-weight:600;color:#6b3fa0}
+.last-box{margin:0 16px 12px;padding:10px 14px;background:#fff8ed;border:1.5px solid #f5d49a;border-radius:8px}
+.last-label{font-family:monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#b86e00;margin-bottom:6px;font-weight:500}
+.last-chips{display:flex;flex-wrap:wrap;gap:6px}
+.last-chip{font-family:monospace;font-size:13px;font-weight:500;color:#b86e00;background:#fff;border:1px solid #f5d49a;padding:4px 10px;border-radius:20px}
+.last-chip.drop{color:#c0392b;border-color:#f5c6c2}
+.last-rm{font-size:11px;color:#b86e00;font-family:monospace;margin-top:6px}
+.last-hint{font-size:12px;color:#b86e00;margin-top:4px;font-style:italic}
+.sets-area{padding:0 16px 14px}
+.set-row{display:grid;grid-template-columns:28px 1fr 1fr auto;gap:8px;align-items:center;margin-bottom:4px}
+.set-num{font-family:monospace;font-size:12px;color:#888880;text-align:center}
+.set-input{background:#fff;border:1.5px solid #e0ddd8;border-radius:8px;padding:10px 12px;font-family:monospace;font-size:15px;font-weight:500;color:#1a1a18;width:100%;text-align:center}
+.set-input.done{background:#edf7f1;border-color:#b8ddc9}
+.set-input.drop-inp{background:#fdf2f1;border-color:#f5c6c2}
+.set-input.drop-inp.done{background:#edf7f1;border-color:#b8ddc9}
+.check-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid #e0ddd8;background:#fff;color:#888880;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.check-btn.done{background:#2d7a4f;border-color:#2d7a4f;color:#fff}
+.check-btn.drop-btn{border-color:#f5c6c2;color:#c0392b}
+.check-btn.drop-btn.done{background:#2d7a4f;border-color:#2d7a4f;color:#fff}
+.rpe-row{display:flex;align-items:center;gap:6px;margin-bottom:8px;padding-left:36px}
+.rpe-label{font-family:monospace;font-size:10px;color:#888880;letter-spacing:.05em;white-space:nowrap}
+.rpe-hint{font-size:11px;color:#888880;font-style:italic}
+.rpe-btn{width:30px;height:26px;border-radius:6px;border:1.5px solid #e0ddd8;background:#fff;color:#888880;font-family:monospace;font-size:12px;font-weight:600}
+.rpe-btn.sel{background:#1a1a18;border-color:#1a1a18;color:#fff}
+.drop-area{padding:10px 16px 14px;border-top:1px dashed #e0ddd8}
+.drop-area.faded{opacity:.4}
+.drop-label{font-family:monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#c0392b;margin-bottom:8px}
+.rest-banner{margin:8px 0 4px;padding:10px 14px;background:#eef4fc;border:1.5px solid #b8d0f0;border-radius:8px;display:flex;align-items:center;gap:10px}
+.rest-banner.done-rest{background:#edf7f1;border-color:#b8ddc9}
+.rest-time{font-family:monospace;font-size:20px;font-weight:500;color:#1d5fa8;min-width:42px}
+.rest-banner.done-rest .rest-time{color:#2d7a4f}
+.rest-lbl{font-size:13px;color:#1d5fa8;flex:1}
+.rest-banner.done-rest .rest-lbl{color:#2d7a4f}
+.rest-skip{font-size:12px;font-weight:500;color:#1d5fa8;background:none;border:1px solid #b8d0f0;border-radius:20px;padding:4px 10px}
+.pr-banner{background:#fffbeb;border-bottom:1px solid #f5d87a;padding:7px 16px;display:flex;align-items:center;gap:8px}
+.pr-banner-text{font-size:13px;font-weight:600;color:#b8860b}
+.finish-btn{width:100%;padding:17px;background:#1a1a18;color:#fff;font-size:16px;font-weight:700;border:none;border-radius:12px}
+.finish-hint{font-size:12px;color:#b0ada6;text-align:center;margin-top:8px}
+.discard-btn{width:100%;margin-top:12px;padding:12px;background:none;border:1.5px solid #e0ddd8;border-radius:12px;font-size:14px;color:#888880}
+.summary-card{background:#edf7f1;border:1.5px solid #b8ddc9;border-radius:12px;padding:24px 20px;text-align:center;margin-bottom:16px}
+.summary-icon{font-size:40px;margin-bottom:10px}
+.summary-title{font-size:22px;font-weight:700;margin-bottom:6px}
+.summary-date{font-size:14px;color:#888880}
+.pr-callout{background:#fffbeb;border:1.5px solid #f5d87a;border-radius:12px;padding:14px 16px;margin-bottom:16px}
+.pr-callout-title{font-size:14px;font-weight:700;color:#b8860b;margin-bottom:6px}
+.pr-callout-item{font-size:13px;color:#b8860b;margin-bottom:2px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px}
+.stat-box{background:#f7f7f5;border:1.5px solid #e0ddd8;border-radius:8px;padding:14px 10px;text-align:center}
+.stat-val{font-family:monospace;font-size:22px;font-weight:500}
+.stat-lbl{font-size:11px;color:#888880;margin-top:2px}
+.back-btn{width:100%;padding:15px;background:#f7f7f5;border:1.5px solid #e0ddd8;border-radius:12px;font-size:15px;font-weight:500;color:#1a1a18}
+.vol-bar-wrap{margin-bottom:14px}
+.vol-bar-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+.vol-bar-name{font-size:14px;font-weight:600}
+.vol-bar-status{font-size:12px;font-family:monospace}
+.vol-bar-bg{height:8px;background:#efefec;border-radius:4px;overflow:hidden}
+.vol-bar-fill{height:100%;border-radius:4px;transition:width .5s}
+.vol-bar-minmax{display:flex;justify-content:space-between;margin-top:3px}
+.vol-bar-minmax span{font-size:10px;color:#b0ada6;font-family:monospace}
+.pr-row{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;background:#f7f7f5;border:1.5px solid #e0ddd8;border-radius:10px;margin-bottom:8px}
+.pr-row-name{font-size:14px;font-weight:600}
+.pr-row-date{font-size:11px;color:#888880;margin-top:2px;font-family:monospace}
+.pr-row-val{font-family:monospace;font-size:18px;font-weight:700;color:#b8860b;text-align:right}
+.pr-row-unit{font-size:10px;color:#888880;font-family:monospace}
+.hist-entry{background:#f7f7f5;border:1.5px solid #e0ddd8;border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.hist-date{font-family:monospace;font-size:11px;color:#888880;margin-bottom:4px}
+.hist-day{font-size:16px;font-weight:700;margin-bottom:8px}
+.hist-exs{font-size:13px;color:#888880;line-height:1.7}
+.empty{text-align:center;padding:40px 20px;color:#888880;font-size:14px}
+.empty-icon{font-size:36px;margin-bottom:10px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:flex-end}
+.modal-sheet{background:#fff;border-radius:16px 16px 0 0;width:100%;max-height:80vh;overflow-y:auto;padding:24px 20px 40px}
+.modal-handle{width:36px;height:4px;background:#e0ddd8;border-radius:2px;margin:0 auto 20px}
+.modal-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}
+.modal-title-label{font-family:monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#888880;margin-bottom:4px}
+.modal-title{font-size:19px;font-weight:700}
+.modal-close{background:#efefec;border:none;border-radius:50%;width:32px;height:32px;font-size:16px;color:#888880;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.form-cues-label{font-family:monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#888880;margin-bottom:10px}
+.form-cue-row{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.form-cue-num{font-family:monospace;font-size:12px;font-weight:700;color:#1a1a18;min-width:20px;margin-top:1px}
+.form-cue-text{font-size:14px;color:#1a1a18;line-height:1.5}
+.breathing-box{padding:12px 14px;background:#eef4fc;border:1.5px solid #b8d0f0;border-radius:8px;margin-bottom:12px}
+.breathing-label{font-family:monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#1d5fa8;margin-bottom:4px}
+.breathing-text{font-size:14px;color:#1d5fa8}
+.shoulder-box{padding:12px 14px;background:#fff8ed;border:1.5px solid #f5d49a;border-radius:8px}
+.shoulder-label{font-family:monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#b86e00;margin-bottom:4px}
+.shoulder-text{font-size:14px;color:#b86e00}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// ── DATA ──────────────────────────────────────────────────────────
+const DAYS = [
+  { id:'upper_a', name:'Upper A', type:'Upper', focus:'Chest + Back', exercises:[
+    { id:'face_pull',        name:'Face Pulls',             sets:3, reps:'15-20', note:'Do this FIRST every session — shoulder health. High cable, rope, pull to forehead, externally rotate at end', subs:[], dropSet:true  },
+    { id:'incline_db',       name:'Incline DB Press',       sets:4, reps:'8-10',  note:'30-45° bench. Elbows 45° from torso — never flare to 90°. Controlled descent', subs:[], dropSet:false },
+    { id:'cable_fly',        name:'Cable Flyes',            sets:3, reps:'12-15', note:'Slight elbow bend throughout. Squeeze hard at centre, hold 1s', subs:[{name:'DB Flyes (flat bench)',note:'Same cues — sub when cable is taken'}], dropSet:true  },
+    { id:'chest_sup_row_a',  name:'Chest Supported Row',    sets:4, reps:'8-10',  note:'Chest flat on pad. Full arm hang at bottom, full retraction at top. Neutral grip if available', subs:[], dropSet:false },
+    { id:'lat_pulldown',     name:'Lat Pulldown',           sets:3, reps:'10-12', note:'Depress shoulder blades before pulling. Drive elbows to back pockets', subs:[], dropSet:false },
+    { id:'db_curl_a',        name:'DB Curl',                sets:3, reps:'10-12', note:'Supinate at top, elbows pinned, 2-3s eccentric', subs:[], dropSet:true  },
+    { id:'overhead_tricep',  name:'Overhead Tricep Ext',    sets:3, reps:'10-12', note:'Cable or DB. Elbows stay close to head. Full stretch at bottom', subs:[], dropSet:true  },
+  ]},
+  { id:'upper_b', name:'Upper B', type:'Upper', focus:'Shoulders + Arms', exercises:[
+    { id:'face_pull_b',      name:'Face Pulls',             sets:3, reps:'15-20', note:'Do this FIRST every session — shoulder health. High cable, rope, pull to forehead, externally rotate at end', subs:[], dropSet:true  },
+    { id:'landmine_press',   name:'Landmine Press',         sets:4, reps:'8-10',  note:'Half-kneeling default. Bar follows natural arc — keeps shoulder in safe scapular plane throughout. Standing for heavier variation', subs:[], dropSet:false },
+    { id:'lateral_raise',    name:'Cable Lateral Raise',    sets:3, reps:'12-15', note:'Shoulder-safe: slight forward lean, thumb up, raise to shoulder height only', subs:[], dropSet:true  },
+    { id:'chest_sup_row_b',  name:'Chest Supported Row',    sets:3, reps:'10-12', note:'Chest flat on pad. Full stretch at bottom, full retraction at top', subs:[], dropSet:false },
+    { id:'pec_deck',         name:'Pec Deck / Machine Fly', sets:3, reps:'12-15', note:'Squeeze and hold 1s at peak. Slow open — full chest stretch', subs:[], dropSet:true  },
+    { id:'hammer_curl',      name:'Hammer Curl',            sets:3, reps:'10-12', note:'Neutral grip. Elbows pinned. 2-3s lower', subs:[], dropSet:true  },
+    { id:'tricep_pushdown',  name:'Tricep Pushdown',        sets:3, reps:'12-15', note:'Elbows pinned to sides. Full extension, squeeze. Rope: flare wrists at bottom', subs:[], dropSet:true  },
+  ]},
+  { id:'upper_c', name:'Upper C', type:'Upper', focus:'Back Width + Chest Detail', exercises:[
+    { id:'face_pull_c',      name:'Face Pulls',             sets:3, reps:'15-20', note:'Do this FIRST every session — shoulder health. High cable, rope, pull to forehead, externally rotate at end', subs:[], dropSet:true  },
+    { id:'pullup_assisted',  name:'Assisted Pull-Up / Pulldown', sets:4, reps:'8-10', note:'Full dead hang. Depress shoulder blades before pulling. Drive elbows to pockets. 2-3s eccentric', subs:[], dropSet:false },
+    { id:'chest_sup_row_c',  name:'Chest Supported Row',    sets:4, reps:'8-10',  note:'Chest flat on pad. Full stretch at bottom, full retraction at top', subs:[], dropSet:false },
+    { id:'incline_db_c',     name:'Incline DB Press',       sets:3, reps:'10-12', note:'Higher rep range today — focus on squeeze at top, not just moving weight', subs:[], dropSet:false },
+    { id:'cable_fly_c',      name:'Cable Flyes',            sets:3, reps:'12-15', note:'Detail work — slow and deliberate. Full stretch at open, hard squeeze at close', subs:[{name:'DB Flyes (flat bench)',note:'Same cues — sub when cable is taken'}], dropSet:true  },
+    { id:'db_curl_c',        name:'DB Curl',                sets:3, reps:'10-12', note:'Supinate at top, elbows pinned, 2-3s eccentric', subs:[], dropSet:true  },
+    { id:'tricep_pushdown_c',name:'Tricep Pushdown',        sets:3, reps:'12-15', note:'Elbows pinned to sides. Full extension, squeeze at bottom', subs:[], dropSet:true  },
+  ]},
+  { id:'lower', name:'Lower', type:'Lower', focus:'Strength + Athletic', exercises:[
+    { id:'squat',            name:'Barbell Back Squat',     sets:4, reps:'5-6',   note:'Strength focus. Big brace, knees track toes, hit parallel minimum', subs:[], dropSet:false },
+    { id:'deadlift',         name:'Conventional Deadlift',  sets:3, reps:'4-5',   note:'Bar over mid-foot. 360° brace before pulling. Bar stays close — drags up shins', subs:[], dropSet:false },
+    { id:'hip_thrust',       name:'Hip Thrust',             sets:3, reps:'10-12', note:'Drive through heels. Full hip extension, hard glute squeeze, hold 1s at top', subs:[], dropSet:false },
+    { id:'bulgarian',        name:'Bulgarian Split Squat',  sets:3, reps:'8-10',  note:'Per leg. Rear foot elevated. Slight forward hinge for glutes. Drive through front heel', subs:[], dropSet:false },
+    { id:'walking_lunge',    name:'Walking Lunges',         sets:3, reps:'12-15', note:'Per leg. Torso upright, front shin vertical at bottom, drive through front heel', subs:[], dropSet:true  },
+    { id:'leg_curl',         name:'Leg Curl (machine)',     sets:3, reps:'12-15', note:'Hamstring health for running. Slow 3s eccentric — most important part', subs:[], dropSet:true  },
+    { id:'calf_raise',       name:'Standing Calf Raise',    sets:4, reps:'15-20', note:'Full ROM, pause at bottom, hard squeeze at top. For running and skating', subs:[], dropSet:true  },
+  ]},
+];
+
+const EX_MUSCLES = {
+  face_pull:'Shoulders',face_pull_b:'Shoulders',face_pull_c:'Shoulders',
+  incline_db:'Chest',cable_fly:'Chest',pec_deck:'Chest',incline_db_c:'Chest',cable_fly_c:'Chest',
+  chest_sup_row_a:'Back',chest_sup_row_b:'Back',chest_sup_row_c:'Back',lat_pulldown:'Back',pullup_assisted:'Back',
+  lateral_raise:'Shoulders',landmine_press:'Shoulders',
+  db_curl_a:'Biceps',db_curl_c:'Biceps',hammer_curl:'Biceps',
+  overhead_tricep:'Triceps',tricep_pushdown:'Triceps',tricep_pushdown_c:'Triceps',
+  squat:'Quads',walking_lunge:'Quads',bulgarian:'Quads',
+  deadlift:'Hamstrings',leg_curl:'Hamstrings',
+  hip_thrust:'Glutes',calf_raise:'Calves',
+};
+const MUSCLE_TARGETS = {
+  Chest:{min:10,max:20},Back:{min:10,max:20},Shoulders:{min:12,max:20},
+  Biceps:{min:10,max:20},Triceps:{min:10,max:20},Quads:{min:10,max:20},
+  Hamstrings:{min:8,max:16},Glutes:{min:8,max:16},Calves:{min:8,max:16},
+};
+
+const FORM = {
+  face_pull:{cues:["Anchor high on the cable stack — above head height","Use a rope attachment. Grip overhand, thumbs pointing back","Pull to forehead level, elbows flaring out and up","At the end position, externally rotate — hands behind ears","Control the return — don't let the weight yank you forward"],breathing:"Exhale on the pull",shoulder:"Your #1 shoulder health exercise. Light weight, perfect form, every session without exception. Strengthens the posterior rotator cuff and external rotators that stabilise against subluxation"},
+  face_pull_b:{cues:["Anchor high on the cable stack — above head height","Use a rope attachment. Grip overhand, thumbs pointing back","Pull to forehead level, elbows flaring out and up","At the end position, externally rotate — hands behind ears","Control the return — don't let the weight yank you forward"],breathing:"Exhale on the pull",shoulder:"Your #1 shoulder health exercise. Light weight, perfect form, every session without exception"},
+  face_pull_c:{cues:["Anchor high on the cable stack — above head height","Use a rope attachment. Grip overhand, thumbs pointing back","Pull to forehead level, elbows flaring out and up","At the end position, externally rotate — hands behind ears","Control the return — don't let the weight yank you forward"],breathing:"Exhale on the pull",shoulder:"Your #1 shoulder health exercise. Light weight, perfect form, every session without exception"},
+  incline_db:{cues:["Set bench to 30-45°. Higher angle = more upper chest, less shoulder stress","Grip just outside shoulder width — wrists stacked over elbows","Lower to mid-chest, elbows at 45° from torso — never flare to 90°","Pause at the bottom, drive up and in. Don't lock out at the top","Shoulder blades retracted and depressed throughout"],breathing:"Inhale down, exhale on the push",shoulder:"Elbows at 45° is the single most important cue for your shoulder — avoids anterior impingement"},
+  incline_db_c:{cues:["Same setup as Upper A — 30-45° bench","Higher rep range today so slightly lighter than usual","Focus on the squeeze at the top rather than the load","2-3s controlled descent every rep","Drive up and slightly in — DBs travel toward each other"],breathing:"Inhale down, exhale on the push",shoulder:"Elbows at 45° — always"},
+  cable_fly:{cues:["Cables at chest height or slightly above","Split stance for stability — step forward","Slight, fixed bend in elbow — don't let it change","Initiate with the chest. Think 'hugging a barrel'","Squeeze hard at centre, hold 1s, controlled return"],breathing:"Exhale as you bring cables together",shoulder:"Keep movement in the horizontal plane — no upward arc which would impinge"},
+  cable_fly_c:{cues:["Detail day — go lighter and focus on feel","Full stretch at the open position — load the chest completely","Squeeze hard at centre, hold 2s","Slow controlled return — don't let it fly back","Quality over load today"],breathing:"Exhale as you bring cables together",shoulder:"Horizontal plane only — no upward arc"},
+  chest_sup_row_a:{cues:["Chest flat on pad — eliminates all compensatory lean and lower back","Let arms hang fully at bottom — full stretch every rep","Drive elbows up and back, squeeze shoulder blades together","Hold retracted position 1s at top","Neutral grip (palms facing each other) if available"],breathing:"Exhale on the pull",shoulder:"Chest supported = shoulder cannot compensate. Pure back work with zero instability risk"},
+  chest_sup_row_b:{cues:["Chest flat on pad — eliminates all compensatory lean and lower back","Let arms hang fully at bottom — full stretch every rep","Drive elbows up and back, squeeze shoulder blades together","Hold retracted position 1s at top","Neutral grip if available"],breathing:"Exhale on the pull",shoulder:"Chest supported = shoulder cannot compensate. Pure back work with zero instability risk"},
+  chest_sup_row_c:{cues:["Chest flat on pad — eliminates all compensatory lean and lower back","Let arms hang fully at bottom — full stretch every rep","Drive elbows up and back, squeeze shoulder blades together","Hold retracted position 1s at top","Neutral grip if available"],breathing:"Exhale on the pull",shoulder:"Chest supported = shoulder cannot compensate. Pure back work with zero instability risk"},
+  lat_pulldown:{cues:["Grip just outside shoulder width, overhand","Slight lean back (15-20°), chest tall","Initiate by depressing shoulder blades before any arm movement","Drive elbows down toward back pockets","Bar to upper chest — never behind the neck"],breathing:"Exhale on the pull down",shoulder:"Depress shoulders before pulling — protects AC joint and reduces impingement risk"},
+  landmine_press:{cues:["Half-kneeling: one knee down, opposite foot forward, tall spine","Grip the end of the bar at shoulder height","Press up and forward along the bar's natural arc — don't fight it","The arc keeps humerus in scapular plane — the safest position for your shoulder","Lower controlled, reset posture before each rep"],breathing:"Exhale on the press",shoulder:"The most shoulder-safe pressing movement available. The bar path physically cannot put you in a dangerous position. Standing variation is fine for heavier days — same arc, more core"},
+  lateral_raise:{cues:["Cable at hip height, working arm crosses in front of body","Slight forward lean at hips — about 10-15°","Thumb up or neutral — never thumb pointing down","Raise to shoulder height only — no higher","Lead with elbow, not wrist. Controlled lower"],breathing:"Exhale on the raise",shoulder:"Thumb up and forward lean are non-negotiable for shoulder safety — they shift the arm into the scapular plane"},
+  pec_deck:{cues:["Adjust seat so handles are at chest height","Upper arms parallel to floor throughout","Drive with the elbows, not the wrists","Squeeze hard at centre — hold 1-2s","Open slowly — full chest stretch on return"],breathing:"Exhale as you close",shoulder:"Don't open past 90° if shoulder is uncomfortable. The machine controls the path — use it"},
+  pullup_assisted:{cues:["Full dead hang at the bottom — don't cheat the range","Depress shoulder blades before pulling — crucial","Drive elbows down to your hip pockets","Chin over bar at the top","Lower 2-3s — the eccentric is where the back width comes from"],breathing:"Exhale on the pull",shoulder:"Full hang through shoulder — loads safely through full ROM. Don't skip the bottom position"},
+  db_curl_a:{cues:["Elbows pinned at your sides throughout","Supinate (rotate) the wrist as you curl — pinky leads at top","Squeeze hard at the top, pause","Lower slowly 2-3s — this is the important part","No swing — if you're swinging, the weight is too heavy"],breathing:"Exhale on the curl up",shoulder:null},
+  db_curl_c:{cues:["Elbows pinned at your sides throughout","Supinate (rotate) the wrist as you curl — pinky leads at top","Squeeze hard at the top, pause","Lower slowly 2-3s — eccentric builds the mass","No swing"],breathing:"Exhale on the curl up",shoulder:null},
+  overhead_tricep:{cues:["Cable: rope anchored low. DB: grip both DB heads with both hands","Elbows point straight up — keep them close to head throughout","Only the forearm moves. Upper arm stays vertical and fixed","Full extension at top, full stretch at bottom — feel the long head load","Control the descent — this is where the growth stimulus is"],breathing:"Exhale on the extension",shoulder:"If shoulder is uncomfortable overhead, substitute tricep pushdown — same stimulus, no overhead position"},
+  hammer_curl:{cues:["Neutral grip throughout — palms facing each other","Elbows stay pinned at sides","Curl up, brief pause, lower 2-3s","Alternating or simultaneous — both work","Targets brachialis and brachioradialis — different to standard curl"],breathing:"Exhale on the curl",shoulder:null},
+  tricep_pushdown:{cues:["Cable set high. Rope or bar attachment","Elbows pinned tightly to sides — they must not move","Only forearm moves — hinge at elbow","Full extension at bottom, pause and squeeze hard","Rope: flare wrists out at the bottom for maximum contraction"],breathing:"Exhale on the push",shoulder:null},
+  tricep_pushdown_c:{cues:["Cable set high. Rope or bar attachment","Elbows pinned tightly to sides","Only forearm moves","Full extension at bottom, pause and squeeze","Rope: flare wrists at the bottom"],breathing:"Exhale on the push",shoulder:null},
+  squat:{cues:["Bar on traps (high bar) or rear delts (low bar)","Feet shoulder-width, toes out 15-30°","Big breath and brace — 360° tension before every descent","Knees track over toes. Hit parallel or below","Drive up through the floor, chest stays tall"],breathing:"Valsalva — big breath, brace, hold through rep, exhale at top",shoulder:null},
+  deadlift:{cues:["Bar over mid-foot — about 1 inch from shins","Hip-width stance, toes slightly out","Push hips back to grip — just outside legs","360° brace — expand your whole trunk","Drive the floor away. Bar stays close — drags up the shins","Lock out with glutes at top. Don't hyperextend"],breathing:"Valsalva — big breath, brace before pull, exhale at lockout",shoulder:null},
+  hip_thrust:{cues:["Upper back against bench, bar padded across hip crease","Feet flat, hip-width, shins vertical at top","Drive through heels — not toes","Full hip extension, hard glute squeeze, hold 1s at top","Ribs down and core braced — don't hyperextend lower back"],breathing:"Exhale at the top",shoulder:null},
+  bulgarian:{cues:["Rear foot elevated on bench, laces down","Front foot far enough forward that shin stays vertical at bottom","Slight forward hinge at hip as you descend — loads glutes more","Lower until rear knee nearly touches floor","Drive through front heel to stand"],breathing:"Inhale on descent, exhale on drive",shoulder:null},
+  walking_lunge:{cues:["Hold DBs at sides or barbell across traps","Step forward far enough that front shin stays vertical","Lower back knee toward floor — controlled, don't slam","Drive through front heel, step through into next rep","Torso upright throughout — don't lean forward"],breathing:"Inhale on step, exhale on drive",shoulder:null},
+  leg_curl:{cues:["Lie face down, pad just above the heels","Curl all the way up — aim for pad to touch glutes","Squeeze hard at top, hold 1s","Lower slowly — 3 full seconds. This is the key for hamstring health and running injury prevention","Don't lift hips off the pad"],breathing:"Exhale on the curl",shoulder:null},
+  calf_raise:{cues:["Full range — heel as low as possible at bottom","Pause at bottom to eliminate the stretch reflex — don't bounce","Drive up, pause and squeeze hard at top","Slow and controlled — calves respond to time under tension","Slight bend in knee to hit the gastrocnemius"],breathing:"Exhale on the raise",shoulder:null},
+};
+
+const RPE_LABELS = {6:'Very easy',7:'Could do 3+ more',8:'Could do 2 more',9:'Could do 1 more',10:'Max effort'};
+
+// ── HELPERS ───────────────────────────────────────────────────────
+const fmtShort = iso => new Date(iso).toLocaleDateString('en-CA',{month:'short',day:'numeric'});
+const fmtLong  = iso => new Date(iso).toLocaleDateString('en-CA',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+const fmtTime  = s => `${Math.floor(Math.max(s,0)/60)}:${(Math.max(s,0)%60).toString().padStart(2,'0')}`;
+const fmtElap  = s => `${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`;
+const epley    = (w,r) => { const ww=parseFloat(w),rr=parseInt(r); if(!ww||!rr||rr<=0)return null; return rr===1?ww:Math.round(ww*(1+rr/30)*10)/10; };
+const best1RM  = sets => sets?sets.reduce((b,s)=>{const rm=epley(s.weight,s.reps);return(rm&&(!b||rm>b))?rm:b;},null):null;
+
+const getTarget = (last, repsStr) => {
+  if (!last||!last.length) return null;
+  const v=last.filter(s=>s.weight&&s.reps); if(!v.length) return null;
+  const p=repsStr.split('-'),top=parseInt(p[p.length-1]),bot=parseInt(p[0]);
+  const avgW=v.reduce((a,s)=>a+parseFloat(s.weight),0)/v.length;
+  const rt=avgW<45?2.5:5;
+  if (v.every(s=>parseInt(s.reps)>=top)) {
+    const nw=Math.round((avgW+rt)/rt)*rt;
+    return {weight:nw,reps:bot,label:`↑ Add weight → try ${nw}lbs × ${bot}`};
+  }
+  const avgR=Math.round(v.reduce((a,s)=>a+parseInt(s.reps),0)/v.length);
+  return {weight:avgW,reps:Math.min(avgR+1,top),label:`→ Same weight, push for ${Math.min(avgR+1,top)}+ reps`};
+};
+const hint = (last,repsStr) => {
+  const p=repsStr.split('-'),top=parseInt(p[p.length-1]),bot=parseInt(p[0]);
+  if(last.every(s=>parseInt(s.reps)>=top)) return '↑ Hit the top — try adding weight';
+  if(last.every(s=>parseInt(s.reps)>=bot)) return '→ Solid — push for more reps';
+  return '↗ Build reps before adding weight';
+};
+
+// ── STORAGE ───────────────────────────────────────────────────────
+const SK='recomp_h',SSK='recomp_s',SCRK='recomp_sc';
+const loadH  = () => { try{return JSON.parse(localStorage.getItem(SK)||'[]');}catch{return[];} };
+const saveH  = h => localStorage.setItem(SK,JSON.stringify(h));
+const loadS  = () => { try{return JSON.parse(localStorage.getItem(SSK));}catch{return null;} };
+const saveS  = s => { if(s)localStorage.setItem(SSK,JSON.stringify(s));else localStorage.removeItem(SSK); };
+const loadSc = () => localStorage.getItem(SCRK)||'home';
+const saveSc = s => localStorage.setItem(SCRK,s);
+
+// ── AUDIO ─────────────────────────────────────────────────────────
+let _ac=null;
+const getAC = () => { if(!_ac||_ac.state==='closed')try{_ac=new(window.AudioContext||window.webkitAudioContext)();}catch{}return _ac; };
+const unlockAudio = () => { const c=getAC(); if(c&&c.state==='suspended')c.resume().catch(()=>{}); };
+const beep = (ctx,at) => [[880,0],[1100,0.22]].forEach(([f,off])=>{
+  try{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);
+  o.type='sine';o.frequency.value=f;const t=at+off;
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.55,t+0.01);g.gain.exponentialRampToValueAtTime(0.001,t+0.18);
+  o.start(t);o.stop(t+0.2);}catch{}
+});
+
+// ── STATE ─────────────────────────────────────────────────────────
+let S = {
+  screen: loadSc(),
+  history: loadH(),
+  session: loadS(),
+  summary: null,
+  elapsed: 0,
+  formModal: null,
+  restTimers: {},
+};
+if (S.session&&S.screen==='summary') S.screen='workout';
+
+let elapsedIv = null;
+function startElapsed() {
+  clearInterval(elapsedIv);
+  if (!S.session) return;
+  elapsedIv = setInterval(()=>{
+    S.elapsed = Math.floor((Date.now()-S.session.startTime)/1000);
+    const el=document.getElementById('etxt'); if(el)el.textContent=fmtElap(S.elapsed);
+  },1000);
+}
+if (S.session) { S.elapsed=Math.floor((Date.now()-S.session.startTime)/1000); startElapsed(); }
+
+// ── REST TIMERS ───────────────────────────────────────────────────
+function startRest(key) {
+  stopRest(key);
+  const end=Date.now()+90000;
+  const ctx=getAC();
+  if(ctx){if(ctx.state==='suspended')ctx.resume().catch(()=>{});beep(ctx,ctx.currentTime+90);}
+  const iv=setInterval(()=>{
+    const rem=Math.max(0,Math.round((end-Date.now())/1000));
+    const tel=document.getElementById('rt-'+key),bel=document.getElementById('rb-'+key),lel=document.getElementById('rl-'+key);
+    if(rem<=0){
+      clearInterval(iv);
+      if(bel)bel.classList.add('done-rest');
+      if(tel)tel.textContent='✓';
+      if(lel)lel.textContent='Rest done — go!';
+      S.restTimers[key]={...S.restTimers[key],done:true};
+      setTimeout(()=>skipRest(key),2500);
+    } else { if(tel)tel.textContent=fmtTime(rem); }
+  },500);
+  S.restTimers[key]={end,iv,done:false};
+}
+function stopRest(key){if(S.restTimers[key]){clearInterval(S.restTimers[key].iv);delete S.restTimers[key];}}
+function skipRest(key){stopRest(key);const el=document.getElementById('rb-'+key);if(el)el.style.display='none';}
+function clearAllRest(){Object.keys(S.restTimers).forEach(stopRest);}
+
+// ── SESSION ───────────────────────────────────────────────────────
+function startWorkout(dayId) {
+  const day=DAYS.find(d=>d.id===dayId);
+  const sd={},dd={};
+  day.exercises.forEach(ex=>{
+    sd[ex.id]=Array.from({length:ex.sets},()=>({weight:'',reps:'',done:false,rpe:null}));
+    if(ex.dropSet)dd[ex.id]={weight:'',reps:'',done:false};
+  });
+  S.session={dayId,setData:sd,dropData:dd,activeSubs:{},startTime:Date.now()};
+  S.elapsed=0; S.restTimers={};
+  saveS(S.session); startElapsed(); goScreen('workout');
+}
+function updSet(exId,idx,f,v){S.session.setData[exId][idx][f]=v;saveS(S.session);}
+function updDrop(exId,f,v){S.session.dropData[exId][f]=v;saveS(S.session);}
+function togSet(exId,idx){
+  const s=S.session.setData[exId][idx];s.done=!s.done;saveS(S.session);
+  if(s.done)startRest(exId+'_'+idx);else stopRest(exId+'_'+idx);render();
+}
+function togDrop(exId){
+  const d=S.session.dropData[exId];d.done=!d.done;saveS(S.session);
+  if(d.done)startRest(exId+'_drop');else stopRest(exId+'_drop');render();
+}
+function togSub(exId){const s=S.session.activeSubs;s[exId]!==undefined?delete s[exId]:s[exId]=0;saveS(S.session);render();}
+
+function calcProg(sess){
+  if(!sess)return{total:0,done:0,pct:0};
+  const day=DAYS.find(d=>d.id===sess.dayId);let t=0,d=0;
+  day.exercises.forEach(ex=>{t+=sess.setData[ex.id].length;d+=sess.setData[ex.id].filter(s=>s.done).length;if(ex.dropSet){t+=1;if(sess.dropData[ex.id]?.done)d+=1;}});
+  return{total:t,done:d,pct:t?Math.round(d/t*100):0};
+}
+
+function getPRs(sess){
+  const prs=[];
+  const day=DAYS.find(d=>d.id===sess.dayId);
+  day.exercises.forEach(ex=>{
+    const cur=best1RM(sess.setData[ex.id].filter(s=>s.done||s.weight));if(!cur)return;
+    const best=S.history.reduce((b,e)=>{const rm=best1RM((e.sets?.[ex.id]||[]).filter(s=>s.done||s.weight));return rm&&rm>b?rm:b;},0);
+    if(cur>best)prs.push(ex.id);
+  });
+  return prs;
+}
+
+function confirmFinish(){
+  const {total,done}=calcProg(S.session);
+  if(done===0){alert('Log at least one set first!');return;}
+  const inc=total-done;
+  if(inc>0&&!confirm(`${inc} set${inc>1?'s':''} not marked done. Finish anyway?`))return;
+  finish();
+}
+function finish(){
+  clearAllRest();clearInterval(elapsedIv);
+  const day=DAYS.find(d=>d.id===S.session.dayId);
+  const dur=Math.round((Date.now()-S.session.startTime)/60000);
+  const sets={},drops={};
+  day.exercises.forEach(ex=>{
+    sets[ex.id]=S.session.setData[ex.id].filter(s=>s.done||s.weight||s.reps);
+    if(ex.dropSet&&(S.session.dropData[ex.id].done||S.session.dropData[ex.id].weight))drops[ex.id]=S.session.dropData[ex.id];
+  });
+  const prs=getPRs(S.session);
+  const entry={dayId:S.session.dayId,dayName:day.name,date:new Date().toISOString(),duration:dur,sets,drops};
+  S.history=[...S.history,entry];saveH(S.history);
+  const td=Object.values(sets).reduce((a,s)=>a+s.filter(x=>x.done).length,0);
+  S.summary={day,entry,duration:dur,totalDone:td,prs};
+  S.session=null;saveS(null);goScreen('summary');
+}
+function discard(){
+  if(!confirm('Discard this workout? All progress will be lost.'))return;
+  clearAllRest();clearInterval(elapsedIv);S.session=null;saveS(null);goScreen('home');
+}
+
+function goScreen(sc){S.screen=sc;saveSc(sc);render();}
+function handleDayTap(dayId){
+  if(S.session?.dayId===dayId){goScreen('workout');return;}
+  if(S.session&&!confirm('Workout in progress. Discard it?'))return;
+  if(S.session){clearAllRest();clearInterval(elapsedIv);S.session=null;saveS(null);}
+  startWorkout(dayId);
+}
+
+// ── RENDER HELPERS ────────────────────────────────────────────────
+function restBannerHTML(key){
+  const t=S.restTimers[key];if(!t)return'';
+  const rem=Math.max(0,Math.round((t.end-Date.now())/1000));
+  return `<div class="rest-banner${t.done?' done-rest':''}" id="rb-${key}">
+    <span class="rest-time" id="rt-${key}">${t.done?'✓':fmtTime(rem)}</span>
+    <span class="rest-lbl" id="rl-${key}">${t.done?'Rest done — go!':'Rest'}</span>
+    ${!t.done?`<button class="rest-skip" onclick="skipRest('${key}')">Skip</button>`:''}
+  </div>`;
+}
+
+function exCardHTML(ex, dayId){
+  const sess=S.session,sd=sess.setData[ex.id],dd=sess.dropData?.[ex.id];
+  const last=S.history.slice().reverse().find(e=>e.dayId===dayId)||null;
+  const lastEx=last?.sets?.[ex.id]||null,lastDrop=last?.drops?.[ex.id]||null;
+  const sub=sess.activeSubs[ex.id]!==undefined;
+  const dName=sub&&ex.subs[0]?ex.subs[0].name:ex.name;
+  const dNote=sub&&ex.subs[0]?ex.subs[0].note:ex.note;
+  const allW=sd.every(s=>s.done),allD=allW&&(!ex.dropSet||dd?.done),anyD=sd.some(s=>s.done);
+  const lwDone=sd[sd.length-1]?.done;
+  const tgt=getTarget(lastEx,ex.reps);
+  const prs=getPRs(sess);const isPR=prs.includes(ex.id);
+
+  let h=`<div class="ex-card${anyD&&!allD?' any-done':''}${allD?' all-done':''}">`;
+  if(isPR)h+=`<div class="pr-banner"><span>🏆</span><span class="pr-banner-text">New Personal Record on ${dName}!</span></div>`;
+  h+=`<div class="ex-header"><div class="ex-name">${allD?'✓ ':''}${dName}</div><div class="ex-header-right">
+    ${FORM[ex.id]?`<button class="form-btn" onclick="openForm('${ex.id}')">Form</button>`:''}
+    <div class="ex-badge">${ex.sets}×${ex.reps}</div></div></div>`;
+  if(dNote)h+=`<div class="ex-note">${dNote}</div>`;
+  if(ex.subs.length&&!allD)h+=`<div class="sub-btn-wrap"><button class="sub-btn" onclick="togSub('${ex.id}')">${sub?`Using: ${ex.subs[0].name} — switch back`:`Sub: ${ex.subs[0].name}`}</button></div>`;
+  if(tgt&&!allD)h+=`<div class="target-box"><div class="target-label">Today's Target</div><div class="target-text">${tgt.label}</div></div>`;
+  if(lastEx?.length){
+    const rm=best1RM(lastEx.filter(s=>s.done||s.weight));
+    const h2=lastEx.every(s=>s.weight&&s.reps)?hint(lastEx,ex.reps):'';
+    h+=`<div class="last-box"><div class="last-label">Last Session</div><div class="last-chips">
+      ${lastEx.map(ls=>`<span class="last-chip">${ls.weight?ls.weight+'lbs':'—'} × ${ls.reps||'—'}${ls.rpe?` @${ls.rpe}`:''}</span>`).join('')}
+      ${ex.dropSet&&lastDrop&&(lastDrop.weight||lastDrop.reps)?`<span class="last-chip drop">↓ ${lastDrop.weight||'?'}lbs × ${lastDrop.reps||'?'}</span>`:''}
+    </div>${rm?`<div class="last-rm">Est. 1RM: ${rm}lbs</div>`:''}${h2?`<div class="last-hint">${h2}</div>`:''}</div>`;
+  }
+  h+=`<div class="sets-area">`;
+  sd.forEach((set,idx)=>{
+    const rk=ex.id+'_'+idx;
+    h+=`<div class="set-row">
+      <div class="set-num">${idx+1}</div>
+      <input class="set-input${set.done?' done':''}" type="number" inputmode="decimal" placeholder="${tgt?tgt.weight:'lbs'}" value="${set.weight}" ${set.done?'readonly':''} onchange="updSet('${ex.id}',${idx},'weight',this.value)">
+      <input class="set-input${set.done?' done':''}" type="number" inputmode="numeric" placeholder="${tgt?tgt.reps:'reps'}" value="${set.reps}" ${set.done?'readonly':''} onchange="updSet('${ex.id}',${idx},'reps',this.value)">
+      <button class="check-btn${set.done?' done':''}" onclick="togSet('${ex.id}',${idx})">${set.done?'✓':'○'}</button>
+    </div>`;
+    if(set.done)h+=`<div class="rpe-row"><span class="rpe-label">RPE</span>
+      ${[6,7,8,9,10].map(r=>`<button class="rpe-btn${set.rpe===r?' sel':''}" title="${RPE_LABELS[r]}" onclick="updSet('${ex.id}',${idx},'rpe',${set.rpe===r?'null':r})">${r}</button>`).join('')}
+      ${set.rpe?`<span class="rpe-hint">${RPE_LABELS[set.rpe]}</span>`:''}</div>`;
+    if(S.restTimers[rk])h+=restBannerHTML(rk);
+  });
+  h+=`</div>`;
+  if(ex.dropSet){
+    h+=`<div class="drop-area${!lwDone&&!dd?.done?' faded':''}"><div class="drop-label">↓ Drop Set — reduce ~20-30%, go to failure</div>
+      <div class="set-row">
+        <div class="set-num" style="color:#c0392b">↓</div>
+        <input class="set-input drop-inp${dd?.done?' done':''}" type="number" inputmode="decimal" placeholder="lbs" value="${dd?.weight||''}" ${dd?.done?'readonly':''} onchange="updDrop('${ex.id}','weight',this.value)">
+        <input class="set-input drop-inp${dd?.done?' done':''}" type="number" inputmode="numeric" placeholder="reps" value="${dd?.reps||''}" ${dd?.done?'readonly':''} onchange="updDrop('${ex.id}','reps',this.value)">
+        <button class="check-btn drop-btn${dd?.done?' done':''}" onclick="togDrop('${ex.id}')">${dd?.done?'✓':'○'}</button>
+      </div>${S.restTimers[ex.id+'_drop']?restBannerHTML(ex.id+'_drop'):''}
+    </div>`;
+  }
+  h+=`</div>`;return h;
+}
+
+function volumeHTML(){
+  const now=Date.now(),wk=7*24*60*60*1000;
+  const recent=S.history.filter(e=>now-new Date(e.date).getTime()<wk);
+  const ms={};
+  recent.forEach(e=>{
+    const day=DAYS.find(d=>d.id===e.dayId);if(!day)return;
+    day.exercises.forEach(ex=>{
+      const done=(e.sets?.[ex.id]||[]).filter(s=>s.done).length;if(!done)return;
+      const m=EX_MUSCLES[ex.id];if(!m)return;ms[m]=(ms[m]||0)+done;
+    });
+  });
+  const prMap={};
+  S.history.forEach(e=>{
+    const day=DAYS.find(d=>d.id===e.dayId);if(!day)return;
+    day.exercises.forEach(ex=>{
+      const rm=best1RM((e.sets?.[ex.id]||[]).filter(s=>s.done||s.weight));
+      if(rm&&(!prMap[ex.id]||rm>prMap[ex.id].rm))prMap[ex.id]={rm,date:e.date,exName:ex.name};
+    });
+  });
+  let h=`<div class="sec-label">Weekly Volume · Past 7 Days</div>`;
+  if(!recent.length)h+=`<div class="empty"><div class="empty-icon">📊</div>Complete a workout to see volume</div>`;
+  else Object.keys(MUSCLE_TARGETS).forEach(m=>{
+    const sets=ms[m]||0,t=MUSCLE_TARGETS[m];
+    const pct=Math.min(sets/t.max*100,100);
+    const col=sets<t.min?'#b86e00':sets>t.max?'#1d5fa8':'#2d7a4f';
+    const lbl=sets===0?'0 sets':sets<t.min?`${sets} — aim for ${t.min}+`:sets>t.max?`${sets} — above target`:`${sets} ✓`;
+    h+=`<div class="vol-bar-wrap">
+      <div class="vol-bar-row"><span class="vol-bar-name">${m}</span><span class="vol-bar-status" style="color:${col}">${lbl}</span></div>
+      <div class="vol-bar-bg"><div class="vol-bar-fill" style="width:${pct}%;background:${col}"></div></div>
+      <div class="vol-bar-minmax"><span>${t.min} min</span><span>${t.max} max</span></div>
+    </div>`;
+  });
+  h+=`<div class="sec-label" style="margin-top:24px">Personal Records · Est. 1RM</div>`;
+  const prs=Object.entries(prMap).sort((a,b)=>b[1].rm-a[1].rm);
+  if(!prs.length)h+=`<div class="empty"><div class="empty-icon">🏆</div>No PRs yet — get lifting</div>`;
+  else prs.forEach(([,pr])=>h+=`<div class="pr-row"><div><div class="pr-row-name">${pr.exName}</div><div class="pr-row-date">${fmtShort(pr.date)}</div></div><div><div class="pr-row-val">${pr.rm}lbs</div><div class="pr-row-unit">est. 1RM</div></div></div>`);
+  return h;
+}
+
+// ── RENDER ────────────────────────────────────────────────────────
+function render(){
+  const {screen,session,history,summary}=S;
+  const prog=calcProg(session);
+  const actDay=session?DAYS.find(d=>d.id===session.dayId):null;
+  const titles={home:'Select Workout',summary:'Done!',history:'History',volume:'Dashboard'};
+  const title=screen==='workout'?actDay?.name:titles[screen]||'';
+  const badge=screen==='workout'?actDay?.type:screen==='summary'?'✓':'—';
+
+  const navTabs=(active)=>['Workout','Volume','History'].map(t=>{
+    const sc={Workout:'home',Volume:'volume',History:'history'};
+    return `<button class="nav-tab${active===sc[t]?' active':''}" onclick="goScreen('${sc[t]}')">${t}</button>`;
+  }).join('');
+
+  const sessBanner=session&&screen!=='workout'?`<div class="session-banner" onclick="goScreen('workout')">
+    <div style="flex:1"><div class="session-banner-title">${actDay?.name} in progress</div>
+    <div class="session-banner-sub">${prog.done}/${prog.total} sets · <span id="etxt">${fmtElap(S.elapsed)}</span> · tap to return</div></div>
+    <div class="session-banner-arrow">→</div></div>`:'';
+
+  let content='';
+
+  if(screen==='home'){
+    const cards=DAYS.map(day=>{
+      const last=S.history.slice().reverse().find(e=>e.dayId===day.id)||null;
+      const isAct=session?.dayId===day.id;
+      return `<div class="day-card${isAct?' is-active':last?' has-history':''}" onclick="handleDayTap('${day.id}')">
+        ${last&&!isAct?'<div class="green-dot"></div>':''}
+        <div class="day-card-type">${day.type}</div>
+        <div class="day-card-name">${day.name}</div>
+        <div class="day-card-sub">${isAct?`${prog.done}/${prog.total} sets · in progress`:day.focus}</div>
+        ${last&&!isAct?`<div class="day-card-last">Last: ${fmtShort(last.date)}</div>`:''}
+        ${isAct?'<div class="day-card-last">Tap to resume →</div>':''}
+      </div>`;
+    }).join('');
+    content=`<div class="pad"><div class="nav-tabs">${navTabs('home')}</div>${sessBanner}<div class="sec-label">Choose Day</div><div class="day-grid">${cards}</div></div>`;
+  }
+  else if(screen==='workout'&&session&&actDay){
+    const cards=actDay.exercises.map(ex=>exCardHTML(ex,session.dayId)).join('');
+    content=`<div class="pad">${cards}<div style="margin:28px 0 8px">
+      <button class="finish-btn" onclick="confirmFinish()">✓ Finish Workout</button>
+      <div class="finish-hint">Tap when you're done — nothing saves automatically</div>
+      <button class="discard-btn" onclick="discard()">Discard Workout</button>
+    </div></div>`;
+  }
+  else if(screen==='summary'&&summary){
+    const prBlock=summary.prs?.length?`<div class="pr-callout"><div class="pr-callout-title">🏆 New PRs this session</div>
+      ${summary.prs.map(id=>{const ex=DAYS.flatMap(d=>d.exercises).find(e=>e.id===id);const rm=best1RM(summary.entry.sets[id]||[]);return ex?`<div class="pr-callout-item">${ex.name}${rm?` — ${rm}lbs est. 1RM`:''}</div>`:''}).join('')}</div>`:'';
+    content=`<div class="pad"><div class="summary-card"><div class="summary-icon">✓</div>
+      <div class="summary-title">${summary.day.name} Complete</div><div class="summary-date">${fmtLong(summary.entry.date)}</div></div>
+      ${prBlock}<div class="stat-grid">
+        ${[['Duration',`${summary.duration}m`],['Sets Done',summary.totalDone],['Exercises',summary.day.exercises.length]].map(([l,v])=>`<div class="stat-box"><div class="stat-val">${v}</div><div class="stat-lbl">${l}</div></div>`).join('')}
+      </div><button class="back-btn" onclick="goScreen('home')">← Back to Home</button></div>`;
+  }
+  else if(screen==='volume'){
+    content=`<div class="pad"><div class="nav-tabs">${navTabs('volume')}</div>${sessBanner}${volumeHTML()}</div>`;
+  }
+  else if(screen==='history'){
+    const entries=[...history].reverse().map(entry=>{
+      const day=DAYS.find(d=>d.id===entry.dayId);
+      const lines=day?.exercises.map(ex=>{
+        const sets=entry.sets?.[ex.id];if(!sets?.length)return'';
+        const s=sets.filter(s=>s.done||s.weight).map(s=>`${s.weight||'?'}lbs×${s.reps||'?'}${s.rpe?`@${s.rpe}`:''}`).join(', ');
+        const dr=entry.drops?.[ex.id];
+        const ds=dr&&(dr.weight||dr.reps)?` ↓${dr.weight||'?'}lbs×${dr.reps||'?'}`:''
+        return s?`<div>${ex.name}: ${s}${ds}</div>`:'';
+      }).join('')||'';
+      return `<div class="hist-entry"><div class="hist-date">${fmtLong(entry.date)} · ${entry.duration||'—'}min</div>
+        <div class="hist-day">${entry.dayName}</div><div class="hist-exs">${lines||'—'}</div></div>`;
+    }).join('');
+    content=`<div class="pad"><div class="nav-tabs">${navTabs('history')}</div>${sessBanner}<div class="sec-label">Past Sessions</div>
+      ${history.length?entries:'<div class="empty"><div class="empty-icon">📋</div>No sessions yet</div>'}</div>`;
+  }
+
+  let modal='';
+  if(S.formModal){
+    const ex=DAYS.flatMap(d=>d.exercises).find(e=>e.id===S.formModal);
+    const fm=FORM[S.formModal];
+    if(ex&&fm)modal=`<div class="modal-overlay" onclick="closeForm()"><div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-handle"></div>
+      <div class="modal-header"><div><div class="modal-title-label">Form Guide</div><div class="modal-title">${ex.name}</div></div>
+        <button class="modal-close" onclick="closeForm()">✕</button></div>
+      <div class="form-cues-label">Key Cues</div>
+      ${fm.cues.map((c,i)=>`<div class="form-cue-row"><div class="form-cue-num">${i+1}.</div><div class="form-cue-text">${c}</div></div>`).join('')}
+      <div class="breathing-box" style="margin-top:16px"><div class="breathing-label">Breathing</div><div class="breathing-text">${fm.breathing}</div></div>
+      ${fm.shoulder?`<div class="shoulder-box" style="margin-top:12px"><div class="shoulder-label">Shoulder Note</div><div class="shoulder-text">${fm.shoulder}</div></div>`:''}
+    </div></div>`;
+  }
+
+  document.getElementById('app').innerHTML=`<div onclick="unlockAudio()">
+    <div class="header">
+      <div class="header-row">
+        <div><div class="logo">Recomp Workout</div><div class="day-label">${title}</div></div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <div class="badge">${badge}</div>
+          ${screen==='workout'?`<div class="timer-txt" id="etxt">${fmtElap(S.elapsed)}</div>`:''}
+        </div>
+      </div>
+      ${screen==='workout'?`<div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${prog.pct}%"></div></div><div class="prog-lbl">${prog.done} / ${prog.total} sets</div>`:''}
+    </div>
+    ${content}${modal}
+  </div>`;
+}
+
+// ── GLOBALS ───────────────────────────────────────────────────────
+window.goScreen=goScreen;window.handleDayTap=handleDayTap;window.togSet=togSet;
+window.togDrop=togDrop;window.togSub=togSub;window.updSet=updSet;window.updDrop=updDrop;
+window.confirmFinish=confirmFinish;window.discard=discard;window.skipRest=skipRest;
+window.unlockAudio=unlockAudio;window.openForm=id=>{S.formModal=id;render();};
+window.closeForm=()=>{S.formModal=null;render();};
+
+// ── SERVICE WORKER ────────────────────────────────────────────────
+if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
+
+render();
+</script>
+</body>
+</html>
