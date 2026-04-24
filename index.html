@@ -528,7 +528,9 @@ function render(){
 
   const navTabs=(active)=>['Workout','Volume','History'].map(t=>{
     const sc={Workout:'home',Volume:'volume',History:'history'};
-    return `<button class="nav-tab${active===sc[t]?' active':''}" onclick="goScreen('${sc[t]}')">${t}</button>`;
+    const isActive=active===sc[t]||(t==='Workout'&&active==='workout');
+    const dest=t==='Workout'&&session?'workout':sc[t];
+    return `<button class="nav-tab${isActive?' active':''}" onclick="goScreen('${dest}')">${t}</button>`;
   }).join('');
 
   const sessBanner=session&&screen!=='workout'?`<div class="session-banner" onclick="goScreen('workout')">
@@ -555,7 +557,7 @@ function render(){
   }
   else if(screen==='workout'&&session&&actDay){
     const cards=actDay.exercises.map(ex=>exCardHTML(ex,session.dayId)).join('');
-    content=`<div class="pad">${cards}<div style="margin:28px 0 8px">
+    content=`<div class="pad"><div class="nav-tabs">${navTabs('workout')}</div>${cards}<div style="margin:28px 0 8px">
       <button class="finish-btn" onclick="confirmFinish()">✓ Finish Workout</button>
       <div class="finish-hint">Tap when you're done — nothing saves automatically</div>
       <button class="discard-btn" onclick="discard()">Discard Workout</button>
