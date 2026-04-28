@@ -288,16 +288,16 @@ const getTarget = (last, repsStr) => {
   const rt=avgW<45?2.5:5;
   if (v.every(s=>parseInt(s.reps)>=top)) {
     const nw=Math.round((avgW+rt)/rt)*rt;
-    return {weight:nw,reps:bot,label:`↑ Add weight → try ${nw}lbs × ${bot}`};
+    return {weight:nw,reps:bot,label:`Add weight — try ${nw}lbs × ${bot} reps`};
   }
   const avgR=Math.round(v.reduce((a,s)=>a+parseInt(s.reps),0)/v.length);
-  return {weight:avgW,reps:Math.min(avgR+1,top),label:`→ Same weight, push for ${Math.min(avgR+1,top)}+ reps`};
+  return {weight:avgW,reps:Math.min(avgR+1,top),label:`Same weight — push for ${Math.min(avgR+1,top)}+ reps`};
 };
 const hint = (last,repsStr) => {
   const p=repsStr.split('-'),top=parseInt(p[p.length-1]),bot=parseInt(p[0]);
-  if(last.every(s=>parseInt(s.reps)>=top)) return '↑ Hit the top — try adding weight';
-  if(last.every(s=>parseInt(s.reps)>=bot)) return '→ Solid — push for more reps';
-  return '↗ Build reps before adding weight';
+  if(last.every(s=>parseInt(s.reps)>=top)) return 'Hit the top of the range — add weight next session';
+  if(last.every(s=>parseInt(s.reps)>=bot)) return 'Good — push for more reps next session';
+  return 'Build reps before adding weight';
 };
 
 // ── STORAGE ───────────────────────────────────────────────────────
@@ -313,12 +313,37 @@ const saveSc = s => localStorage.setItem(SCRK,s);
 let _ac=null;
 const getAC = () => { if(!_ac||_ac.state==='closed')try{_ac=new(window.AudioContext||window.webkitAudioContext)();}catch{}return _ac; };
 const unlockAudio = () => { const c=getAC(); if(c&&c.state==='suspended')c.resume().catch(()=>{}); };
-const beep = (ctx,at) => [[880,0],[1100,0.22]].forEach(([f,off])=>{
-  try{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);
-  o.type='sine';o.frequency.value=f;const t=at+off;
-  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.55,t+0.01);g.gain.exponentialRampToValueAtTime(0.001,t+0.18);
-  o.start(t);o.stop(t+0.2);}catch{}
-});
+
+function playTone(ctx, freq, startAt, dur=0.3, vol=1.0) {
+  try {
+    const o=ctx.createOscillator(), g=ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type='sine'; o.frequency.value=freq;
+    g.gain.setValueAtTime(0, startAt);
+    g.gain.linearRampToValueAtTime(vol, startAt+0.01);
+    g.gain.exponentialRampToValueAtTime(0.001, startAt+dur);
+    o.start(startAt); o.stop(startAt+dur+0.05);
+  } catch {}
+}
+
+// Schedule 3-2-1 countdown beeps + loud finish tone
+// Uses absolute end timestamp to stay accurate through screen lock
+function scheduleCountdown(ctx, endTimestamp) {
+  const now = Date.now();
+  // 3, 2, 1 countdown beeps (short, medium pitch)
+  [3, 2, 1].forEach(sec => {
+    const msUntil = (endTimestamp - now) - (sec * 1000);
+    if (msUntil < 0) return;
+    const audioAt = ctx.currentTime + msUntil / 1000;
+    playTone(ctx, 660, audioAt, 0.15, 0.8);
+  });
+  // Finish: three loud ascending tones
+  const msUntilEnd = endTimestamp - now;
+  const finAt = ctx.currentTime + msUntilEnd / 1000;
+  playTone(ctx, 880,  finAt,       0.25, 1.0);
+  playTone(ctx, 1100, finAt+0.28,  0.25, 1.0);
+  playTone(ctx, 1320, finAt+0.56,  0.4,  1.0);
+}
 
 // ── STATE ─────────────────────────────────────────────────────────
 let S = {
@@ -351,22 +376,31 @@ const restDur = exId => COMPOUND_IDS.has(exId) ? 180 : 90;
 
 function startRest(key, dur=90) {
   stopRest(key);
-  const end=Date.now()+(dur*1000);
-  const ctx=getAC();
-  if(ctx){if(ctx.state==='suspended')ctx.resume().catch(()=>{});beep(ctx,ctx.currentTime+dur);}
-  const iv=setInterval(()=>{
-    const rem=Math.max(0,Math.round((end-Date.now())/1000));
-    const tel=document.getElementById('rt-'+key),bel=document.getElementById('rb-'+key),lel=document.getElementById('rl-'+key);
-    if(rem<=0){
+  const endTs = Date.now() + (dur * 1000);
+  const ctx = getAC();
+  if (ctx) {
+    if (ctx.state==='suspended') ctx.resume().catch(()=>{});
+    scheduleCountdown(ctx, endTs);
+  }
+  const iv = setInterval(()=>{
+    const rem = Math.max(0, Math.round((endTs - Date.now()) / 1000));
+    const tel=document.getElementById('rt-'+key);
+    const bel=document.getElementById('rb-'+key);
+    const lel=document.getElementById('rl-'+key);
+    if (rem <= 0) {
       clearInterval(iv);
-      if(bel)bel.classList.add('done-rest');
-      if(tel)tel.textContent='✓';
-      if(lel)lel.textContent='Rest done — go!';
-      S.restTimers[key]={...S.restTimers[key],done:true};
-      setTimeout(()=>skipRest(key),2500);
-    } else { if(tel)tel.textContent=fmtTime(rem); }
-  },500);
-  S.restTimers[key]={end,iv,done:false,dur};
+      if (bel) bel.classList.add('done-rest');
+      if (tel) tel.textContent = '✓';
+      if (lel) lel.textContent = 'Rest done — go!';
+      S.restTimers[key] = {...S.restTimers[key], done:true};
+      setTimeout(()=>skipRest(key), 2500);
+    } else {
+      // Show 3-2-1 in display during countdown
+      if (tel) tel.textContent = rem <= 3 ? `${rem}` : fmtTime(rem);
+      if (lel && rem <= 3) lel.textContent = 'Get ready...';
+    }
+  }, 250);
+  S.restTimers[key] = {endTs, iv, done:false, dur};
 }
 function stopRest(key){if(S.restTimers[key]){clearInterval(S.restTimers[key].iv);delete S.restTimers[key];}}
 function skipRest(key){stopRest(key);const el=document.getElementById('rb-'+key);if(el)el.style.display='none';}
@@ -376,9 +410,19 @@ function clearAllRest(){Object.keys(S.restTimers).forEach(stopRest);}
 function startWorkout(dayId) {
   const day=DAYS.find(d=>d.id===dayId);
   const sd={},dd={};
+  const lastSession = S.history.slice().reverse().find(e=>e.dayId===dayId)||null;
   day.exercises.forEach(ex=>{
-    sd[ex.id]=Array.from({length:ex.sets},()=>({weight:'',reps:'',done:false,rpe:null}));
-    if(ex.dropSet)dd[ex.id]={weight:'',reps:'',done:false};
+    const lastEx = lastSession?.sets?.[ex.id]||null;
+    const tgt = getTarget(lastEx, ex.reps);
+    // Pre-populate with suggested weight/reps from progressive overload logic
+    const prefillW = tgt ? String(tgt.weight) : '';
+    const prefillR = tgt ? String(tgt.reps) : '';
+    sd[ex.id]=Array.from({length:ex.sets},()=>({weight:prefillW,reps:prefillR,done:false,rpe:null}));
+    if(ex.dropSet){
+      // Drop set: suggest ~70% of working weight
+      const dropW = tgt ? String(Math.round(tgt.weight*0.7/2.5)*2.5) : '';
+      dd[ex.id]={weight:dropW,reps:'',done:false};
+    }
   });
   S.session={dayId,setData:sd,dropData:dd,activeSubs:{},startTime:Date.now()};
   S.elapsed=0; S.restTimers={};
@@ -387,12 +431,23 @@ function startWorkout(dayId) {
 function updSet(exId,idx,f,v){S.session.setData[exId][idx][f]=v;saveS(S.session);}
 function updDrop(exId,f,v){S.session.dropData[exId][f]=v;saveS(S.session);}
 function togSet(exId,idx){
-  const s=S.session.setData[exId][idx];s.done=!s.done;saveS(S.session);
-  if(s.done)startRest(exId+'_'+idx, restDur(exId));else stopRest(exId+'_'+idx);render();
+  const s=S.session.setData[exId][idx];
+  s.done=!s.done;
+  saveS(S.session);
+  if(s.done) startRest(exId+'_'+idx, restDur(exId));
+  else stopRest(exId+'_'+idx);
+  render();
 }
 function togDrop(exId){
-  const d=S.session.dropData[exId];d.done=!d.done;saveS(S.session);
-  if(d.done)startRest(exId+'_drop', 90);else stopRest(exId+'_drop');render();
+  // No rest before drop set — strip weight and go immediately
+  // Rest starts AFTER the drop set
+  const d=S.session.dropData[exId];
+  const wasDone=d.done;
+  d.done=!d.done;
+  saveS(S.session);
+  if(!wasDone) startRest(exId+'_drop', 90);
+  else stopRest(exId+'_drop');
+  render();
 }
 function togSub(exId){const s=S.session.activeSubs;s[exId]!==undefined?delete s[exId]:s[exId]=0;saveS(S.session);render();}
 
@@ -453,11 +508,14 @@ function handleDayTap(dayId){
 // ── RENDER HELPERS ────────────────────────────────────────────────
 function restBannerHTML(key){
   const t=S.restTimers[key];if(!t)return'';
-  const rem=Math.max(0,Math.round((t.end-Date.now())/1000));
+  const rem=Math.max(0,Math.round((t.endTs-Date.now())/1000));
+  const isCountdown=rem<=3&&rem>0&&!t.done;
   const durLabel=t.dur===180?'3 min rest':'90s rest';
-  return `<div class="rest-banner${t.done?' done-rest':''}" id="rb-${key}">
-    <span class="rest-time" id="rt-${key}">${t.done?'✓':fmtTime(rem)}</span>
-    <span class="rest-lbl" id="rl-${key}">${t.done?'Rest done — go!':durLabel}</span>
+  const timeDisplay=t.done?'✓':isCountdown?`${rem}`:fmtTime(rem);
+  const lbl=t.done?'Rest done — go!':isCountdown?'Get ready...':durLabel;
+  return `<div class="rest-banner${t.done?' done-rest':''}${isCountdown?' counting':''}\" id="rb-${key}" style="${isCountdown?'background:#fff8ed;border-color:#f5d49a;':''}">
+    <span class="rest-time" id="rt-${key}" style="${isCountdown?'color:#b86e00;font-size:28px;':''}">${timeDisplay}</span>
+    <span class="rest-lbl" id="rl-${key}" style="${isCountdown?'color:#b86e00;font-weight:600;':''}">${lbl}</span>
     ${!t.done?`<button class="rest-skip" onclick="skipRest('${key}')">Skip</button>`:''}
   </div>`;
 }
@@ -498,21 +556,24 @@ function exCardHTML(ex, dayId){
       <input class="set-input${set.done?' done':''}" type="number" inputmode="decimal" placeholder="${tgt?tgt.weight:'lbs'}" value="${set.weight}" ${set.done?'readonly':''} onchange="updSet('${ex.id}',${idx},'weight',this.value)">
       <input class="set-input${set.done?' done':''}" type="number" inputmode="numeric" placeholder="${tgt?tgt.reps:'reps'}" value="${set.reps}" ${set.done?'readonly':''} onchange="updSet('${ex.id}',${idx},'reps',this.value)">
       <button class="check-btn${set.done?' done':''}" onclick="togSet('${ex.id}',${idx})">${set.done?'✓':'○'}</button>
-    </div>`;
-    if(set.done)h+=`<div class="rpe-row"><span class="rpe-label">RPE</span>
-      ${[6,7,8,9,10].map(r=>`<button class="rpe-btn${set.rpe===r?' sel':''}" title="${RPE_LABELS[r]}" onclick="updSet('${ex.id}',${idx},'rpe',${set.rpe===r?'null':r})">${r}</button>`).join('')}
-      ${set.rpe?`<span class="rpe-hint">${RPE_LABELS[set.rpe]}</span>`:''}</div>`;
-    if(S.restTimers[rk])h+=restBannerHTML(rk);
+    </div>
+    ${set.done?`<div class="rpe-row"><span class="rpe-label">RPE</span>
+      ${[6,7,8,9,10].map(r=>`<button class="rpe-btn${set.rpe===r?' sel':''}" title="${RPE_LABELS[r]}" onclick="updSet('${ex.id}',${idx},'rpe',${set.rpe===r?'null':r});render()">${r}</button>`).join('')}
+      ${set.rpe?`<span class="rpe-hint">${RPE_LABELS[set.rpe]}</span>`:''}</div>`:''}
+    ${S.restTimers[rk]?restBannerHTML(rk):''}`;
   });
   h+=`</div>`;
   if(ex.dropSet){
-    h+=`<div class="drop-area${!lwDone&&!dd?.done?' faded':''}"><div class="drop-label">↓ Drop Set — reduce ~20-30%, go to failure</div>
+    // No rest timer shown before drop set — go straight to it
+    h+=`<div class="drop-area${!lwDone&&!dd?.done?' faded':''}">
+      <div class="drop-label">↓ Drop Set — reduce ~20-30%, go immediately — no rest</div>
       <div class="set-row">
         <div class="set-num" style="color:#c0392b">↓</div>
         <input class="set-input drop-inp${dd?.done?' done':''}" type="number" inputmode="decimal" placeholder="lbs" value="${dd?.weight||''}" ${dd?.done?'readonly':''} onchange="updDrop('${ex.id}','weight',this.value)">
         <input class="set-input drop-inp${dd?.done?' done':''}" type="number" inputmode="numeric" placeholder="reps" value="${dd?.reps||''}" ${dd?.done?'readonly':''} onchange="updDrop('${ex.id}','reps',this.value)">
         <button class="check-btn drop-btn${dd?.done?' done':''}" onclick="togDrop('${ex.id}')">${dd?.done?'✓':'○'}</button>
-      </div>${S.restTimers[ex.id+'_drop']?restBannerHTML(ex.id+'_drop'):''}
+      </div>
+      ${S.restTimers[ex.id+'_drop']?restBannerHTML(ex.id+'_drop'):''}
     </div>`;
   }
   h+=`</div>`;return h;
