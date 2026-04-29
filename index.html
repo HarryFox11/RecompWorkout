@@ -94,6 +94,12 @@ button{outline:none;cursor:pointer;font-family:inherit}
 .pr-banner-text{font-size:13px;font-weight:600;color:#b8860b}
 .finish-btn{width:100%;padding:17px;background:#1a1a18;color:#fff;font-size:16px;font-weight:700;border:none;border-radius:12px}
 .finish-hint{font-size:12px;color:#b0ada6;text-align:center;margin-top:8px}
+.pause-btn{width:100%;margin-top:10px;padding:14px;background:#fff8ed;border:1.5px solid #f5d49a;border-radius:12px;font-size:15px;font-weight:600;color:#b86e00}
+.resume-btn{width:100%;padding:17px;background:#b86e00;color:#fff;font-size:16px;font-weight:700;border:none;border-radius:12px}
+.paused-banner{background:#fff8ed;border:1.5px solid #f5d49a;border-radius:12px;padding:20px;text-align:center;margin-bottom:16px}
+.paused-icon{font-size:32px;margin-bottom:8px}
+.paused-title{font-size:18px;font-weight:700;color:#b86e00;margin-bottom:4px}
+.paused-sub{font-size:13px;color:#888880}
 .discard-btn{width:100%;margin-top:12px;padding:12px;background:none;border:1.5px solid #e0ddd8;border-radius:12px;font-size:14px;color:#888880}
 .summary-card{background:#edf7f1;border:1.5px solid #b8ddc9;border-radius:12px;padding:24px 20px;text-align:center;margin-bottom:16px}
 .summary-icon{font-size:40px;margin-bottom:10px}
@@ -198,13 +204,13 @@ const DAYS = [
     { id:'landmine_press',   name:'Landmine Press',         sets:4, reps:'8-10',  note:'Half-kneeling default. Bar follows natural arc — keeps shoulder in safe scapular plane throughout. Standing for heavier variation', subs:[], dropSet:false },
     { id:'lateral_raise',    name:'Cable Lateral Raise',    sets:3, reps:'12-15', note:'Shoulder-safe: slight forward lean, thumb up, raise to shoulder height only', subs:[], dropSet:true  },
     { id:'chest_sup_row_b',  name:'Chest Supported Row',    sets:3, reps:'10-12', note:'Chest flat on pad. Full stretch at bottom, full retraction at top', subs:[], dropSet:false },
-    { id:'pec_deck',         name:'Pec Deck / Machine Fly', sets:3, reps:'12-15', note:'Squeeze and hold 1s at peak. Slow open — full chest stretch', subs:[], dropSet:true  },
+    { id:'db_fly',           name:'DB Flyes',               sets:3, reps:'12-15', note:'Flat bench. Slight fixed elbow bend. Lower until chest is fully loaded, squeeze hard at top. Control the weight — don\'t let gravity take it', subs:[], dropSet:true  },
     { id:'hammer_curl',      name:'Hammer Curl',            sets:3, reps:'10-12', note:'Neutral grip. Elbows pinned. 2-3s lower', subs:[], dropSet:true  },
     { id:'tricep_pushdown',  name:'Tricep Pushdown',        sets:3, reps:'12-15', note:'Elbows pinned to sides. Full extension, squeeze. Rope: flare wrists at bottom', subs:[], dropSet:true  },
   ]},
   { id:'upper_c', name:'Upper C', type:'Upper', focus:'Back Width + Chest Detail', exercises:[
-    { id:'face_pull_c',      name:'Face Pulls',             sets:3, reps:'15-20', note:'Do this FIRST every session — shoulder health. High cable, rope, pull to forehead, externally rotate at end', subs:[], dropSet:true  },
-    { id:'pullup_assisted',  name:'Assisted Pull-Up / Pulldown', sets:4, reps:'8-10', note:'Full dead hang. Depress shoulder blades before pulling. Drive elbows to pockets. 2-3s eccentric', subs:[], dropSet:false },
+    { id:'face_pull_c',           name:'Face Pulls',                  sets:3, reps:'15-20', note:'Do this FIRST every session — shoulder health. High cable, rope, pull to forehead, externally rotate at end', subs:[], dropSet:true  },
+    { id:'straight_arm_pulldown', name:'Straight Arm Cable Pulldown', sets:4, reps:'10-12', note:'Cable set high. Arms straight throughout — don\'t bend the elbows. Pull the bar to your hips using only the lats. Best pure lat isolation movement available', subs:[{name:'Chest Supported DB Y-Raise',note:'Lie face down on incline bench. Arms form a Y shape. Raise DBs up and out — squeezes upper back and rear delts. Excellent shoulder health work'},{name:'Inverted Row',note:'Bar at hip height in a rack. Hang underneath, body straight. Pull chest to bar. The more horizontal your body, the harder it is'}], dropSet:false },
     { id:'chest_sup_row_c',  name:'Chest Supported Row',    sets:4, reps:'8-10',  note:'Chest flat on pad. Full stretch at bottom, full retraction at top', subs:[], dropSet:false },
     { id:'incline_db_c',     name:'Incline DB Press',       sets:3, reps:'10-12', note:'Higher rep range today — focus on squeeze at top, not just moving weight', subs:[], dropSet:false },
     { id:'cable_fly_c',      name:'Cable Flyes',            sets:3, reps:'12-15', note:'Detail work — slow and deliberate. Full stretch at open, hard squeeze at close', subs:[{name:'DB Flyes (flat bench)',note:'Same cues — sub when cable is taken'}], dropSet:true  },
@@ -224,8 +230,8 @@ const DAYS = [
 
 const EX_MUSCLES = {
   face_pull:'Shoulders',face_pull_b:'Shoulders',face_pull_c:'Shoulders',
-  incline_db:'Chest',cable_fly:'Chest',pec_deck:'Chest',incline_db_c:'Chest',cable_fly_c:'Chest',
-  chest_sup_row_a:'Back',chest_sup_row_b:'Back',chest_sup_row_c:'Back',lat_pulldown:'Back',pullup_assisted:'Back',
+  incline_db:'Chest',cable_fly:'Chest',db_fly:'Chest',incline_db_c:'Chest',cable_fly_c:'Chest',
+  chest_sup_row_a:'Back',chest_sup_row_b:'Back',chest_sup_row_c:'Back',lat_pulldown:'Back',straight_arm_pulldown:'Back',
   lateral_raise:'Shoulders',landmine_press:'Shoulders',
   db_curl_a:'Biceps',db_curl_c:'Biceps',hammer_curl:'Biceps',
   overhead_tricep:'Triceps',tricep_pushdown:'Triceps',tricep_pushdown_c:'Triceps',
@@ -254,7 +260,10 @@ const FORM = {
   landmine_press:{cues:["Half-kneeling: one knee down, opposite foot forward, tall spine","Grip the end of the bar at shoulder height","Press up and forward along the bar's natural arc — don't fight it","The arc keeps humerus in scapular plane — the safest position for your shoulder","Lower controlled, reset posture before each rep"],breathing:"Exhale on the press",shoulder:"The most shoulder-safe pressing movement available. The bar path physically cannot put you in a dangerous position. Standing variation is fine for heavier days — same arc, more core"},
   lateral_raise:{cues:["Cable at hip height, working arm crosses in front of body","Slight forward lean at hips — about 10-15°","Thumb up or neutral — never thumb pointing down","Raise to shoulder height only — no higher","Lead with elbow, not wrist. Controlled lower"],breathing:"Exhale on the raise",shoulder:"Thumb up and forward lean are non-negotiable for shoulder safety — they shift the arm into the scapular plane"},
   pec_deck:{cues:["Adjust seat so handles are at chest height","Upper arms parallel to floor throughout","Drive with the elbows, not the wrists","Squeeze hard at centre — hold 1-2s","Open slowly — full chest stretch on return"],breathing:"Exhale as you close",shoulder:"Don't open past 90° if shoulder is uncomfortable. The machine controls the path — use it"},
-  pullup_assisted:{cues:["Full dead hang at the bottom — don't cheat the range","Depress shoulder blades before pulling — crucial","Drive elbows down to your hip pockets","Chin over bar at the top","Lower 2-3s — the eccentric is where the back width comes from"],breathing:"Exhale on the pull",shoulder:"Full hang through shoulder — loads safely through full ROM. Don't skip the bottom position"},
+  db_fly:{cues:["Flat bench. Hold DBs over chest, palms facing each other","Slight fixed bend in the elbows — don't change this angle throughout","Lower in a wide arc until you feel a deep chest stretch","Drive back up squeezing the chest — think closing your arms around a barrel","Control the descent — this is where the chest gets loaded"],breathing:"Inhale on the lower, exhale on the squeeze up",shoulder:"Don't lower past the point of discomfort — your shoulder controls the depth here"},
+  straight_arm_pulldown:{cues:["Cable set high, use a straight bar or rope","Stand back slightly, hinge forward a little at the hips","Arms straight throughout — no bending at the elbow","Pull the bar down to your thighs using only your lats","Squeeze hard at the bottom, controlled return to the top"],breathing:"Exhale on the pull down",shoulder:"Arms straight is the key cue — the moment you bend the elbows you start using biceps instead of lats"},
+  chest_sup_y_raise:{cues:["Lie face down on an incline bench set to 30-45°","Hold light DBs, arms hanging straight down","Raise arms up and out to form a Y shape — thumbs pointing up","Squeeze the upper back and rear delts hard at the top","Lower slowly — you'll feel this in areas you've never felt before"],breathing:"Exhale on the raise",shoulder:"Excellent shoulder health movement — strengthens the lower trapezius and rear delts. Use very light weight"},
+  inverted_row:{cues:["Set a barbell in a rack at hip height","Hang underneath it, body straight from heels to shoulders","Pull your chest to the bar — elbows go back, not out","Hold for 1s at the top, lower with control","The more horizontal your body, the harder it is — adjust bar height to match your level"],breathing:"Exhale on the pull",shoulder:"Pure horizontal pulling — great for posture and shoulder balance"},
   db_curl_a:{cues:["Elbows pinned at your sides throughout","Supinate (rotate) the wrist as you curl — pinky leads at top","Squeeze hard at the top, pause","Lower slowly 2-3s — this is the important part","No swing — if you're swinging, the weight is too heavy"],breathing:"Exhale on the curl up",shoulder:null},
   db_curl_c:{cues:["Elbows pinned at your sides throughout","Supinate (rotate) the wrist as you curl — pinky leads at top","Squeeze hard at the top, pause","Lower slowly 2-3s — eccentric builds the mass","No swing"],breathing:"Exhale on the curl up",shoulder:null},
   overhead_tricep:{cues:["Cable: rope anchored low. DB: grip both DB heads with both hands","Elbows point straight up — keep them close to head throughout","Only the forearm moves. Upper arm stays vertical and fixed","Full extension at top, full stretch at bottom — feel the long head load","Control the descent — this is where the growth stimulus is"],breathing:"Exhale on the extension",shoulder:"If shoulder is uncomfortable overhead, substitute tricep pushdown — same stimulus, no overhead position"},
@@ -326,24 +335,39 @@ function playTone(ctx, freq, startAt, dur=0.3, vol=1.0) {
   } catch {}
 }
 
-// Schedule 3-2-1 countdown beeps + loud finish tone
-// Uses absolute end timestamp to stay accurate through screen lock
 function scheduleCountdown(ctx, endTimestamp) {
   const now = Date.now();
-  // 3, 2, 1 countdown beeps (short, medium pitch)
   [3, 2, 1].forEach(sec => {
     const msUntil = (endTimestamp - now) - (sec * 1000);
-    if (msUntil < 0) return;
+    if (msUntil < 100) return;
     const audioAt = ctx.currentTime + msUntil / 1000;
     playTone(ctx, 660, audioAt, 0.15, 0.8);
   });
-  // Finish: three loud ascending tones
   const msUntilEnd = endTimestamp - now;
-  const finAt = ctx.currentTime + msUntilEnd / 1000;
-  playTone(ctx, 880,  finAt,       0.25, 1.0);
-  playTone(ctx, 1100, finAt+0.28,  0.25, 1.0);
-  playTone(ctx, 1320, finAt+0.56,  0.4,  1.0);
+  if (msUntilEnd > 0) {
+    const finAt = ctx.currentTime + msUntilEnd / 1000;
+    playTone(ctx, 880,  finAt,       0.25, 1.0);
+    playTone(ctx, 1100, finAt+0.28,  0.25, 1.0);
+    playTone(ctx, 1320, finAt+0.56,  0.4,  1.0);
+  }
 }
+
+// Reschedule all active rest timers when screen unlocks
+// This is the fix for iOS killing scheduled audio during screen lock
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible') return;
+  const ctx = getAC();
+  if (!ctx) return;
+  ctx.resume().then(() => {
+    Object.entries(S.restTimers).forEach(([key, t]) => {
+      if (t.done) return;
+      const rem = (t.endTs - Date.now()) / 1000;
+      if (rem <= 0) return;
+      // Reschedule the audio from now with correct remaining time
+      scheduleCountdown(ctx, t.endTs);
+    });
+  }).catch(() => {});
+});
 
 // ── STATE ─────────────────────────────────────────────────────────
 let S = {
@@ -352,6 +376,8 @@ let S = {
   session: loadS(),
   summary: null,
   elapsed: 0,
+  paused: false,
+  pausedAt: null,
   formModal: null,
   restTimers: {},
 };
@@ -370,7 +396,7 @@ if (S.session) { S.elapsed=Math.floor((Date.now()-S.session.startTime)/1000); st
 
 // ── REST TIMERS ───────────────────────────────────────────────────
 const COMPOUND_IDS = new Set(['squat','deadlift','hip_thrust','bulgarian','walking_lunge',
-  'pullup_assisted','chest_sup_row_a','chest_sup_row_b','chest_sup_row_c',
+  'straight_arm_pulldown','chest_sup_row_a','chest_sup_row_b','chest_sup_row_c',
   'lat_pulldown','incline_db','incline_db_c','landmine_press']);
 const restDur = exId => COMPOUND_IDS.has(exId) ? 180 : 90;
 
@@ -497,6 +523,30 @@ function discard(){
   clearAllRest();clearInterval(elapsedIv);S.session=null;saveS(null);goScreen('home');
 }
 
+function pauseWorkout() {
+  S.paused = true;
+  S.pausedAt = Date.now();
+  clearInterval(elapsedIv);
+  // Pause all rest timers by extending their endTs
+  render();
+}
+function resumeWorkout() {
+  if (!S.paused || !S.pausedAt) return;
+  const pauseDur = Date.now() - S.pausedAt;
+  S.session.startTime += pauseDur;
+  saveS(S.session);
+  Object.keys(S.restTimers).forEach(key => {
+    if (!S.restTimers[key].done) {
+      S.restTimers[key].endTs += pauseDur;
+      const ctx = getAC();
+      if (ctx) scheduleCountdown(ctx, S.restTimers[key].endTs);
+    }
+  });
+  S.paused = false;
+  S.pausedAt = null;
+  startElapsed();
+  render();
+}
 function goScreen(sc){S.screen=sc;saveSc(sc);render();}
 function handleDayTap(dayId){
   if(S.session?.dayId===dayId){goScreen('workout');return;}
@@ -831,12 +881,26 @@ function render(){
     content=`<div class="pad"><div class="nav-tabs">${navTabs('home')}</div>${sessBanner}<div class="sec-label">Choose Day</div><div class="day-grid">${cards}</div></div>`;
   }
   else if(screen==='workout'&&session&&actDay){
-    const cards=actDay.exercises.map(ex=>exCardHTML(ex,session.dayId)).join('');
-    content=`<div class="pad"><div class="nav-tabs">${navTabs('workout')}</div>${cards}<div style="margin:28px 0 8px">
-      <button class="finish-btn" onclick="confirmFinish()">✓ Finish Workout</button>
-      <div class="finish-hint">Tap when you're done — nothing saves automatically</div>
-      <button class="discard-btn" onclick="discard()">Discard Workout</button>
-    </div></div>`;
+    if (S.paused) {
+      content=`<div class="pad">
+        <div class="nav-tabs">${navTabs('workout')}</div>
+        <div class="paused-banner">
+          <div class="paused-icon">⏸</div>
+          <div class="paused-title">Workout Paused</div>
+          <div class="paused-sub">Take your time — timer is stopped</div>
+        </div>
+        <button class="resume-btn" onclick="resumeWorkout()">▶ Resume Workout</button>
+        <button class="discard-btn" onclick="discard()">Discard Workout</button>
+      </div>`;
+    } else {
+      const cards=actDay.exercises.map(ex=>exCardHTML(ex,session.dayId)).join('');
+      content=`<div class="pad"><div class="nav-tabs">${navTabs('workout')}</div>${cards}<div style="margin:28px 0 8px">
+        <button class="finish-btn" onclick="confirmFinish()">✓ Finish Workout</button>
+        <div class="finish-hint">Tap when you're done — nothing saves automatically</div>
+        <button class="pause-btn" onclick="pauseWorkout()">⏸ Pause Workout</button>
+        <button class="discard-btn" onclick="discard()">Discard Workout</button>
+      </div></div>`;
+    }
   }
   else if(screen==='summary'&&summary){
     const prBlock=summary.prs?.length?`<div class="pr-callout"><div class="pr-callout-title">🏆 New PRs this session</div>
@@ -904,6 +968,7 @@ window.confirmFinish=confirmFinish;window.discard=discard;window.skipRest=skipRe
 window.unlockAudio=unlockAudio;window.openForm=id=>{S.formModal=id;render();};
 window.closeForm=()=>{S.formModal=null;render();};
 window.logBodyweight=logBodyweight;
+window.pauseWorkout=pauseWorkout;window.resumeWorkout=resumeWorkout;
 
 // ── SERVICE WORKER ────────────────────────────────────────────────
 if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
