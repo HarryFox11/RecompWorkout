@@ -294,7 +294,7 @@ const getTarget = (last, repsStr) => {
   const v=last.filter(s=>s.weight&&s.reps); if(!v.length) return null;
   const p=repsStr.split('-'),top=parseInt(p[p.length-1]),bot=parseInt(p[0]);
   const avgW=v.reduce((a,s)=>a+parseFloat(s.weight),0)/v.length;
-  const rt=avgW<45?2.5:5;
+  const rt = 5;
   if (v.every(s=>parseInt(s.reps)>=top)) {
     const nw=Math.round((avgW+rt)/rt)*rt;
     return {weight:nw,reps:bot,label:`Add weight — try ${nw}lbs × ${bot} reps`};
@@ -897,7 +897,6 @@ function render(){
       content=`<div class="pad"><div class="nav-tabs">${navTabs('workout')}</div>${cards}<div style="margin:28px 0 8px">
         <button class="finish-btn" onclick="confirmFinish()">✓ Finish Workout</button>
         <div class="finish-hint">Tap when you're done — nothing saves automatically</div>
-        <button class="pause-btn" onclick="pauseWorkout()">⏸ Pause Workout</button>
         <button class="discard-btn" onclick="discard()">Discard Workout</button>
       </div></div>`;
     }
@@ -955,7 +954,14 @@ function render(){
           ${screen==='workout'?`<div class="timer-txt" id="etxt">${fmtElap(S.elapsed)}</div>`:''}
         </div>
       </div>
-      ${screen==='workout'?`<div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${prog.pct}%"></div></div><div class="prog-lbl">${prog.done} / ${prog.total} sets</div>`:''}
+      ${screen==='workout'?`<div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${prog.pct}%"></div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px">
+          <div class="prog-lbl">${prog.done} / ${prog.total} sets</div>
+          ${!S.paused
+            ? `<button onclick="pauseWorkout()" style="font-family:monospace;font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:#b86e00;background:#fff8ed;border:1px solid #f5d49a;border-radius:20px;padding:3px 10px">⏸ Pause</button>`
+            : `<button onclick="resumeWorkout()" style="font-family:monospace;font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:#2d7a4f;background:#edf7f1;border:1px solid #b8ddc9;border-radius:20px;padding:3px 10px">▶ Resume</button>`
+          }
+        </div>`:''}
     </div>
     ${content}${modal}
   </div>`;
