@@ -217,32 +217,32 @@ const DAYS = [
     { id:'db_curl_c',        name:'DB Curl',                sets:3, reps:'10-12', note:'Supinate at top, elbows pinned, 2-3s eccentric', subs:[], dropSet:true  },
     { id:'tricep_pushdown_c',name:'Tricep Pushdown',        sets:3, reps:'12-15', note:'Elbows pinned to sides. Full extension, squeeze at bottom', subs:[], dropSet:true  },
   ]},
-  { id:'lower', name:'Lower', type:'Lower', focus:'Strength + Athletic', exercises:[
-    { id:'squat',            name:'Barbell Back Squat',     sets:4, reps:'5-6',   note:'Strength focus. Big brace, knees track toes, hit parallel minimum', subs:[], dropSet:false },
-    { id:'deadlift',         name:'Conventional Deadlift',  sets:3, reps:'4-5',   note:'Bar over mid-foot. 360° brace before pulling. Bar stays close — drags up shins', subs:[], dropSet:false },
-    { id:'hip_thrust',       name:'Hip Thrust',             sets:3, reps:'10-12', note:'Drive through heels. Full hip extension, hard glute squeeze, hold 1s at top', subs:[], dropSet:false },
-    { id:'bulgarian',        name:'Bulgarian Split Squat',  sets:3, reps:'8-10',  note:'Per leg. Rear foot elevated. Slight forward hinge for glutes. Drive through front heel', subs:[], dropSet:false },
-    { id:'walking_lunge',    name:'Walking Lunges',         sets:3, reps:'12-15', note:'Per leg. Torso upright, front shin vertical at bottom, drive through front heel', subs:[], dropSet:true  },
-    { id:'leg_curl',         name:'Leg Curl (machine)',     sets:3, reps:'12-15', note:'Hamstring health for running. Slow 3s eccentric — most important part', subs:[], dropSet:true  },
-    { id:'calf_raise',       name:'Standing Calf Raise',    sets:4, reps:'15-20', note:'Full ROM, pause at bottom, hard squeeze at top. For running and skating', subs:[], dropSet:true  },
+  { id:'conditioning', name:'Conditioning', type:'Active', focus:'Endurance + Muscle Tone · 35-45 min', exercises:[
+    { id:'face_pull_d',     name:'Face Pulls',          sets:3, reps:'20-25', note:'Shoulder health — always first. Light weight, high rep, perfect form. 45s rest today', subs:[], dropSet:false },
+    { id:'pushup',          name:'Push-Ups',            sets:4, reps:'15-20', note:'Hands just outside shoulder width. Full ROM — chest to floor. 3s descent. Elevate hands on bench to make easier, feet elevated to make harder', subs:[], dropSet:false },
+    { id:'inverted_row_d',  name:'Inverted Row',        sets:3, reps:'15-20', note:'Bar at hip height in rack. Body straight. Pull chest to bar, elbows back. Lower slowly. More horizontal = harder', subs:[], dropSet:false },
+    { id:'db_lateral_cond', name:'DB Lateral Raise',    sets:3, reps:'20-25', note:'Light weight, high rep. Thumb up, slight forward lean. Feel the burn. 45s rest', subs:[], dropSet:true  },
+    { id:'reverse_lunge',   name:'Reverse Lunge',       sets:3, reps:'15-20', note:'Per leg. Step back instead of forward — easier on the knees. Torso upright, drive through front heel to stand', subs:[], dropSet:false },
+    { id:'db_rdl_cond',     name:'DB Romanian DL',      sets:3, reps:'15-20', note:'Lighter than strength days. Focus on the hamstring stretch and controlled return. Great for running and skating resilience', subs:[], dropSet:false },
+    { id:'plank',           name:'Plank Hold',          sets:3, reps:'45-60s',note:'Forearms on floor. Squeeze glutes, core, quads. Body straight from heels to head. Don\'t let hips sag or pike', subs:[], dropSet:false },
+    { id:'db_curl_d',       name:'DB Curl',             sets:2, reps:'15-20', note:'Light. Squeeze hard at top, slow 3s eccentric. Finisher — go to near failure', subs:[], dropSet:true  },
+    { id:'tricep_dip',      name:'Bench Dip',           sets:2, reps:'15-20', note:'Hands on bench behind you, feet on floor or elevated. Lower until upper arm is parallel to floor. Drive back up through triceps', subs:[{name:'Tricep Pushdown (light)',note:'If bench dips are uncomfortable on the shoulder — same stimulus, no risk'}], dropSet:false },
   ]},
 ];
 
 const EX_MUSCLES = {
-  face_pull:'Shoulders',face_pull_b:'Shoulders',face_pull_c:'Shoulders',
-  incline_db:'Chest',cable_fly:'Chest',db_fly:'Chest',incline_db_c:'Chest',cable_fly_c:'Chest',
-  chest_sup_row_a:'Back',chest_sup_row_b:'Back',chest_sup_row_c:'Back',lat_pulldown:'Back',straight_arm_pulldown:'Back',
-  lateral_raise:'Shoulders',landmine_press:'Shoulders',
-  db_curl_a:'Biceps',db_curl_c:'Biceps',hammer_curl:'Biceps',
-  overhead_tricep:'Triceps',tricep_pushdown:'Triceps',tricep_pushdown_c:'Triceps',
-  squat:'Quads',walking_lunge:'Quads',bulgarian:'Quads',
-  deadlift:'Hamstrings',leg_curl:'Hamstrings',
-  hip_thrust:'Glutes',calf_raise:'Calves',
+  face_pull:'Shoulders',face_pull_b:'Shoulders',face_pull_c:'Shoulders',face_pull_d:'Shoulders',
+  incline_db:'Chest',cable_fly:'Chest',db_fly:'Chest',incline_db_c:'Chest',cable_fly_c:'Chest',pushup:'Chest',
+  chest_sup_row_a:'Back',chest_sup_row_b:'Back',chest_sup_row_c:'Back',lat_pulldown:'Back',straight_arm_pulldown:'Back',inverted_row_d:'Back',
+  lateral_raise:'Shoulders',landmine_press:'Shoulders',db_lateral_cond:'Shoulders',
+  db_curl_a:'Biceps',db_curl_c:'Biceps',hammer_curl:'Biceps',db_curl_d:'Biceps',
+  overhead_tricep:'Triceps',tricep_pushdown:'Triceps',tricep_pushdown_c:'Triceps',tricep_dip:'Triceps',
+  reverse_lunge:'Quads',db_rdl_cond:'Hamstrings',
+  plank:'Core',
 };
 const MUSCLE_TARGETS = {
   Chest:{min:10,max:20},Back:{min:10,max:20},Shoulders:{min:12,max:20},
-  Biceps:{min:10,max:20},Triceps:{min:10,max:20},Quads:{min:10,max:20},
-  Hamstrings:{min:8,max:16},Glutes:{min:8,max:16},Calves:{min:8,max:16},
+  Biceps:{min:10,max:20},Triceps:{min:10,max:20},Core:{min:6,max:12},
 };
 
 const FORM = {
@@ -262,6 +262,13 @@ const FORM = {
   pec_deck:{cues:["Adjust seat so handles are at chest height","Upper arms parallel to floor throughout","Drive with the elbows, not the wrists","Squeeze hard at centre — hold 1-2s","Open slowly — full chest stretch on return"],breathing:"Exhale as you close",shoulder:"Don't open past 90° if shoulder is uncomfortable. The machine controls the path — use it"},
   db_fly:{cues:["Flat bench. Hold DBs over chest, palms facing each other","Slight fixed bend in the elbows — don't change this angle throughout","Lower in a wide arc until you feel a deep chest stretch","Drive back up squeezing the chest — think closing your arms around a barrel","Control the descent — this is where the chest gets loaded"],breathing:"Inhale on the lower, exhale on the squeeze up",shoulder:"Don't lower past the point of discomfort — your shoulder controls the depth here"},
   straight_arm_pulldown:{cues:["Cable set high, use a straight bar or rope","Stand back slightly, hinge forward a little at the hips","Arms straight throughout — no bending at the elbow","Pull the bar down to your thighs using only your lats","Squeeze hard at the bottom, controlled return to the top"],breathing:"Exhale on the pull down",shoulder:"Arms straight is the key cue — the moment you bend the elbows you start using biceps instead of lats"},
+  pushup:{cues:["Hands just outside shoulder width, fingers forward or slightly out","Body straight from heels to head — squeeze glutes and core throughout","Lower chest to the floor — full range, don't half-rep","3 second descent, explosive push","Elevate hands on bench to make easier; elevate feet to make harder"],breathing:"Inhale on the way down, exhale on the push",shoulder:"Elbows track at 45° from your torso — same as incline press. Avoid flaring wide"},
+  inverted_row_d:{cues:["Set a bar in a rack at hip height","Hang underneath with arms straight — this is your start position","Body straight from heels to shoulders — squeeze glutes to stay rigid","Pull chest to the bar, elbows go back","Lower slowly with control — 2-3 seconds"],breathing:"Exhale on the pull",shoulder:"Great horizontal pull — balances all the pushing. Shoulder-safe and no equipment needed beyond a bar"},
+  reverse_lunge:{cues:["Stand tall, step one foot back instead of forward","Lower back knee toward the floor — controlled, don't slam","Front shin stays vertical — don't let the knee travel over the toe","Drive through the front heel to return to standing","Alternate legs or complete all reps on one side"],breathing:"Inhale on the step back, exhale on the drive up",shoulder:null},
+  db_rdl_cond:{cues:["Lighter than strength sessions — this is about feeling the movement","Push hips back as the weight lowers — hinge, don't squat","Feel the hamstring stretch at the bottom before you reverse","Drive hips forward to stand, glutes finish the movement","DBs stay close to legs throughout"],breathing:"Inhale on the hinge down, exhale on the drive up",shoulder:null},
+  plank:{cues:["Forearms on the floor, elbows under shoulders","Squeeze your glutes, quads, and core simultaneously — hard","Body forms a straight line from heels to head","Don't let hips sag toward the floor or pike up","Breathe steadily — don't hold your breath"],breathing:"Slow steady breathing throughout",shoulder:null},
+  tricep_dip:{cues:["Hands on bench behind you, fingers forward","Feet on floor (easier) or elevated on another bench (harder)","Lower until upper arms are parallel to floor — don't go lower","Drive back up through the triceps","Keep elbows tracking backward, not flaring out wide"],breathing:"Inhale on the lower, exhale on the push",shoulder:"If you feel any shoulder discomfort, stop and use the tricep pushdown sub instead"},
+  db_lateral_cond:{cues:["Lighter than Upper B — this is high rep endurance work","Thumb up, slight forward lean as always","Raise to shoulder height only","Control the lower — don't let arms drop","You should feel a deep burn by rep 15+"],breathing:"Exhale on the raise",shoulder:"Thumb up and forward lean — same shoulder-safe cues always apply"},
   chest_sup_y_raise:{cues:["Lie face down on an incline bench set to 30-45°","Hold light DBs, arms hanging straight down","Raise arms up and out to form a Y shape — thumbs pointing up","Squeeze the upper back and rear delts hard at the top","Lower slowly — you'll feel this in areas you've never felt before"],breathing:"Exhale on the raise",shoulder:"Excellent shoulder health movement — strengthens the lower trapezius and rear delts. Use very light weight"},
   inverted_row:{cues:["Set a barbell in a rack at hip height","Hang underneath it, body straight from heels to shoulders","Pull your chest to the bar — elbows go back, not out","Hold for 1s at the top, lower with control","The more horizontal your body, the harder it is — adjust bar height to match your level"],breathing:"Exhale on the pull",shoulder:"Pure horizontal pulling — great for posture and shoulder balance"},
   db_curl_a:{cues:["Elbows pinned at your sides throughout","Supinate (rotate) the wrist as you curl — pinky leads at top","Squeeze hard at the top, pause","Lower slowly 2-3s — this is the important part","No swing — if you're swinging, the weight is too heavy"],breathing:"Exhale on the curl up",shoulder:null},
@@ -323,51 +330,31 @@ let _ac=null;
 const getAC = () => { if(!_ac||_ac.state==='closed')try{_ac=new(window.AudioContext||window.webkitAudioContext)();}catch{}return _ac; };
 const unlockAudio = () => { const c=getAC(); if(c&&c.state==='suspended')c.resume().catch(()=>{}); };
 
-function playTone(ctx, freq, startAt, dur=0.3, vol=1.0) {
+function playToneNow(freq, dur=0.25, vol=0.9) {
   try {
+    const ctx=getAC(); if(!ctx)return;
+    if(ctx.state==='suspended')ctx.resume().catch(()=>{});
     const o=ctx.createOscillator(), g=ctx.createGain();
     o.connect(g); g.connect(ctx.destination);
     o.type='sine'; o.frequency.value=freq;
-    g.gain.setValueAtTime(0, startAt);
-    g.gain.linearRampToValueAtTime(vol, startAt+0.01);
-    g.gain.exponentialRampToValueAtTime(0.001, startAt+dur);
-    o.start(startAt); o.stop(startAt+dur+0.05);
+    const t=ctx.currentTime;
+    g.gain.setValueAtTime(0,t);
+    g.gain.linearRampToValueAtTime(vol,t+0.01);
+    g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+    o.start(t); o.stop(t+dur+0.05);
   } catch {}
 }
 
-function scheduleCountdown(ctx, endTimestamp) {
-  const now = Date.now();
-  [3, 2, 1].forEach(sec => {
-    const msUntil = (endTimestamp - now) - (sec * 1000);
-    if (msUntil < 100) return;
-    const audioAt = ctx.currentTime + msUntil / 1000;
-    playTone(ctx, 660, audioAt, 0.15, 0.8);
-  });
-  const msUntilEnd = endTimestamp - now;
-  if (msUntilEnd > 0) {
-    const finAt = ctx.currentTime + msUntilEnd / 1000;
-    playTone(ctx, 880,  finAt,       0.25, 1.0);
-    playTone(ctx, 1100, finAt+0.28,  0.25, 1.0);
-    playTone(ctx, 1320, finAt+0.56,  0.4,  1.0);
+function playCountdownBeep(rem) {
+  // Called in real-time from the interval — no scheduling needed
+  if (rem===3||rem===2||rem===1) playToneNow(660, 0.15, 0.7);
+  if (rem===0) {
+    // Triple ascending finish tones
+    playToneNow(880, 0.25, 1.0);
+    setTimeout(()=>playToneNow(1100, 0.25, 1.0), 280);
+    setTimeout(()=>playToneNow(1320, 0.35, 1.0), 560);
   }
 }
-
-// Reschedule all active rest timers when screen unlocks
-// This is the fix for iOS killing scheduled audio during screen lock
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState !== 'visible') return;
-  const ctx = getAC();
-  if (!ctx) return;
-  ctx.resume().then(() => {
-    Object.entries(S.restTimers).forEach(([key, t]) => {
-      if (t.done) return;
-      const rem = (t.endTs - Date.now()) / 1000;
-      if (rem <= 0) return;
-      // Reschedule the audio from now with correct remaining time
-      scheduleCountdown(ctx, t.endTs);
-    });
-  }).catch(() => {});
-});
 
 // ── STATE ─────────────────────────────────────────────────────────
 let S = {
@@ -395,7 +382,7 @@ function startElapsed() {
 if (S.session) { S.elapsed=Math.floor((Date.now()-S.session.startTime)/1000); startElapsed(); }
 
 // ── REST TIMERS ───────────────────────────────────────────────────
-const COMPOUND_IDS = new Set(['squat','deadlift','hip_thrust','bulgarian','walking_lunge',
+const COMPOUND_IDS = new Set(['pushup','inverted_row_d','reverse_lunge','db_rdl_cond',
   'straight_arm_pulldown','chest_sup_row_a','chest_sup_row_b','chest_sup_row_c',
   'lat_pulldown','incline_db','incline_db_c','landmine_press']);
 const restDur = exId => COMPOUND_IDS.has(exId) ? 180 : 90;
@@ -403,16 +390,13 @@ const restDur = exId => COMPOUND_IDS.has(exId) ? 180 : 90;
 function startRest(key, dur=90) {
   stopRest(key);
   const endTs = Date.now() + (dur * 1000);
-  const ctx = getAC();
-  if (ctx) {
-    if (ctx.state==='suspended') ctx.resume().catch(()=>{});
-    scheduleCountdown(ctx, endTs);
-  }
   const iv = setInterval(()=>{
     const rem = Math.max(0, Math.round((endTs - Date.now()) / 1000));
     const tel=document.getElementById('rt-'+key);
     const bel=document.getElementById('rb-'+key);
     const lel=document.getElementById('rl-'+key);
+    // Play audio in real-time when screen is on
+    playCountdownBeep(rem);
     if (rem <= 0) {
       clearInterval(iv);
       if (bel) bel.classList.add('done-rest');
@@ -421,11 +405,10 @@ function startRest(key, dur=90) {
       S.restTimers[key] = {...S.restTimers[key], done:true};
       setTimeout(()=>skipRest(key), 2500);
     } else {
-      // Show 3-2-1 in display during countdown
       if (tel) tel.textContent = rem <= 3 ? `${rem}` : fmtTime(rem);
       if (lel && rem <= 3) lel.textContent = 'Get ready...';
     }
-  }, 250);
+  }, 1000);
   S.restTimers[key] = {endTs, iv, done:false, dur};
 }
 function stopRest(key){if(S.restTimers[key]){clearInterval(S.restTimers[key].iv);delete S.restTimers[key];}}
@@ -538,8 +521,6 @@ function resumeWorkout() {
   Object.keys(S.restTimers).forEach(key => {
     if (!S.restTimers[key].done) {
       S.restTimers[key].endTs += pauseDur;
-      const ctx = getAC();
-      if (ctx) scheduleCountdown(ctx, S.restTimers[key].endTs);
     }
   });
   S.paused = false;
@@ -687,12 +668,12 @@ function platesHTML() {
 
 // ── STRENGTH GRAPHS ───────────────────────────────────────────────
 const GRAPH_LIFTS = [
-  {label:'Squat',         ids:['squat']},
-  {label:'Deadlift',      ids:['deadlift']},
-  {label:'Landmine Press',ids:['landmine_press']},
-  {label:'Chest Row',     ids:['chest_sup_row_a','chest_sup_row_b','chest_sup_row_c']},
-  {label:'Lat Pulldown',  ids:['lat_pulldown']},
-  {label:'DB Curl',       ids:['db_curl_a','db_curl_c']},
+  {label:'Landmine Press',    ids:['landmine_press']},
+  {label:'Incline DB Press',  ids:['incline_db','incline_db_c']},
+  {label:'Chest Row',         ids:['chest_sup_row_a','chest_sup_row_b','chest_sup_row_c']},
+  {label:'Lat Pulldown',      ids:['lat_pulldown']},
+  {label:'DB Curl',           ids:['db_curl_a','db_curl_c','db_curl_d']},
+  {label:'Cable Lateral Raise',ids:['lateral_raise']},
 ];
 
 function strengthGraphHTML() {
