@@ -913,8 +913,21 @@ function render(){
       return `<div class="hist-entry"><div class="hist-date">${fmtLong(entry.date)} · ${entry.duration||'—'}min</div>
         <div class="hist-day">${entry.dayName}</div><div class="hist-exs">${lines||'—'}</div></div>`;
     }).join('');
-    content=`<div class="pad"><div class="nav-tabs">${navTabs('history')}</div>${sessBanner}<div class="sec-label">Past Sessions</div>
-      ${history.length?entries:'<div class="empty"><div class="empty-icon">📋</div>No sessions yet</div>'}</div>`;
+
+    const exportImportHTML = `
+      <div style="background:#f7f7f5;border:1.5px solid #e0ddd8;border-radius:12px;padding:16px;margin-bottom:16px">
+        <div style="font-family:monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#888880;margin-bottom:10px">Data Backup</div>
+        <button onclick="exportData()" style="width:100%;padding:11px;background:#1a1a18;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;margin-bottom:8px">📋 Copy All Data to Clipboard</button>
+        <div style="font-size:12px;color:#888880;margin-bottom:10px">Paste it into Notes app to save. To restore: paste it back and tap Import.</div>
+        <textarea id="importBox" placeholder="Paste backup data here to restore..." style="width:100%;height:80px;border:1.5px solid #e0ddd8;border-radius:8px;padding:10px;font-family:monospace;font-size:11px;resize:none"></textarea>
+        <button onclick="importData()" style="width:100%;padding:11px;background:#2d7a4f;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;margin-top:8px">↓ Import Data</button>
+      </div>`;
+
+    content=`<div class="pad"><div class="nav-tabs">${navTabs('history')}</div>${sessBanner}
+      ${exportImportHTML}
+      <div class="sec-label">Past Sessions</div>
+      ${history.length?entries:'<div class="empty"><div class="empty-icon">📋</div>No sessions yet</div>'}
+    </div>`;
   }
 
   let modal='';
@@ -955,6 +968,41 @@ function render(){
 }
 
 // ── GLOBALS ───────────────────────────────────────────────────────
+window.exportData = () => {
+  const data = {
+    history: S.history,
+    bwLog: S.bwLog || [],
+    exported: new Date().toISOString()
+  };
+  const json = JSON.stringify(data);
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(json)
+      .then(() => alert('✓ Copied! Paste into Notes app to save.'))
+      .catch(() => {
+        const box = document.getElementById('importBox');
+        if (box) { box.value = json; box.select(); }
+        alert('Clipboard blocked — your data is in the text box below. Select all and copy manually.');
+      });
+  } else {
+    const box = document.getElementById('importBox');
+    if (box) { box.value = json; }
+    alert('Your data is in the text box. Select all and copy manually.');
+  }
+};
+window.importData = () => {
+  const box = document.getElementById('importBox');
+  if (!box || !box.value.trim()) { alert('Paste your backup data in the box first.'); return; }
+  try {
+    const data = JSON.parse(box.value.trim());
+    if (!data.history || !Array.isArray(data.history)) { alert('Invalid data format.'); return; }
+    if (!confirm(`Import ${data.history.length} sessions? This will replace your current history.`)) return;
+    S.history = data.history;
+    if (data.bwLog) { S.bwLog = data.bwLog; saveBW(S.bwLog); }
+    saveH(S.history);
+    alert('✓ Data imported successfully!');
+    render();
+  } catch(e) { alert('Could not read data — make sure you pasted the full backup text.'); }
+};
 window.goScreen=goScreen;window.handleDayTap=handleDayTap;window.togSet=togSet;
 window.togDrop=togDrop;window.togSub=togSub;window.updSet=updSet;window.updDrop=updDrop;
 window.confirmFinish=confirmFinish;window.discard=discard;window.skipRest=skipRest;
@@ -963,10 +1011,7 @@ window.closeForm=()=>{S.formModal=null;render();};
 window.logBodyweight=logBodyweight;
 window.pauseWorkout=pauseWorkout;window.resumeWorkout=resumeWorkout;
 
-// ── SERVICE WORKER ────────────────────────────────────────────────
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').catch(()=>{});
-}
+// No service worker - loads fresh every time
 
 render();
 </script>
