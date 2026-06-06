@@ -964,7 +964,20 @@ window.logBodyweight=logBodyweight;
 window.pauseWorkout=pauseWorkout;window.resumeWorkout=resumeWorkout;
 
 // ── SERVICE WORKER ────────────────────────────────────────────────
-if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/RecompWorkout/sw.js')
+    .then(reg => {
+      reg.update();
+      reg.addEventListener('updatefound', () => {
+        const nw = reg.installing;
+        nw.addEventListener('statechange', () => {
+          if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+            window.location.reload();
+          }
+        });
+      });
+    }).catch(()=>{});
+}
 
 render();
 </script>
