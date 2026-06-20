@@ -959,14 +959,25 @@ function render(){
       </div></div>`;
     }
   }
-  else if(screen==='summary'&&summary){
-    const prBlock=summary.prs?.length?`<div class="pr-callout"><div class="pr-callout-title">🏆 New PRs this session</div>
-      ${summary.prs.map(id=>{const ex=DAYS.flatMap(d=>d.exercises).find(e=>e.id===id);const rm=best1RM(summary.entry.sets[id]||[]);return ex?`<div class="pr-callout-item">${ex.name}${rm?` — ${rm}lbs est. 1RM`:''}</div>`:''}).join('')}</div>`:'';
-    content=`<div class="pad"><div class="summary-card"><div class="summary-icon">✓</div>
+  // Always show home button and export on summary screen, even if summary data is missing
+  else if(screen==='summary'){
+    const summaryContent = summary ? `<div class="summary-card"><div class="summary-icon">✓</div>
       <div class="summary-title">${summary.day.name} Complete</div><div class="summary-date">${fmtLong(summary.entry.date)}</div></div>
-      ${prBlock}<div class="stat-grid">
+      ${summary.prs?.length?`<div class="pr-callout"><div class="pr-callout-title">🏆 New PRs this session</div>
+      ${summary.prs.map(id=>{const ex=DAYS.flatMap(d=>d.exercises).find(e=>e.id===id);const rm=best1RM(summary.entry.sets[id]||[]);return ex?`<div class="pr-callout-item">${ex.name}${rm?` — ${rm}lbs est. 1RM`:''}</div>`:''}).join('')}</div>`:''}
+      <div class="stat-grid">
         ${[['Duration',`${summary.duration}m`],['Sets Done',summary.totalDone],['Exercises',summary.day.exercises.length]].map(([l,v])=>`<div class="stat-box"><div class="stat-val">${v}</div><div class="stat-lbl">${l}</div></div>`).join('')}
-      </div><button class="back-btn" onclick="goScreen('home')">← Back to Home</button></div>`;
+      </div>` : `<div class="summary-card"><div class="summary-icon">✓</div><div class="summary-title">Workout Complete</div></div>`;
+    content=`<div class="pad">${summaryContent}
+      <button class="back-btn" onclick="goScreen('home')" style="margin-bottom:12px">← Back to Home</button>
+      <div style="background:#f7f7f5;border:1.5px solid #e0ddd8;border-radius:12px;padding:16px;margin-top:8px">
+        <div style="font-family:monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#888880;margin-bottom:10px">DATA BACKUP</div>
+        <button onclick="exportData()" style="width:100%;padding:14px;background:#1a1a18;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px">📋 Copy All Data to Clipboard</button>
+        <div style="font-size:12px;color:#888880;margin-bottom:12px">Paste it into Notes app to save. To restore: paste it back and tap Import.</div>
+        <textarea id="import-box" placeholder="Paste backup data here to restore..." style="width:100%;height:80px;padding:10px;border:1.5px solid #e0ddd8;border-radius:8px;font-family:monospace;font-size:12px;resize:none"></textarea>
+        <button onclick="importData()" style="width:100%;padding:14px;background:#2d7a4f;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-top:10px">↓ Import Data</button>
+      </div>
+    </div>`;
   }
   else if(screen==='volume'){
     content=`<div class="pad"><div class="nav-tabs">${navTabs('volume')}</div>${sessBanner}${volumeHTML()}</div>`;
@@ -1079,6 +1090,31 @@ window.togDrop=togDrop;window.togSub=togSub;window.updSet=updSet;window.updDrop=
 window.confirmFinish=confirmFinish;window.discard=discard;window.skipRest=skipRest;
 window.unlockAudio=unlockAudio;window.openForm=id=>{S.formModal=id;render();};
 window.closeForm=()=>{S.formModal=null;render();};
+window.exportData = () => {
+  const data = JSON.stringify({history: S.history, bwLog: S.bwLog||[], exported: new Date().toISOString()});
+  navigator.clipboard.writeText(data).then(()=>alert('Copied! Paste into Notes app to save.')).catch(()=>{
+    // Fallback for older iOS
+    const ta = document.createElement('textarea');
+    ta.value = data; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    alert('Copied! Paste into Notes app to save.');
+  });
+};
+window.importData = () => {
+  const box = document.getElementById('import-box');
+  if (!box||!box.value.trim()){alert('Paste your backup data first');return;}
+  try {
+    const parsed = JSON.parse(box.value.trim());
+    if (!Array.isArray(parsed.history)){alert('Invalid backup data');return;}
+    if (!confirm(`Import ${parsed.history.length} sessions? This will replace your current history.`)) return;
+    S.history = parsed.history;
+    if (parsed.bwLog) S.bwLog = parsed.bwLog;
+    saveH(S.history);
+    if (S.bwLog) localStorage.setItem('recomp_bw', JSON.stringify(S.bwLog));
+    alert(`Imported ${parsed.history.length} sessions successfully!`);
+    goScreen('home');
+  } catch(e) { alert('Could not read backup data — make sure you pasted the full text'); }
+};
 window.logBodyweight=logBodyweight;
 window.pauseWorkout=pauseWorkout;window.resumeWorkout=resumeWorkout;
 
