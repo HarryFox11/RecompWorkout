@@ -398,7 +398,7 @@ let S = {
   restTimers: {},
 };
 if (S.session&&S.screen==='summary') S.screen='workout';
-if (!S.session&&S.screen==='summary') S.screen='home';
+if (S.screen==='summary') S.screen='home'; // summary can't be restored - always go home
 
 let elapsedIv = null;
 function startElapsed() {
@@ -526,7 +526,11 @@ function togSub(exId){const s=S.session.activeSubs;s[exId]!==undefined?delete s[
 function calcProg(sess){
   if(!sess)return{total:0,done:0,pct:0};
   const day=DAYS.find(d=>d.id===sess.dayId);let t=0,d=0;
-  day.exercises.forEach(ex=>{t+=sess.setData[ex.id].length;d+=sess.setData[ex.id].filter(s=>s.done).length;if(ex.dropSet){t+=1;if(sess.dropData[ex.id]?.done)d+=1;}});
+  day.exercises.forEach(ex=>{
+    const sd=sess.setData[ex.id]||[];
+    t+=sd.length;d+=sd.filter(s=>s.done).length;
+    if(ex.dropSet){t+=1;if(sess.dropData?.[ex.id]?.done)d+=1;}
+  });
   return{total:t,done:d,pct:t?Math.round(d/t*100):0};
 }
 
@@ -534,7 +538,8 @@ function getPRs(sess){
   const prs=[];
   const day=DAYS.find(d=>d.id===sess.dayId);
   day.exercises.forEach(ex=>{
-    const cur=best1RM(sess.setData[ex.id].filter(s=>s.done||s.weight));if(!cur)return;
+    const sd=sess.setData[ex.id]||[];
+    const cur=best1RM(sd.filter(s=>s.done||s.weight));if(!cur)return;
     const best=S.history.reduce((b,e)=>{const rm=best1RM((e.sets?.[ex.id]||[]).filter(s=>s.done||s.weight));return rm&&rm>b?rm:b;},0);
     if(cur>best)prs.push(ex.id);
   });
@@ -554,8 +559,8 @@ function finish(){
   const dur=Math.round((Date.now()-S.session.startTime)/60000);
   const sets={},drops={};
   day.exercises.forEach(ex=>{
-    sets[ex.id]=S.session.setData[ex.id].filter(s=>s.done||s.weight||s.reps);
-    if(ex.dropSet&&(S.session.dropData[ex.id].done||S.session.dropData[ex.id].weight))drops[ex.id]=S.session.dropData[ex.id];
+    sets[ex.id]=(S.session.setData[ex.id]||[]).filter(s=>s.done||s.weight||s.reps);
+    if(ex.dropSet&&S.session.dropData?.[ex.id]&&(S.session.dropData[ex.id].done||S.session.dropData[ex.id].weight))drops[ex.id]=S.session.dropData[ex.id];
   });
   const prs=getPRs(S.session);
   const entry={dayId:S.session.dayId,dayName:day.name,date:new Date().toISOString(),duration:dur,sets,drops};
@@ -591,7 +596,7 @@ function resumeWorkout() {
   startElapsed();
   render();
 }
-function goScreen(sc){S.screen=sc;saveSc(sc);render();}
+function goScreen(sc){S.screen=sc;if(sc!=='summary')saveSc(sc);render();}
 function handleDayTap(dayId){
   if(S.session?.dayId===dayId){goScreen('workout');return;}
   if(S.session&&!confirm('Workout in progress. Discard it?'))return;
@@ -619,8 +624,9 @@ function exCardHTML(ex, dayId){
   const subIdx=sess.activeSubs[ex.id];
   const activeSub=subIdx!==undefined&&ex.subs[subIdx];
   const activeId=activeSub?.id||ex.id;
-  const sd=sess.setData[activeId]||sess.setData[ex.id];
-  const dd=sess.dropData?.[activeId]||sess.dropData?.[ex.id];
+  // Safety: fall back to main exercise data if sub data doesn't exist
+  const sd=sess.setData[activeId]||sess.setData[ex.id]||Array.from({length:ex.sets},()=>({weight:'',reps:'',done:false,rpe:null}));
+  const dd=sess.dropData?.[activeId]||sess.dropData?.[ex.id]||null;
   // Last performance from history using the active exercise's own ID
   const lastEx=getLastPerf(activeId);
   const lastDrop=S.history.slice().reverse().reduce((found,entry)=>{
