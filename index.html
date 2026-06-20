@@ -1102,9 +1102,10 @@ window.exportData = () => {
 };
 window.importData = () => {
   const box = document.getElementById('import-box');
-  if (!box||!box.value.trim()){alert('Paste your backup data first');return;}
+  const val = (box&&box.value.trim()) || prompt('Paste your backup data here:');
+  if (!val||!val.trim()){alert('No data provided');return;}
   try {
-    const parsed = JSON.parse(box.value.trim());
+    const parsed = JSON.parse(val.trim());
     if (!Array.isArray(parsed.history)){alert('Invalid backup data');return;}
     if (!confirm(`Import ${parsed.history.length} sessions? This will replace your current history.`)) return;
     S.history = parsed.history;
