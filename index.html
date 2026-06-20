@@ -38,7 +38,9 @@ button{outline:none;cursor:pointer;font-family:inherit}
 .day-card-name{font-size:17px;font-weight:700}
 .day-card-sub{font-size:12px;color:#888880;margin-top:3px}
 .day-card-last{font-size:11px;color:#2d7a4f;margin-top:6px}
-.green-dot{position:absolute;top:12px;right:12px;width:8px;height:8px;border-radius:50%;background:#2d7a4f}
+.day-card.is-hiit{background:#fdf2f1;border-color:#f5c6c2}
+.day-card.is-hiit .day-card-type{color:#c0392b}
+.day-card.is-hiit .day-card-name{color:#c0392b}
 .session-banner{margin:16px 0 0;padding:12px 16px;background:#1a1a18;border-radius:12px;display:flex;align-items:center;gap:12px;cursor:pointer}
 .session-banner-title{font-size:13px;font-weight:700;color:#fff}
 .session-banner-sub{font-size:12px;color:rgba(255,255,255,.6);margin-top:1px}
@@ -191,42 +193,60 @@ button{outline:none;cursor:pointer;font-family:inherit}
 // ── DATA ──────────────────────────────────────────────────────────
 const DAYS = [
   { id:'upper_a', name:'Upper A', type:'Upper', focus:'Chest + Back', exercises:[
-    { id:'face_pull',        name:'Face Pulls',             sets:3, reps:'15-20', note:'Do this FIRST every session — shoulder health. High cable, rope, pull to forehead, externally rotate at end', subs:[{name:'Band Pull-Aparts',note:'Hold band at shoulder width, pull apart to full extension. Same rear delt and rotator cuff benefit — do these anywhere'},{name:'DB Rear Delt Fly',note:'Hinge forward 45°, raise light DBs out to sides. Very light weight, focus on the squeeze'}], dropSet:true  },
-    { id:'incline_db',       name:'Incline DB Press',       sets:4, reps:'8-10',  note:'30-45° bench. Elbows 45° from torso — never flare to 90°. Controlled descent', subs:[{name:'Feet-Elevated Push-Up',note:'Feet on bench, hands on floor. Replicates the incline angle. Pause at the bottom for 1s'},{name:'Cable Chest Press',note:'Cables at chest height, press forward. Constant tension — good if DBs are taken'}], dropSet:false },
-    { id:'cable_fly',        name:'Cable Flyes',            sets:3, reps:'12-15', note:'Slight elbow bend throughout. Squeeze hard at centre, hold 1s', subs:[{name:'DB Flyes (flat bench)',note:'Same cues — slight elbow bend, feel the stretch, squeeze at top. Go lighter than cable'},{name:'Resistance Band Fly',note:'Anchor band behind you at chest height. Same arc, constant tension throughout'}], dropSet:true  },
-    { id:'seated_cable_row_a', name:'Seated Cable Row',    sets:4, reps:'8-10',  note:'Close neutral grip handle. Pull to belly button, hold 1-2s, full stretch at front. Constant tension throughout', subs:[{name:'Single Arm DB Row',note:'One hand on bench, row DB to hip. Full stretch at bottom, squeeze at top'},{name:'Straight Arm Pulldown',note:'Arms straight, pull bar to hips using only lats. No bicep involvement'},{name:'Resistance Band Row',note:'Anchor band at chest height, row both hands back. Good if all cable stations taken'}], dropSet:false },
-    { id:'cable_crunch', name:'Cable Crunches', sets:3, reps:'12-15', note:'Kneel at cable, rope attachment. Crunch elbows to knees — ribs to hips. Hold 1s at bottom. Add weight progressively like any muscle. Don\'t pull with arms', subs:[{name:'Ab Wheel Rollout',note:'Kneel on floor, roll out until arms are extended, pull back with abs only. One of the hardest core exercises — start small'},{name:'Hanging Knee Raise',note:'Hang from pull-up bar, raise knees to chest. Control the lower — don\'t swing'}], dropSet:false },
-    { id:'db_curl_a', name:'DB Curl', sets:3, reps:'10-12', note:'Supinate at top, elbows pinned, 2-3s eccentric', subs:[{name:'Seated Preacher Curl',note:'Sit on bench, elbows on inner thighs. Eliminates all swing — pure bicep. Go lighter than usual'},{name:'Concentration Curl',note:'Elbow braced on inner knee, one arm at a time. Maximum isolation. Very slow and deliberate'}], dropSet:true },
-    { id:'overhead_tricep', name:'Overhead Tricep Ext', sets:3, reps:'10-12', note:'Cable or DB. Elbows stay close to head. Full stretch at bottom', subs:[{name:'Lying DB Tricep Extension',note:'Flat bench. Lower DBs toward forehead, elbows stay fixed. Full stretch, drive back up. Go lighter than cable'},{name:'Single DB Overhead Extension',note:'Both hands grip one DB overhead. Lower behind head, elbows stay in. Long head stretch — excellent isolation'}], dropSet:true },
+    { id:'face_pull',        name:'Face Pulls',             sets:3, reps:'15-20', note:'Do this FIRST every session — shoulder health. High cable, rope, pull to forehead, externally rotate at end', subs:[{id:'band_pull_apart',name:'Band Pull-Aparts',note:'Hold band at shoulder width, pull apart to full extension. Same rear delt and rotator cuff benefit — do these anywhere'},{id:'db_rear_delt_fly',name:'DB Rear Delt Fly',note:'Hinge forward 45°, raise light DBs out to sides. Very light weight, focus on the squeeze'}], dropSet:true  },
+    { id:'incline_db',       name:'Incline DB Press',       sets:4, reps:'8-10',  note:'30-45° bench. Elbows 45° from torso — never flare to 90°. Controlled descent', subs:[{id:'feet_elevated_pushup',name:'Feet-Elevated Push-Up',note:'Feet on bench, hands on floor. Replicates the incline angle. Pause at the bottom for 1s'},{id:'cable_chest_press',name:'Cable Chest Press',note:'Cables at chest height, press forward. Constant tension — good if DBs are taken'}], dropSet:false },
+    { id:'cable_fly',        name:'Cable Flyes',            sets:3, reps:'12-15', note:'Slight elbow bend throughout. Squeeze hard at centre, hold 1s', subs:[{id:'db_fly_flat',name:'DB Flyes (flat bench)',note:'Same cues — slight elbow bend, feel the stretch, squeeze at top. Go lighter than cable'},{id:'resistance_band_fly',name:'Resistance Band Fly',note:'Anchor band behind you at chest height. Same arc, constant tension throughout'}], dropSet:true  },
+    { id:'seated_cable_row_a', name:'Seated Cable Row',    sets:4, reps:'8-10',  note:'Close neutral grip handle. Pull to belly button, hold 1-2s, full stretch at front. Constant tension throughout', subs:[{id:'single_arm_db_row',name:'Single Arm DB Row',note:'One hand on bench, row DB to hip. Full stretch at bottom, squeeze at top'},{id:'straight_arm_pulldown',name:'Straight Arm Pulldown',note:'Arms straight, pull bar to hips using only lats. No bicep involvement'},{id:'resistance_band_row',name:'Resistance Band Row',note:'Anchor band at chest height, row both hands back. Good if all cable stations taken'}], dropSet:false },
+    { id:'cable_crunch', name:'Cable Crunches', sets:3, reps:'12-15', note:'Kneel at cable, rope attachment. Crunch elbows to knees — ribs to hips. Hold 1s at bottom. Add weight progressively like any muscle. Don\'t pull with arms', subs:[{id:'ab_wheel_rollout',name:'Ab Wheel Rollout',note:'Kneel on floor, roll out until arms are extended, pull back with abs only. One of the hardest core exercises — start small'},{id:'hanging_knee_raise',name:'Hanging Knee Raise',note:'Hang from pull-up bar, raise knees to chest. Control the lower — don\'t swing'}], dropSet:false },
+    { id:'db_curl_a', name:'DB Curl', sets:3, reps:'10-12', note:'Supinate at top, elbows pinned, 2-3s eccentric', subs:[{id:'seated_preacher_curl',name:'Seated Preacher Curl',note:'Sit on bench, elbows on inner thighs. Eliminates all swing — pure bicep. Go lighter than usual'},{id:'concentration_curl',name:'Concentration Curl',note:'Elbow braced on inner knee, one arm at a time. Maximum isolation. Very slow and deliberate'}], dropSet:true },
+    { id:'overhead_tricep', name:'Overhead Tricep Ext', sets:3, reps:'10-12', note:'Cable or DB. Elbows stay close to head. Full stretch at bottom', subs:[{id:'lying_db_tricep',name:'Lying DB Tricep Extension',note:'Flat bench. Lower DBs toward forehead, elbows stay fixed. Full stretch, drive back up. Go lighter than cable'},{id:'single_db_overhead',name:'Single DB Overhead Extension',note:'Both hands grip one DB overhead. Lower behind head, elbows stay in. Long head stretch — excellent isolation'}], dropSet:true },
   ]},
   { id:'upper_b', name:'Upper B', type:'Upper', focus:'Shoulders + Arms', exercises:[
-    { id:'face_pull_b',      name:'Face Pulls',             sets:3, reps:'15-20', note:'Do this FIRST every session — shoulder health. High cable, rope, pull to forehead, externally rotate at end', subs:[{name:'Band Pull-Aparts',note:'Hold band at shoulder width, pull apart to full extension. Same rear delt benefit'},{name:'DB Rear Delt Fly',note:'Hinge forward 45°, raise light DBs out to sides. Very light weight'}], dropSet:true  },
-    { id:'landmine_press',   name:'Landmine Press',         sets:4, reps:'8-10',  note:'Half-kneeling default. Bar follows natural arc — keeps shoulder in safe scapular plane throughout. Standing for heavier variation', subs:[{name:'Single Arm DB Arnold Press',note:'Start palm facing you, rotate to palm forward as you press. Same arc as landmine. Start at 20lbs'},{name:'DB Shoulder Press (strict)',note:'Elbows forward not flared, stop at ear height. Keep it strict'}], dropSet:false },
-    { id:'lateral_raise', name:'Cable Lateral Raise', sets:3, reps:'12-15', note:'Shoulder-safe: slight forward lean, thumb up, raise to shoulder height only', subs:[{name:'Seated DB Lateral Raise',note:'Seated removes leg drive and cheating. Lighter weight, strict form. Thumb up, raise to shoulder height only'},{name:'Bent-Over DB Lateral Raise',note:'Hinge forward at hips 45°. Raise arms out to sides — hits rear delt and side delt. Light weight'}], dropSet:true },
-    { id:'hanging_knee_raise', name:'Hanging Knee Raises', sets:3, reps:'12-15', note:'Hang from pull-up bar. Raise knees to chest — curl the hips up, don\'t just lift the legs. Hold 1s at top. Lower slowly — don\'t swing', subs:[{name:'Dead Bug',note:'Lie on back, arms up. Lower opposite arm and leg slowly while keeping lower back flat. Harder than it looks — great for hockey stability'},{name:'Ab Wheel Rollout',note:'Kneel, roll out to full extension, pull back with abs. Brutal and effective'},{name:'Lying Leg Raise',note:'Flat bench or floor. Legs straight, raise to 90°, lower slowly. Don\'t let lower back arch'}], dropSet:false },
-    { id:'db_fly',           name:'DB Flyes',               sets:3, reps:'12-15', note:"Flat bench. Slight fixed elbow bend. Lower until chest is fully loaded, squeeze hard at top. Control the weight", subs:[{name:'Cable Flyes',note:'Cables at chest height. Same squeeze and arc — constant tension version'},{name:'Resistance Band Fly',note:'Anchor band behind you at chest height. Same movement, works anywhere'}], dropSet:true  },
-    { id:'hammer_curl', name:'Hammer Curl', sets:3, reps:'10-12', note:'Neutral grip. Elbows pinned. 2-3s lower', subs:[{name:'Seated Preacher Curl (neutral grip)',note:'Elbows on inner thighs, neutral grip. Same isolation benefit — go lighter'},{name:'Concentration Curl',note:'Elbow on inner knee, one arm at a time. Slow and deliberate — maximum isolation'}], dropSet:true },
-    { id:'tricep_pushdown', name:'Tricep Pushdown', sets:3, reps:'12-15', note:'Elbows pinned to sides. Full extension, squeeze. Rope: flare wrists at bottom', subs:[{name:'Lying DB Tricep Extension',note:'Flat bench, DBs lowered toward forehead. Elbows stay fixed. Go lighter'},{name:'Bench Dip (bodyweight)',note:'Hands on bench, lower until arms parallel to floor. Good bodyweight option if cable is taken'}], dropSet:true },
+    { id:'face_pull_b',      name:'Face Pulls',             sets:3, reps:'15-20', note:'Do this FIRST every session — shoulder health. High cable, rope, pull to forehead, externally rotate at end', subs:[{id:'band_pull_apart',name:'Band Pull-Aparts',note:'Hold band at shoulder width, pull apart to full extension. Same rear delt benefit'},{id:'db_rear_delt_fly',name:'DB Rear Delt Fly',note:'Hinge forward 45°, raise light DBs out to sides. Very light weight'}], dropSet:true  },
+    { id:'landmine_press',   name:'Landmine Press',         sets:4, reps:'8-10',  note:'Half-kneeling default. Bar follows natural arc — keeps shoulder in safe scapular plane throughout. Standing for heavier variation', subs:[{id:'arnold_press',name:'Single Arm DB Arnold Press',note:'Start palm facing you, rotate to palm forward as you press. Same arc as landmine. Start at 20lbs'},{id:'db_shoulder_press_strict',name:'DB Shoulder Press (strict)',note:'Elbows forward not flared, stop at ear height. Keep it strict'}], dropSet:false },
+    { id:'lateral_raise', name:'Cable Lateral Raise', sets:3, reps:'12-15', note:'Shoulder-safe: slight forward lean, thumb up, raise to shoulder height only', subs:[{id:'seated_db_lateral',name:'Seated DB Lateral Raise',note:'Seated removes leg drive and cheating. Lighter weight, strict form. Thumb up, raise to shoulder height only'},{id:'bent_over_db_lateral',name:'Bent-Over DB Lateral Raise',note:'Hinge forward at hips 45°. Raise arms out to sides — hits rear delt and side delt. Light weight'}], dropSet:true },
+    { id:'hanging_knee_raise', name:'Hanging Knee Raises', sets:3, reps:'12-15', note:'Hang from pull-up bar. Raise knees to chest — curl the hips up, don\'t just lift the legs. Hold 1s at top. Lower slowly — don\'t swing', subs:[{id:'dead_bug',name:'Dead Bug',note:'Lie on back, arms up. Lower opposite arm and leg slowly while keeping lower back flat. Harder than it looks — great for hockey stability'},{id:'ab_wheel_rollout',name:'Ab Wheel Rollout',note:'Kneel, roll out to full extension, pull back with abs. Brutal and effective'},{id:'lying_leg_raise',name:'Lying Leg Raise',note:'Flat bench or floor. Legs straight, raise to 90°, lower slowly. Don\'t let lower back arch'}], dropSet:false },
+    { id:'db_fly',           name:'DB Flyes',               sets:3, reps:'12-15', note:"Flat bench. Slight fixed elbow bend. Lower until chest is fully loaded, squeeze hard at top. Control the weight", subs:[{id:'cable_fly_sub',name:'Cable Flyes',note:'Cables at chest height. Same squeeze and arc — constant tension version'},{id:'resistance_band_fly',name:'Resistance Band Fly',note:'Anchor band behind you at chest height. Same movement, works anywhere'}], dropSet:true  },
+    { id:'hammer_curl', name:'Hammer Curl', sets:3, reps:'10-12', note:'Neutral grip. Elbows pinned. 2-3s lower', subs:[{id:'seated_preacher_neutral',name:'Seated Preacher Curl (neutral grip)',note:'Elbows on inner thighs, neutral grip. Same isolation benefit — go lighter'},{id:'concentration_curl',name:'Concentration Curl',note:'Elbow on inner knee, one arm at a time. Slow and deliberate — maximum isolation'}], dropSet:true },
+    { id:'tricep_pushdown', name:'Tricep Pushdown', sets:3, reps:'12-15', note:'Elbows pinned to sides. Full extension, squeeze. Rope: flare wrists at bottom', subs:[{id:'lying_db_tricep',name:'Lying DB Tricep Extension',note:'Flat bench, DBs lowered toward forehead. Elbows stay fixed. Go lighter'},{id:'bench_dip_bw',name:'Bench Dip (bodyweight)',note:'Hands on bench, lower until arms parallel to floor. Good bodyweight option if cable is taken'}], dropSet:true },
   ]},
   { id:'upper_c', name:'Upper C', type:'Upper', focus:'Back Width + Chest Detail', exercises:[
-    { id:'face_pull_c',           name:'Face Pulls',                  sets:3, reps:'15-20', note:'Do this FIRST every session — shoulder health. High cable, rope, pull to forehead, externally rotate at end', subs:[{name:'Band Pull-Aparts',note:'Hold band at shoulder width, pull apart to full extension. Same rear delt benefit'},{name:'DB Rear Delt Fly',note:'Hinge forward 45°, raise light DBs out to sides. Very light weight'}], dropSet:true  },
-    { id:'pallof_press', name:'Pallof Press', sets:3, reps:'10-12', note:'Cable set at chest height, stand sideways. Press straight out, hold 2s, return. Core resists rotation the entire time. Switch sides. Direct hockey carry-over', subs:[{name:'Cable Crunch',note:'Kneel, rope attachment, crunch elbows to knees. Hold 1s at bottom. Add weight progressively'},{name:'Dead Bug',note:'Lie on back, arms up. Lower opposite arm and leg slowly keeping lower back flat. Builds deep core stability'},{name:'Ab Wheel Rollout',note:'Kneel, roll out to full extension, pull back with abs only'}], dropSet:false },
-    { id:'seated_cable_row_c', name:'Seated Cable Row',    sets:4, reps:'8-10',  note:'Close neutral grip handle. Pull to belly button, hold 1-2s, full stretch at front', subs:[{name:'Single Arm DB Row',note:'One hand on bench, row DB to hip. Full stretch at bottom, squeeze at top'},{name:'Resistance Band Row',note:'Anchor band at chest height, row both hands back'}], dropSet:false },
-    { id:'incline_db_c',     name:'Incline DB Press',       sets:3, reps:'10-12', note:'Higher rep range today — focus on squeeze at top, not just moving weight', subs:[{name:'Feet-Elevated Push-Up',note:'Feet on bench, hands on floor. Replicates incline angle. Pause at bottom for 1s'},{name:'Cable Chest Press',note:'Cables at chest height, press forward. Good if DBs are taken'}], dropSet:false },
-    { id:'cable_fly_c',      name:'Cable Flyes',            sets:3, reps:'12-15', note:'Detail work — slow and deliberate. Full stretch at open, hard squeeze at close', subs:[{name:'DB Flyes (flat bench)',note:'Same cues — slight elbow bend, full stretch, hard squeeze. Go lighter'},{name:'Resistance Band Fly',note:'Anchor band at chest height. Same arc and squeeze, works anywhere'}], dropSet:true  },
-    { id:'db_curl_c', name:'DB Curl', sets:3, reps:'10-12', note:'Supinate at top, elbows pinned, 2-3s eccentric', subs:[{name:'Seated Preacher Curl',note:'Elbows on inner thighs — eliminates all swing. Go lighter than usual'},{name:'Concentration Curl',note:'Elbow on inner knee, one arm at a time. Maximum isolation'}], dropSet:true },
-    { id:'tricep_pushdown_c', name:'Tricep Pushdown', sets:3, reps:'12-15', note:'Elbows pinned to sides. Full extension, squeeze at bottom', subs:[{name:'Lying DB Tricep Extension',note:'Flat bench, DBs toward forehead, elbows fixed. Go lighter'},{name:'Single DB Overhead Extension',note:'Both hands on one DB overhead. Lower behind head — great long head stretch'}], dropSet:true },
+    { id:'face_pull_c',           name:'Face Pulls',                  sets:3, reps:'15-20', note:'Do this FIRST every session — shoulder health. High cable, rope, pull to forehead, externally rotate at end', subs:[{id:'band_pull_apart',name:'Band Pull-Aparts',note:'Hold band at shoulder width, pull apart to full extension. Same rear delt benefit'},{id:'db_rear_delt_fly',name:'DB Rear Delt Fly',note:'Hinge forward 45°, raise light DBs out to sides. Very light weight'}], dropSet:true  },
+    { id:'pallof_press', name:'Pallof Press', sets:3, reps:'10-12', note:'Cable set at chest height, stand sideways. Press straight out, hold 2s, return. Core resists rotation the entire time. Switch sides. Direct hockey carry-over', subs:[{id:'cable_crunch_sub',name:'Cable Crunch',note:'Kneel, rope attachment, crunch elbows to knees. Hold 1s at bottom. Add weight progressively'},{id:'dead_bug',name:'Dead Bug',note:'Lie on back, arms up. Lower opposite arm and leg slowly keeping lower back flat. Builds deep core stability'},{id:'ab_wheel_rollout',name:'Ab Wheel Rollout',note:'Kneel, roll out to full extension, pull back with abs only'}], dropSet:false },
+    { id:'seated_cable_row_c', name:'Seated Cable Row',    sets:4, reps:'8-10',  note:'Close neutral grip handle. Pull to belly button, hold 1-2s, full stretch at front', subs:[{id:'single_arm_db_row',name:'Single Arm DB Row',note:'One hand on bench, row DB to hip. Full stretch at bottom, squeeze at top'},{id:'resistance_band_row',name:'Resistance Band Row',note:'Anchor band at chest height, row both hands back'}], dropSet:false },
+    { id:'incline_db_c',     name:'Incline DB Press',       sets:3, reps:'10-12', note:'Higher rep range today — focus on squeeze at top, not just moving weight', subs:[{id:'feet_elevated_pushup',name:'Feet-Elevated Push-Up',note:'Feet on bench, hands on floor. Replicates incline angle. Pause at bottom for 1s'},{id:'cable_chest_press',name:'Cable Chest Press',note:'Cables at chest height, press forward. Good if DBs are taken'}], dropSet:false },
+    { id:'cable_fly_c',      name:'Cable Flyes',            sets:3, reps:'12-15', note:'Detail work — slow and deliberate. Full stretch at open, hard squeeze at close', subs:[{id:'db_fly_flat',name:'DB Flyes (flat bench)',note:'Same cues — slight elbow bend, full stretch, hard squeeze. Go lighter'},{id:'resistance_band_fly',name:'Resistance Band Fly',note:'Anchor band at chest height. Same arc and squeeze, works anywhere'}], dropSet:true  },
+    { id:'db_curl_c', name:'DB Curl', sets:3, reps:'10-12', note:'Supinate at top, elbows pinned, 2-3s eccentric', subs:[{id:'seated_preacher_curl',name:'Seated Preacher Curl',note:'Elbows on inner thighs — eliminates all swing. Go lighter than usual'},{id:'concentration_curl',name:'Concentration Curl',note:'Elbow on inner knee, one arm at a time. Maximum isolation'}], dropSet:true },
+    { id:'tricep_pushdown_c', name:'Tricep Pushdown', sets:3, reps:'12-15', note:'Elbows pinned to sides. Full extension, squeeze at bottom', subs:[{id:'lying_db_tricep',name:'Lying DB Tricep Extension',note:'Flat bench, DBs toward forehead, elbows fixed. Go lighter'},{id:'single_db_overhead',name:'Single DB Overhead Extension',note:'Both hands on one DB overhead. Lower behind head — great long head stretch'}], dropSet:true },
   ]},
   { id:'conditioning', name:'Conditioning', type:'Active', focus:'Endurance + Muscle Tone · 35-45 min', exercises:[
-    { id:'face_pull_d',     name:'Face Pulls',          sets:3, reps:'20-25', note:'Shoulder health — always first. Light weight, high rep, perfect form. 45s rest today', subs:[], dropSet:false },
-    { id:'pushup',          name:'Push-Ups',            sets:4, reps:'15-20', note:'Hands just outside shoulder width. Full ROM — chest to floor. 3s descent. Elevate hands on bench to make easier, feet elevated to make harder', subs:[], dropSet:false },
-    { id:'inverted_row_d',  name:'Inverted Row',        sets:3, reps:'15-20', note:'Bar at hip height in rack. Body straight. Pull chest to bar, elbows back. Lower slowly. More horizontal = harder', subs:[{name:'Seated Cable Row (high rep)',note:'Same pulling pattern. Use lighter weight, 15-20 reps, 45s rest to match conditioning pace'},{name:'Single Arm DB Row (high rep)',note:'One hand on bench, lighter weight, 15-20 reps per side. Keep the rest short'},{name:'Resistance Band Row',note:'Anchor band at chest height. Good if rack and cables are both taken'}], dropSet:false },
-    { id:'db_lateral_cond', name:'DB Lateral Raise',    sets:3, reps:'20-25', note:'Light weight, high rep. Thumb up, slight forward lean. Feel the burn. 45s rest', subs:[], dropSet:true  },
-    { id:'reverse_lunge',   name:'Reverse Lunge',       sets:3, reps:'15-20', note:'Per leg. Step back instead of forward — easier on the knees. Torso upright, drive through front heel to stand', subs:[], dropSet:false },
-    { id:'db_rdl_cond',     name:'DB Romanian DL',      sets:3, reps:'15-20', note:'Lighter than strength days. Focus on the hamstring stretch and controlled return. Great for running and skating resilience', subs:[], dropSet:false },
-    { id:'plank',           name:'Plank Hold',          sets:3, reps:'45-60s',note:'Forearms on floor. Squeeze glutes, core, quads. Body straight from heels to head. Don\'t let hips sag or pike', subs:[], dropSet:false },
-    { id:'db_curl_d',       name:'DB Curl',             sets:2, reps:'15-20', note:'Light. Squeeze hard at top, slow 3s eccentric. Finisher — go to near failure', subs:[], dropSet:true  },
-    { id:'tricep_dip',      name:'Bench Dip',           sets:2, reps:'15-20', note:'Hands on bench behind you, feet on floor or elevated. Lower until upper arm is parallel to floor. Drive back up through triceps', subs:[{name:'Tricep Pushdown (light)',note:'If bench dips are uncomfortable on the shoulder — same stimulus, no risk'}], dropSet:false },
+    { id:'face_pull_d',     name:'Face Pulls',            sets:3, reps:'20-25', note:'Shoulder health — always first. Light weight, high rep, perfect form. 45s rest today', subs:[], dropSet:false },
+    { id:'pushup',          name:'Push-Ups',              sets:4, reps:'15-20', note:'Hands just outside shoulder width. Full ROM — chest to floor. 3s descent. Elevate hands on bench to make easier, feet elevated to make harder', subs:[], dropSet:false },
+    { id:'inverted_row_d',  name:'Inverted Row',          sets:3, reps:'15-20', note:'Bar at hip height in rack. Body straight. Pull chest to bar, elbows back. Lower slowly. More horizontal = harder', subs:[{name:'Seated Cable Row (high rep)',note:'Same pulling pattern. Use lighter weight, 15-20 reps, 45s rest to match conditioning pace'},{name:'Single Arm DB Row (high rep)',note:'One hand on bench, lighter weight, 15-20 reps per side. Keep the rest short'}], dropSet:false },
+    { id:'db_lateral_cond', name:'DB Lateral Raise',      sets:3, reps:'20-25', note:'Light weight, high rep. Thumb up, slight forward lean. Feel the burn. 45s rest', subs:[], dropSet:true  },
+    { id:'cable_crunch_cond',name:'Cable Crunches',       sets:3, reps:'15-20', note:'Kneel at cable, rope attachment. Crunch elbows to knees — ribs to hips. Hold 1s at bottom. Add weight over time', subs:[{name:'Lying Leg Raise',note:'Lie flat, raise legs to 90°, lower slowly. Don\'t let feet touch the floor'},{name:'Plank Hold',note:'Forearms on floor. Squeeze everything. Body straight from heels to head'}], dropSet:false },
+    { id:'db_curl_d',       name:'DB Curl',               sets:2, reps:'15-20', note:'Light. Squeeze hard at top, slow 3s eccentric. Finisher — go to near failure', subs:[{name:'Seated Preacher Curl',note:'Elbows on inner thighs — eliminates all swing. Go lighter'},{name:'Concentration Curl',note:'Elbow on inner knee, one arm at a time. Maximum isolation'}], dropSet:true  },
+    { id:'tricep_dip',      name:'Bench Dip',             sets:2, reps:'15-20', note:'Hands on bench behind you, feet on floor or elevated. Lower until upper arm is parallel to floor. Drive back up through triceps', subs:[{name:'Tricep Pushdown (light)',note:'If bench dips are uncomfortable on the shoulder — same stimulus, no risk'}], dropSet:false },
+    { id:'plank',           name:'Plank Hold',            sets:3, reps:'45-60s',note:'Forearms on floor. Squeeze glutes, core, quads. Body straight from heels to head. Don\'t let hips sag or pike', subs:[{name:'Dead Bug',note:'Lie on back, arms up. Lower opposite arm and leg slowly keeping lower back flat'},{name:'Ab Wheel Rollout',note:'Kneel, roll out to full extension, pull back with abs only'}], dropSet:false },
+  ]},
+  { id:'hiit', name:'HIIT', type:'HIIT', focus:'Fat Burn · 40 min · 40s work / 15s rest', exercises:[
+    { id:'hiit_intro',       name:'⚡ Format: 40s work, 15s rest', sets:2, reps:'rounds', note:'2 rounds through all exercises = ~40 min. Keep moving. Heart rate should be 150-170 BPM. Modify any exercise but never fully stop', subs:[], dropSet:false },
+    { id:'jump_rope',        name:'Jump Rope',           sets:2, reps:'40s', note:'Steady pace — this is your cardio anchor. If no rope: high knees or shadow skipping', subs:[{name:'High Knees',note:'Drive knees up to waist height alternating. Pump arms. Same cardio effect without rope'},{name:'Jumping Jacks (modified)',note:'Step side to side instead of jumping if shoulder is uncomfortable overhead'}], dropSet:false },
+    { id:'pushup_hiit',      name:'Push-Ups',            sets:2, reps:'40s', note:'As many quality reps as possible in 40s. Drop to knees when form breaks — don\'t stop', subs:[{name:'Incline Push-Up',note:'Hands on bench — easier. Good if regular push-ups are too hard to maintain form'},{name:'Wide Push-Up',note:'Hands wider than shoulder width — more chest focus'}], dropSet:false },
+    { id:'squat_jump',       name:'Squat Jump',          sets:2, reps:'40s', note:'Squat down, explode up, soft landing. If knees are uncomfortable: bodyweight squat with no jump', subs:[{name:'Bodyweight Squat',note:'Same movement without the jump. Still effective — focus on speed and depth'},{name:'Sumo Squat',note:'Wide stance, toes out. Targets inner thigh and glutes more'}], dropSet:false },
+    { id:'dead_bug_hiit',    name:'Dead Bug',            sets:2, reps:'40s', note:'Lie on back, arms pointing up. Lower opposite arm and leg slowly. Lower back stays FLAT. This is harder than it looks', subs:[{name:'Bicycle Crunch',note:'Lying on back, elbow to opposite knee. Faster pace for more cardio burn'},{name:'Flutter Kick',note:'Lie flat, legs straight, small fast kicks. Legs never touch floor'}], dropSet:false },
+    { id:'jump_rope_b',      name:'Jump Rope — Fast',    sets:2, reps:'40s', note:'Pick up the pace from round 1. Sprint intervals if you can — 10s hard, 5s moderate, repeat', subs:[{name:'Burpee (modified)',note:'Step back to plank, push-up, step forward, stand. No jump, no overhead — shoulder safe version'},{name:'Shadow Boxing',note:'Jab, cross, hook combinations. Keeps heart rate up, upper body focus'}], dropSet:false },
+    { id:'db_curl_press',    name:'DB Curl to Press',    sets:2, reps:'40s', note:'Curl the DBs up then press forward (not overhead — shoulder safe). Light weight 10-15lbs. Continuous movement', subs:[{name:'DB Lateral Raise',note:'Light weight, continuous reps. Shoulder endurance burn'},{name:'DB Front Raise',note:'Raise arms to shoulder height, lower. Keep it light and continuous'}], dropSet:false },
+    { id:'reverse_lunge_hiit',name:'Reverse Lunge',     sets:2, reps:'40s', note:'Alternate legs, continuous. Step back, knee to floor, drive through front heel. Add DBs for more intensity', subs:[{name:'DB Sumo Squat',note:'Wide stance, one DB held with both hands. Squat deep, drive through heels'},{name:'Step-Up',note:'Use a bench. Step up and down alternating legs. Controlled and powerful'}], dropSet:false },
+    { id:'mountain_climber', name:'Mountain Climbers',   sets:2, reps:'40s', note:'High plank position. Drive knees to chest alternately as fast as possible. Hips stay down — don\'t pike', subs:[{name:'Plank Up-Down',note:'Plank on forearms, push up to hands one arm at a time, lower back down. Slower, more controlled'},{name:'Slow Mountain Climber',note:'Same movement but slow and controlled — harder on the core, easier on cardio'}], dropSet:false },
+    { id:'burpee_mod',       name:'Modified Burpee',     sets:2, reps:'40s', note:'Step back to plank (don\'t jump), do a push-up, step forward, stand up tall. No overhead jump — shoulder safe throughout', subs:[{name:'Squat Thrust',note:'Step back to plank, step forward, stand. Skip the push-up if you\'re gassing out'},{name:'Inchworm',note:'Stand, walk hands out to plank, walk back, stand. Slower and more controlled'}], dropSet:false },
+    { id:'db_row_hiit',      name:'DB Row (alternating)',sets:2, reps:'40s', note:'Hinge forward, row one DB to hip, alternate sides continuously. Light weight, fast pace', subs:[{name:'DB Bent-Over Row (both)',note:'Both DBs at once. Hinge forward, row both to hips, lower. Heavier but slower'},{name:'Superman Hold',note:'Lie face down, raise arms and legs off floor simultaneously. Hold 2s, lower. Core and back'}], dropSet:false },
+    { id:'split_squat_hiit', name:'Split Squat Jump',    sets:2, reps:'40s', note:'Lunge position, jump and switch legs in the air. If too intense: alternating reverse lunges at speed instead', subs:[{name:'Alternating Reverse Lunge (fast)',note:'Same leg pattern without the jump. Still demanding at pace'},{name:'DB Split Squat',note:'Hold light DBs, stationary split squat. Rear foot back, front knee tracks forward'}], dropSet:false },
+    { id:'lying_leg_raise',  name:'Lying Leg Raise',     sets:2, reps:'40s', note:'Lie flat, legs straight. Raise to 90°, lower slowly without touching floor. Lower back stays pressed down', subs:[{name:'Scissor Kick',note:'Same position, alternating legs crossing over each other. Legs never touch floor'},{name:'Crunch',note:'Classic crunch — hands behind head, curl ribs toward hips. Don\'t pull the neck'}], dropSet:false },
+    { id:'jump_rope_c',      name:'Jump Rope Sprint',    sets:2, reps:'40s', note:'All out — as fast as possible. This is your peak intensity moment. Empty the tank', subs:[{name:'High Knees Sprint',note:'Drive knees up as fast as possible. Pump arms hard. All out effort'},{name:'Burpee Sprint',note:'Modified burpees as fast as you can manage with good form'}], dropSet:false },
+    { id:'db_thruster',      name:'DB Thruster',         sets:2, reps:'40s', note:'Squat holding light DBs at shoulders, drive up and press forward (not overhead) as you stand. Squat and press in one motion. 10-15lbs', subs:[{name:'DB Squat to Curl',note:'Squat down, curl DBs as you stand. Lower body and biceps'},{name:'Goblet Squat',note:'Hold one DB with both hands at chest. Deep squat, drive through heels'}], dropSet:false },
+    { id:'lateral_shuffle',  name:'Lateral Shuffle',     sets:2, reps:'40s', note:'Low athletic stance, shuffle side to side — 3 steps each way. Touch the floor each time you change direction. Hockey footwork', subs:[{name:'Side Lunge',note:'Step wide to one side, squat on that leg, push back to centre. Alternate sides'},{name:'Carioca',note:'Lateral crossover steps — one foot crosses in front then behind alternating. Great for hip mobility'}], dropSet:false },
+    { id:'ab_finisher',      name:'Ab Finisher — Choice',sets:2, reps:'40s', note:'Pick one: crunches, bicycle crunches, flutter kicks, or leg raises. Go until the 40s is up. This is the last exercise — empty the tank on the abs', subs:[{name:'Bicycle Crunch',note:'Elbow to opposite knee, continuous. One of the best ab exercises available'},{name:'Flutter Kick',note:'Lie flat, small fast kicks, legs never touch floor. Lower ab focus'},{name:'V-Up',note:'Lie flat, simultaneously raise legs and torso to meet in the middle. Advanced — bend knees if needed'}], dropSet:false },
   ]},
 ];
 
@@ -237,7 +257,7 @@ const EX_MUSCLES = {
   lateral_raise:'Shoulders',landmine_press:'Shoulders',db_lateral_cond:'Shoulders',
   db_curl_a:'Biceps',db_curl_c:'Biceps',hammer_curl:'Biceps',db_curl_d:'Biceps',
   overhead_tricep:'Triceps',tricep_pushdown:'Triceps',tricep_pushdown_c:'Triceps',tricep_dip:'Triceps',
-  cable_crunch:'Core',hanging_knee_raise:'Core',pallof_press:'Core',plank:'Core',
+  cable_crunch:'Core',hanging_knee_raise:'Core',pallof_press:'Core',plank:'Core',cable_crunch_cond:'Core',
   reverse_lunge:'Quads',db_rdl_cond:'Hamstrings',
 };
 const MUSCLE_TARGETS = {
@@ -306,6 +326,7 @@ const best1RM  = sets => sets?sets.reduce((b,s)=>{const rm=epley(s.weight,s.reps
 
 const getTarget = (last, repsStr) => {
   if (!last||!last.length) return null;
+  if (repsStr.includes('s')||repsStr==='rounds') return null; // skip time-based exercises
   const v=last.filter(s=>s.weight&&s.reps); if(!v.length) return null;
   const p=repsStr.split('-'),top=parseInt(p[p.length-1]),bot=parseInt(p[0]);
   const avgW=v.reduce((a,s)=>a+parseFloat(s.weight),0)/v.length;
@@ -377,6 +398,7 @@ let S = {
   restTimers: {},
 };
 if (S.session&&S.screen==='summary') S.screen='workout';
+if (!S.session&&S.screen==='summary') S.screen='home';
 
 let elapsedIv = null;
 function startElapsed() {
@@ -395,9 +417,15 @@ const COMPOUND_IDS = new Set(['pushup','inverted_row_d','reverse_lunge','db_rdl_
   'lat_pulldown','incline_db','incline_db_c','landmine_press']);
 
 const CONDITIONING_IDS = new Set(['face_pull_d','pushup','inverted_row_d','db_lateral_cond',
-  'reverse_lunge','db_rdl_cond','plank','db_curl_d','tricep_dip']);
+  'reverse_lunge','db_rdl_cond','plank','db_curl_d','tricep_dip','cable_crunch_cond']);
+
+const HIIT_IDS = new Set(['jump_rope','pushup_hiit','squat_jump','dead_bug_hiit','jump_rope_b',
+  'db_curl_press','reverse_lunge_hiit','mountain_climber','burpee_mod','db_row_hiit',
+  'split_squat_hiit','lying_leg_raise','jump_rope_c','db_thruster','lateral_shuffle',
+  'ab_finisher','hiit_intro']);
 
 const restDur = exId => {
+  if (HIIT_IDS.has(exId)) return 15;
   if (CONDITIONING_IDS.has(exId)) return 45;
   if (COMPOUND_IDS.has(exId)) return 180;
   return 90;
@@ -431,23 +459,42 @@ function stopRest(key){if(S.restTimers[key]){clearInterval(S.restTimers[key].iv)
 function skipRest(key){stopRest(key);const el=document.getElementById('rb-'+key);if(el)el.style.display='none';}
 function clearAllRest(){Object.keys(S.restTimers).forEach(stopRest);}
 
-// ── SESSION ───────────────────────────────────────────────────────
+// Get the active exercise ID — sub's ID if sub is active, otherwise main ID
+const getActiveId = (ex, activeSubs) => {
+  const subIdx = activeSubs[ex.id];
+  if (subIdx !== undefined && ex.subs[subIdx]?.id) return ex.subs[subIdx].id;
+  return ex.id;
+};
+
+// Get last performance for any exercise ID across all history
+const getLastPerf = (exId) => {
+  for (let i = S.history.length - 1; i >= 0; i--) {
+    const sets = S.history[i].sets?.[exId];
+    if (sets && sets.some(s => s.done || s.weight)) return sets;
+  }
+  return null;
+};
 function startWorkout(dayId) {
   const day=DAYS.find(d=>d.id===dayId);
   const sd={},dd={};
-  const lastSession = S.history.slice().reverse().find(e=>e.dayId===dayId)||null;
   day.exercises.forEach(ex=>{
-    const lastEx = lastSession?.sets?.[ex.id]||null;
-    const tgt = getTarget(lastEx, ex.reps);
-    // Pre-populate with suggested weight/reps from progressive overload logic
-    const prefillW = tgt ? String(tgt.weight) : '';
-    const prefillR = tgt ? String(tgt.reps) : '';
-    sd[ex.id]=Array.from({length:ex.sets},()=>({weight:prefillW,reps:prefillR,done:false,rpe:null}));
-    if(ex.dropSet){
-      // Drop set: suggest ~70% of working weight
-      const dropW = tgt ? String(Math.round(tgt.weight*0.7/2.5)*2.5) : '';
-      dd[ex.id]={weight:dropW,reps:'',done:false};
-    }
+    // Init main exercise with overload target
+    const lastMain = getLastPerf(ex.id);
+    const tgtMain = getTarget(lastMain, ex.reps);
+    const wMain = tgtMain ? String(tgtMain.weight) : '';
+    const rMain = tgtMain ? String(tgtMain.reps) : '';
+    sd[ex.id]=Array.from({length:ex.sets},()=>({weight:wMain,reps:rMain,done:false,rpe:null}));
+    if(ex.dropSet) dd[ex.id]={weight:wMain?String(Math.round(parseFloat(wMain)*0.7/5)*5):'',reps:'',done:false};
+    // Init all sub IDs so switching is instant with their own history
+    ex.subs.forEach(sub=>{
+      if (!sub.id) return;
+      const lastSub = getLastPerf(sub.id);
+      const tgtSub = getTarget(lastSub, ex.reps);
+      const wSub = tgtSub ? String(tgtSub.weight) : '';
+      const rSub = tgtSub ? String(tgtSub.reps) : '';
+      sd[sub.id]=Array.from({length:ex.sets},()=>({weight:wSub,reps:rSub,done:false,rpe:null}));
+      if(ex.dropSet) dd[sub.id]={weight:wSub?String(Math.round(parseFloat(wSub)*0.7/5)*5):'',reps:'',done:false};
+    });
   });
   S.session={dayId,setData:sd,dropData:dd,activeSubs:{},startTime:Date.now()};
   S.elapsed=0; S.restTimers={};
@@ -557,7 +604,7 @@ function restBannerHTML(key){
   const t=S.restTimers[key];if(!t)return'';
   const rem=Math.max(0,Math.round((t.endTs-Date.now())/1000));
   const isCountdown=rem<=3&&rem>0&&!t.done;
-  const durLabel = t.dur===180 ? '3 min rest' : t.dur===45 ? '45s rest' : '90s rest';
+  const durLabel = t.dur===180 ? '3 min rest' : t.dur===45 ? '45s rest' : t.dur===15 ? '15s — get ready' : '90s rest';
   const timeDisplay=t.done?'✓':isCountdown?`${rem}`:fmtTime(rem);
   const lbl=t.done?'Rest done — go!':isCountdown?'Get ready...':durLabel;
   return `<div class="rest-banner${t.done?' done-rest':''}${isCountdown?' counting':''}\" id="rb-${key}" style="${isCountdown?'background:#fff8ed;border-color:#f5d49a;':''}">
@@ -568,16 +615,24 @@ function restBannerHTML(key){
 }
 
 function exCardHTML(ex, dayId){
-  const sess=S.session,sd=sess.setData[ex.id],dd=sess.dropData?.[ex.id];
-  const last=S.history.slice().reverse().find(e=>e.dayId===dayId)||null;
-  const lastEx=last?.sets?.[ex.id]||null,lastDrop=last?.drops?.[ex.id]||null;
-  const sub=sess.activeSubs[ex.id]!==undefined;
-  const dName=sub&&ex.subs[0]?ex.subs[0].name:ex.name;
-  const dNote=sub&&ex.subs[0]?ex.subs[0].note:ex.note;
+  const sess=S.session;
+  const subIdx=sess.activeSubs[ex.id];
+  const activeSub=subIdx!==undefined&&ex.subs[subIdx];
+  const activeId=activeSub?.id||ex.id;
+  const sd=sess.setData[activeId]||sess.setData[ex.id];
+  const dd=sess.dropData?.[activeId]||sess.dropData?.[ex.id];
+  // Last performance from history using the active exercise's own ID
+  const lastEx=getLastPerf(activeId);
+  const lastDrop=S.history.slice().reverse().reduce((found,entry)=>{
+    if(found)return found;
+    const d=entry.drops?.[activeId]; return (d&&(d.weight||d.reps))?d:null;
+  },null);
   const allW=sd.every(s=>s.done),allD=allW&&(!ex.dropSet||dd?.done),anyD=sd.some(s=>s.done);
   const lwDone=sd[sd.length-1]?.done;
+  const dName=activeSub?activeSub.name:ex.name;
+  const dNote=activeSub?activeSub.note:ex.note;
   const tgt=getTarget(lastEx,ex.reps);
-  const prs=getPRs(sess);const isPR=prs.includes(ex.id);
+  const prs=getPRs(sess);const isPR=prs.includes(activeId)||prs.includes(ex.id);
 
   let h=`<div class="ex-card${anyD&&!allD?' any-done':''}${allD?' all-done':''}">`;
   if(isPR)h+=`<div class="pr-banner"><span>🏆</span><span class="pr-banner-text">New Personal Record on ${dName}!</span></div>`;
@@ -585,42 +640,41 @@ function exCardHTML(ex, dayId){
     ${FORM[ex.id]?`<button class="form-btn" onclick="openForm('${ex.id}')">Form</button>`:''}
     <div class="ex-badge">${ex.sets}×${ex.reps}</div></div></div>`;
   if(dNote)h+=`<div class="ex-note">${dNote}</div>`;
-  if(ex.subs.length&&!allD)h+=`<div class="sub-btn-wrap"><button class="sub-btn" onclick="togSub('${ex.id}')">${sub?`Using: ${ex.subs[0].name} — switch back`:`Sub: ${ex.subs[0].name}`}</button></div>`;
-  if(tgt&&!allD)h+=`<div class="target-box"><div class="target-label">Today's Target</div><div class="target-text">${tgt.label}</div></div>`;
+  if(ex.subs.length&&!allD)h+=`<div class="sub-btn-wrap"><button class="sub-btn" onclick="togSub('${ex.id}')">${activeSub?`Using: ${dName} — switch back`:`Sub: ${ex.subs[0].name}`}</button></div>`;
+  if(tgt&&!allD)h+=`<div class="target-box"><div class="target-label">Today's Target${activeSub?` (${dName})`:''}</div><div class="target-text">${tgt.label}</div></div>`;
   if(lastEx?.length){
     const rm=best1RM(lastEx.filter(s=>s.done||s.weight));
     const h2=lastEx.every(s=>s.weight&&s.reps)?hint(lastEx,ex.reps):'';
-    h+=`<div class="last-box"><div class="last-label">Last Session</div><div class="last-chips">
+    h+=`<div class="last-box"><div class="last-label">Last Session${activeSub?` · ${dName}`:''}</div><div class="last-chips">
       ${lastEx.map(ls=>`<span class="last-chip">${ls.weight?ls.weight+'lbs':'—'} × ${ls.reps||'—'}${ls.rpe?` @${ls.rpe}`:''}</span>`).join('')}
       ${ex.dropSet&&lastDrop&&(lastDrop.weight||lastDrop.reps)?`<span class="last-chip drop">↓ ${lastDrop.weight||'?'}lbs × ${lastDrop.reps||'?'}</span>`:''}
     </div>${rm?`<div class="last-rm">Est. 1RM: ${rm}lbs</div>`:''}${h2?`<div class="last-hint">${h2}</div>`:''}</div>`;
   }
   h+=`<div class="sets-area">`;
   sd.forEach((set,idx)=>{
-    const rk=ex.id+'_'+idx;
+    const rk=activeId+'_'+idx;
     h+=`<div class="set-row">
       <div class="set-num">${idx+1}</div>
-      <input class="set-input${set.done?' done':''}" type="number" inputmode="decimal" placeholder="${tgt?tgt.weight:'lbs'}" value="${set.weight}" ${set.done?'readonly':''} onchange="updSet('${ex.id}',${idx},'weight',this.value)">
-      <input class="set-input${set.done?' done':''}" type="number" inputmode="numeric" placeholder="${tgt?tgt.reps:'reps'}" value="${set.reps}" ${set.done?'readonly':''} onchange="updSet('${ex.id}',${idx},'reps',this.value)">
-      <button class="check-btn${set.done?' done':''}" onclick="togSet('${ex.id}',${idx})">${set.done?'✓':'○'}</button>
+      <input class="set-input${set.done?' done':''}" type="number" inputmode="decimal" placeholder="${tgt?tgt.weight:'lbs'}" value="${set.weight}" ${set.done?'readonly':''} onchange="updSet('${activeId}',${idx},'weight',this.value)">
+      <input class="set-input${set.done?' done':''}" type="number" inputmode="numeric" placeholder="${tgt?tgt.reps:'reps'}" value="${set.reps}" ${set.done?'readonly':''} onchange="updSet('${activeId}',${idx},'reps',this.value)">
+      <button class="check-btn${set.done?' done':''}" onclick="togSet('${activeId}',${idx})">${set.done?'✓':'○'}</button>
     </div>
     ${set.done?`<div class="rpe-row"><span class="rpe-label">RPE</span>
-      ${[6,7,8,9,10].map(r=>`<button class="rpe-btn${set.rpe===r?' sel':''}" title="${RPE_LABELS[r]}" onclick="updSet('${ex.id}',${idx},'rpe',${set.rpe===r?'null':r});render()">${r}</button>`).join('')}
+      ${[6,7,8,9,10].map(r=>`<button class="rpe-btn${set.rpe===r?' sel':''}" title="${RPE_LABELS[r]}" onclick="updSet('${activeId}',${idx},'rpe',${set.rpe===r?'null':r});render()">${r}</button>`).join('')}
       ${set.rpe?`<span class="rpe-hint">${RPE_LABELS[set.rpe]}</span>`:''}</div>`:''}
     ${S.restTimers[rk]?restBannerHTML(rk):''}`;
   });
   h+=`</div>`;
   if(ex.dropSet){
-    // No rest timer shown before drop set — go straight to it
     h+=`<div class="drop-area${!lwDone&&!dd?.done?' faded':''}">
       <div class="drop-label">↓ Drop Set — reduce ~20-30%, go immediately — no rest</div>
       <div class="set-row">
         <div class="set-num" style="color:#c0392b">↓</div>
-        <input class="set-input drop-inp${dd?.done?' done':''}" type="number" inputmode="decimal" placeholder="lbs" value="${dd?.weight||''}" ${dd?.done?'readonly':''} onchange="updDrop('${ex.id}','weight',this.value)">
-        <input class="set-input drop-inp${dd?.done?' done':''}" type="number" inputmode="numeric" placeholder="reps" value="${dd?.reps||''}" ${dd?.done?'readonly':''} onchange="updDrop('${ex.id}','reps',this.value)">
-        <button class="check-btn drop-btn${dd?.done?' done':''}" onclick="togDrop('${ex.id}')">${dd?.done?'✓':'○'}</button>
+        <input class="set-input drop-inp${dd?.done?' done':''}" type="number" inputmode="decimal" placeholder="lbs" value="${dd?.weight||''}" ${dd?.done?'readonly':''} onchange="updDrop('${activeId}','weight',this.value)">
+        <input class="set-input drop-inp${dd?.done?' done':''}" type="number" inputmode="numeric" placeholder="reps" value="${dd?.reps||''}" ${dd?.done?'readonly':''} onchange="updDrop('${activeId}','reps',this.value)">
+        <button class="check-btn drop-btn${dd?.done?' done':''}" onclick="togDrop('${activeId}')">${dd?.done?'✓':'○'}</button>
       </div>
-      ${S.restTimers[ex.id+'_drop']?restBannerHTML(ex.id+'_drop'):''}
+      ${S.restTimers[activeId+'_drop']?restBannerHTML(activeId+'_drop'):''}
     </div>`;
   }
   h+=`</div>`;return h;
@@ -866,7 +920,8 @@ function render(){
     const cards=DAYS.map(day=>{
       const last=S.history.slice().reverse().find(e=>e.dayId===day.id)||null;
       const isAct=session?.dayId===day.id;
-      return `<div class="day-card${isAct?' is-active':last?' has-history':''}" onclick="handleDayTap('${day.id}')">
+      const isHiit=day.id==='hiit'&&!isAct&&!last;
+      return `<div class="day-card${isAct?' is-active':isHiit?' is-hiit':last?' has-history':''}" onclick="handleDayTap('${day.id}')">
         ${last&&!isAct?'<div class="green-dot"></div>':''}
         <div class="day-card-type">${day.type}</div>
         <div class="day-card-name">${day.name}</div>
