@@ -99,6 +99,22 @@ button{outline:none;cursor:pointer;font-family:inherit}
 .rpe-hint{font-size:11px;color:#888880;font-style:italic}
 .rpe-btn{width:30px;height:27px;border-radius:6px;border:1.5px solid #e0ddd8;background:#fff;color:#888880;font-family:ui-monospace,monospace;font-size:12px;font-weight:700}
 .rpe-btn.sel{background:#1a1a18;border-color:#1a1a18;color:#fff}
+.warm-label{font-family:ui-monospace,monospace;font-size:9.5px;color:#b0ada6;text-align:center;letter-spacing:.03em}
+.set-input.warm-inp{background:#faf9f7;border-color:#ececea;color:#999;font-size:14px}
+.set-input.warm-inp.done{background:#f0f6f2;border-color:#cfe6da;color:#7aa791}
+.check-btn.warm-btn{border-color:#ececea;color:#c0bdb8;width:34px;height:34px;font-size:14px}
+.check-btn.warm-btn.done{background:#a8cbb8;border-color:#a8cbb8;color:#fff}
+.warm-head{font-family:ui-monospace,monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#b0ada6;margin:2px 0 6px}
+.work-head{font-family:ui-monospace,monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#888880;margin:12px 0 6px;padding-top:10px;border-top:1px dashed #e8e5e0}
+.scheme-tag{display:inline-block;font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.06em;padding:3px 9px;border-radius:20px;margin:0 16px 10px}
+.scheme-tag.pyr{background:#f3eefa;color:#6b3fa0;border:1px solid #c9aff0}
+.scheme-tag.tmp{background:#eef4fc;color:#1d5fa8;border:1px solid #b8d0f0}
+.day-card.is-pyr{background:#f3eefa;border-color:#c9aff0}
+.day-card.is-pyr .day-card-type,.day-card.is-pyr .day-card-sub{color:#6b3fa0}
+.day-card.is-pyr .day-card-name{color:#6b3fa0}
+.day-card.is-tmp{background:#eef4fc;border-color:#b8d0f0}
+.day-card.is-tmp .day-card-type,.day-card.is-tmp .day-card-sub{color:#1d5fa8}
+.day-card.is-tmp .day-card-name{color:#1d5fa8}
 .drop-area{padding:10px 16px 14px;border-top:1px dashed #e0ddd8}
 .drop-area.faded{opacity:.45}
 .drop-label{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#c0392b;margin-bottom:8px}
@@ -367,8 +383,52 @@ const DEFAULT_PROGRAM = [
         {id:'v_up', name:'V-Up', note:'Raise legs and torso to meet. Bend knees if needed.'}
       ]},
   ]},
+  { id:'pyramid', name:'Pyramid', type:'Strength', focus:'Reverse Pyramid · 35 min', exercises:[
+    {id:'pyr_face_pull', name:'Face Pulls', sets:3, reps:'15-20', rest:60, dropSet:false, muscle:'Shoulders',
+      note:'Warm the shoulder up properly before anything heavy today. Light, high rep, perfect form.', subs:FACE_PULL_SUBS},
+    {id:'pyr_landmine', name:'Landmine Press', scheme:'pyramid', basedOn:'landmine_press',
+      sets:3, reps:'6,8,10', drops:[0,0.10,0.20], rest:150, dropSet:false, muscle:'Shoulders',
+      warmup:[{pct:0.5,reps:8},{pct:0.75,reps:4}],
+      note:'HEAVIEST SET FIRST while you are fresh. Then strip 10% and add reps. Set 1 should end at RPE 9 — one rep left in the tank, never grinding.',
+      subs:[{id:'pyr_arnold', name:'DB Arnold Press', note:'Same reverse pyramid. Palm faces you, rotate to palm-forward as you press. Elbows forward.'}]},
+    {id:'pyr_row', name:'Seated Cable Row', scheme:'pyramid', basedOn:'seated_cable_row_a',
+      sets:3, reps:'6,8,10', drops:[0,0.10,0.20], rest:150, dropSet:false, muscle:'Back',
+      warmup:[{pct:0.6,reps:8}],
+      note:'Heaviest first. Close neutral grip, pull to the belly button, full stretch at the front on every rep even when heavy.',
+      subs:[{id:'pyr_db_row', name:'Single Arm DB Row', note:'Same pyramid, one side at a time. Hand and knee on the bench.'}]},
+    {id:'pyr_incline', name:'Incline DB Press', scheme:'pyramid', basedOn:'incline_db',
+      sets:3, reps:'6,8,10', drops:[0,0.10,0.20], rest:150, dropSet:false, muscle:'Chest',
+      warmup:[{pct:0.55,reps:8}],
+      note:'Heaviest first. Elbows at 45° — this matters more than ever on your top set. Stop the set the moment form slips.',
+      subs:[{id:'pyr_db_press', name:'Flat DB Press', note:'Same pyramid. Elbows 45°, controlled, do not go heavy for low reps if the shoulder is talking.'}]},
+    {id:'pyr_crunch', name:'Cable Crunches', sets:3, reps:'12-15', rest:60, dropSet:false, muscle:'Core',
+      note:'Finisher. Kneel, rope, crunch ribs to hips, hold 1s.', subs:CORE_SUBS},
+  ]},
+  { id:'tempo', name:'Tempo', type:'Control', focus:'Time Under Tension · 35 min', exercises:[
+    {id:'tmp_face_pull', name:'Face Pulls', sets:3, reps:'15-20', rest:45, dropSet:false, muscle:'Shoulders',
+      note:'Standard face pulls to open up. Still first, still every session.', subs:FACE_PULL_SUBS},
+    {id:'tmp_incline', name:'Incline DB Press', scheme:'tempo', basedOn:'incline_db', loadPct:0.65,
+      tempo:'4-1-X-0', sets:3, reps:'8', rest:75, dropSet:false, muscle:'Chest',
+      note:'4s lowering. 1s pause at the bottom with the chest loaded. Then drive up FAST — intent matters even if the bar moves slow. No rest at the top.',
+      subs:INCLINE_SUBS},
+    {id:'tmp_row', name:'Seated Cable Row', scheme:'tempo', basedOn:'seated_cable_row_a', loadPct:0.65,
+      tempo:'4-1-X-1', sets:3, reps:'8', rest:75, dropSet:false, muscle:'Back',
+      note:'4s letting the weight stretch you out. 1s pause at full stretch. Pull fast, then hold the squeeze 1s at the back.',
+      subs:ROW_SUBS},
+    {id:'tmp_fly', name:'DB Flyes', scheme:'tempo', basedOn:'db_fly', loadPct:0.6,
+      tempo:'4-2-X-0', sets:3, reps:'10', rest:60, dropSet:false, muscle:'Chest',
+      note:'4s opening out. 2s hold in the stretch — this is the whole exercise. Squeeze back up. Much lighter than normal, do not ego this one.',
+      subs:FLY_SUBS},
+    {id:'tmp_curl', name:'DB Curl', scheme:'tempo', basedOn:'db_curl_a', loadPct:0.6,
+      tempo:'4-0-X-1', sets:2, reps:'10', rest:60, dropSet:false, muscle:'Biceps',
+      note:'4s lowering, squeeze 1s at the top. Elbows pinned. The eccentric is the point — do not rush it.',
+      subs:CURL_SUBS},
+    {id:'tmp_tricep', name:'Tricep Pushdown', scheme:'tempo', basedOn:'tricep_pushdown', loadPct:0.6,
+      tempo:'4-0-X-1', sets:2, reps:'10', rest:60, dropSet:false, muscle:'Triceps',
+      note:'4s letting it come back up under control, 1s hard squeeze at full extension. Elbows glued to your sides.',
+      subs:TRICEP_SUBS},
+  ]},
 ];
-
 /* ══════════════════════════════════════════════════════════════
    2. EXERCISE LIBRARY (for the program editor "add exercise" list)
    ══════════════════════════════════════════════════════════════ */
@@ -488,6 +548,23 @@ const FORM = {
   dead_bug_hiit:{c:["On your back, arms up, knees 90°","Lower opposite arm and leg slowly","LOWER BACK STAYS FLAT","Return and switch","Shorten the range if the back arches"],b:"Exhale extending",s:null},
   squat_jump:{c:["Squat down to parallel","Explode up","Land soft, absorb through the knees and hips","Immediately into the next rep","Knees unhappy? Use the bodyweight squat sub"],b:"Exhale on the jump",s:null},
   ab_finisher:{c:["Pick one: crunches, bicycles, flutter kicks or leg raises","Continuous for the full interval","Quality reps but keep moving","This is the last exercise of the session","Empty the tank"],b:"Exhale on each rep",s:null},
+  // ── PYRAMID DAY ──
+  pyr_face_pull:{c:["High anchor, rope, overhand grip","Pull to forehead, elbows out and up","Externally rotate at the end","Higher volume today — you are about to go heavy","Do not skip this before a heavy pressing day"],b:"Exhale on the pull",s:"Extra important today. You are about to put your heaviest load of the week through this shoulder — warm the stabilisers up first."},
+  pyr_landmine:{c:["Warm-up sets first — they are on the card, do them","Set 1 is your HEAVIEST while you are freshest. 6 reps, finish at RPE 9","RPE 9 means one clean rep left. Never grind to failure here","Strip roughly 10% and go again for 8","Strip another 10% for 10 — the last set should burn, not crush you","Half-kneeling, tall spine, press along the bar's natural arc"],b:"Big breath and brace before each rep, exhale on the press",s:"Reverse pyramid exists for exactly your situation — the heavy set happens when your form and shoulder stability are at their best. The moment your elbow drifts or your shoulder shrugs, that set is over."},
+  pyr_row:{c:["One warm-up set, then straight into the heavy one","Set 1 heaviest for 6, then -10% for 8, then -10% for 10","Full stretch at the front on every rep, even the heavy one","Do not let the heavy set turn into a torso swing","Close neutral grip, pull to the belly button"],b:"Exhale on the pull",s:"Seated and braced means the shoulder stays safe even at the heavier loads. Keep it neutral grip."},
+  pyr_incline:{c:["Warm-up set first, always","Set 1 heaviest for 6, then -10% for 8, then -10% for 10","Elbows at 45° matters most on the top set","Stop the set the instant form slips — reps are not worth it","30-45° bench, controlled descent even when heavy"],b:"Inhale down, exhale up",s:"This is your heaviest chest pressing of the week. If the shoulder feels off at all on the warm-up, drop the top set weight or switch to the flat DB press sub with a lighter load."},
+  pyr_crunch:{c:["Kneel at the cable with the rope","Crunch ribs to hips, hold 1s","Arms are hooks, not levers","Slow return to full stretch","Finisher — three straight sets and you are done"],b:"Exhale hard on the crunch",s:null},
+  pyr_arnold:{c:["Warm-ups first","Heaviest set of 6 first, then -10%, then -10% again","Palm faces you at the bottom, rotates to palm-forward as you press","Elbows travel forward, never flared out to the sides","Stop short of lockout"],b:"Exhale on the press",s:"The rotation keeps the shoulder tracking safely. Do not chase the numbers you would hit on a landmine — the arc is different."},
+  pyr_db_row:{c:["Warm-up set, then heavy","6 heavy, then -10% for 8, then -10% for 10","Hand and knee braced on the bench","Row to the hip, elbow back not out","No torso rotation to cheat the heavy set up"],b:"Exhale on the pull",s:"Braced position keeps the shoulder out of trouble even when heavy."},
+  pyr_db_press:{c:["Warm-up first","Heavy 6, then -10% for 8, then -10% for 10","Elbows at 45°, never flared","Do not go heavy for low reps if the shoulder is complaining","Controlled descent on every single rep"],b:"Inhale down, exhale up",s:"Flat pressing is higher risk than incline for an unstable shoulder. If in doubt, use the incline version instead — you lose nothing."},
+
+  // ── TEMPO DAY ──
+  tmp_face_pull:{c:["Standard face pulls, normal tempo","High anchor, rope, pull to forehead","Externally rotate at the end","Shorter rest today, keep moving","Opens the shoulder up for the tempo work"],b:"Exhale on the pull",s:"Same as always — first exercise, every session."},
+  tmp_incline:{c:["Weight is around 65% of your normal — that is correct, do not add more","FOUR seconds lowering. Count it out in your head","ONE second pause at the bottom with the chest fully loaded","Drive up FAST — intent to move quickly even if the weight moves slow","No rest at the top, straight into the next rep","8 reps should take you roughly 50 seconds"],b:"Inhale over the 4s descent, exhale on the drive up",s:"This is one of the best tools you have. High muscle tension at low joint load — you get the growth stimulus without the shoulder stress of heavy pressing."},
+  tmp_row:{c:["Around 65% of your normal working weight","4 seconds letting the weight pull you into the stretch","1 second pause at full stretch — do not let the shoulder collapse forward","Pull fast, then hold the squeeze 1 second at the back","That is 6 seconds a rep — 8 reps is about 50 seconds of tension"],b:"Inhale on the stretch, exhale on the pull",s:"Keep the shoulder packed during the 4s stretch. Let the lat stretch, not the joint."},
+  tmp_fly:{c:["Go LIGHT — around 60% of normal. This is the one people ego and regret","4 seconds opening out","TWO second hold in the stretched position — this is the whole exercise","Squeeze back up under control","Your chest should be screaming by rep 6"],b:"Inhale opening out, exhale on the squeeze",s:"The 2s stretch hold is where the shoulder is most vulnerable. Only go as deep as feels completely stable, and stop the set if that changes."},
+  tmp_curl:{c:["Around 60% of your normal curl weight","4 seconds lowering — the eccentric IS the exercise","1 second hard squeeze at the top","Elbows pinned, no swing whatsoever","If you can rush it, it is too light"],b:"Exhale on the curl, inhale over the 4s lower",s:null},
+  tmp_tricep:{c:["Around 60% of normal","4 seconds letting the cable come back up under control","1 second hard squeeze at full extension","Elbows glued to your sides the entire set","The slow return is the part that grows the tricep"],b:"Exhale on the push, inhale over the 4s return",s:null},
   // Library-sourced
   lib_lat_pulldown:{c:["Grip just outside shoulder width, overhand","Slight 15-20° lean back, chest tall","DEPRESS the shoulder blades before any arm movement","Drive elbows down to your back pockets","Bar to the upper chest, never behind the neck"],b:"Exhale on the pull down",s:"Depressing the shoulders first protects the AC joint and reduces impingement risk."},
   lib_chest_sup_row:{c:["Chest flat on the pad — eliminates all compensation","Arms hang fully at the bottom, full stretch every rep","Drive elbows up and back, squeeze the blades together","Hold retraction 1s at the top","Neutral grip if the machine allows"],b:"Exhale on the pull",s:"Chest supported means the shoulder physically cannot compensate. Pure back work with zero instability risk."},
@@ -710,22 +787,123 @@ function allTimeBest(id){
 /* ══════════════════════════════════════════════════════════════
    9. SESSION
    ══════════════════════════════════════════════════════════════ */
-function blankSets(n,w,r){ return Array.from({length:Math.max(1,n|0)},()=>({weight:w||'',reps:r||'',done:false,rpe:null})); }
+function blankSets(n,w,r){ return Array.from({length:Math.max(1,n|0)},()=>({weight:w||'',reps:r||'',done:false,rpe:null,warm:false})); }
+
+/* ── PER-SET TARGETING ────────────────────────────────────────
+   Standard days give one target for all sets. Pyramid days give a
+   different weight per set. Tempo days scale down off your normal
+   working weight. This is the engine for all three.               */
+
+// Reps for a specific set index. 'reps' may be "6,8,10" for per-set.
+function repsForSet(ex,i){
+  const r=String(ex.reps||'');
+  if(r.indexOf(',')>-1){ const p=r.split(',').map(x=>x.trim()); return p[i]||p[p.length-1]; }
+  return r;
+}
+function setCountFor(ex){ return Math.max(1,ex.sets|0)+((ex.warmup&&ex.warmup.length)||0); }
+const round5=w=>Math.max(5,Math.round(w/5)*5);
+const floor5=w=>Math.max(5,Math.floor(w/5)*5);
+
+// Working sets only — warm-ups must never influence targets or PRs
+const workingOnly=arr=>Array.isArray(arr)?arr.filter(s=>s&&!s.warm):[];
+
+// What could you lift for N reps, based on an exercise's own history?
+function estimateWeight(sourceId,targetReps){
+  const last=workingOnly(getLastPerf(sourceId));
+  if(!last.length) return null;
+  const rm=best1RM(last.filter(s=>s.weight&&s.reps));
+  if(!rm||!targetReps) return null;
+  return floor5(rm/(1+targetReps/30));   // round DOWN — start conservative
+}
+// Average working weight of an exercise's last session
+function lastAvgWeight(sourceId){
+  const last=workingOnly(getLastPerf(sourceId));
+  const v=last.filter(s=>s.weight);
+  if(!v.length) return null;
+  return v.reduce((a,s)=>a+parseFloat(s.weight),0)/v.length;
+}
+
+// Returns one {weight,reps} per WORKING set
+function getSetTargets(ex){
+  const n=Math.max(1,ex.sets|0), out=[];
+
+  if(ex.scheme==='pyramid'){
+    const topReps=parseInt(repsForSet(ex,0))||6;
+    // Prefer this exercise's own pyramid history, else derive from the
+    // regular-day movement it's based on
+    let top=estimateWeight(ex.id,topReps);
+    if(!top&&ex.basedOn) top=estimateWeight(ex.basedOn,topReps);
+    let prev=null;
+    for(let i=0;i<n;i++){
+      const drop=(ex.drops&&ex.drops[i]!=null)?ex.drops[i]:i*0.10;
+      let w=top?round5(top*(1-drop)):null;
+      // Force a real step down. With light dumbbells a 10% drop can round
+      // back onto the same plate, which would defeat the whole point.
+      if(w!=null&&prev!=null&&w>=prev) w=Math.max(5,prev-5);
+      prev=w;
+      out.push({weight:w,reps:repsForSet(ex,i)});
+    }
+    return out;
+  }
+
+  if(ex.scheme==='tempo'){
+    let base=null;
+    // Own tempo history first — it progresses on its own terms
+    const own=workingOnly(getLastPerf(ex.id));
+    if(own.length){ const t=getTarget(own,repsForSet(ex,0)); if(t) base=t.weight; }
+    // Otherwise scale down from the normal-day version of the lift
+    if(!base&&ex.basedOn){
+      const avg=lastAvgWeight(ex.basedOn);
+      if(avg) base=round5(avg*(ex.loadPct||0.65));
+    }
+    for(let i=0;i<n;i++) out.push({weight:base,reps:repsForSet(ex,i)});
+    return out;
+  }
+
+  const t=getTarget(workingOnly(getLastPerf(ex.id)),ex.reps);
+  for(let i=0;i<n;i++) out.push({weight:t?t.weight:null,reps:t?t.reps:repsForSet(ex,i)});
+  return out;
+}
+
+// Warm-up ramp, as a % of the top working set
+function warmupSets(ex,topWeight){
+  if(!ex.warmup||!ex.warmup.length) return [];
+  return ex.warmup.map(w=>({
+    weight:topWeight?String(round5(topWeight*w.pct)):'',
+    reps:String(w.reps),done:false,rpe:null,warm:true,pre:true
+  }));
+}
+
+// Full set array for an exercise id: warm-ups then working sets
+function buildSets(ex){
+  const tg=getSetTargets(ex);
+  const top=tg[0]&&tg[0].weight;
+  const work=tg.map(t=>({
+    weight:t.weight?String(t.weight):'',
+    reps:t.reps?String(t.reps):'',
+    done:false,rpe:null,warm:false,
+    pre:!!(t.weight||t.reps)   // suggestion, not something you've actually done
+  }));
+  return warmupSets(ex,top).concat(work);
+}
 
 function startWorkout(dayId){
   const day=getDay(dayId); if(!day) return;
   const setData={}, dropData={};
   day.exercises.forEach(ex=>{
-    // main
-    const tM=getTarget(getLastPerf(ex.id),ex.reps);
-    setData[ex.id]=blankSets(ex.sets, tM?String(tM.weight):'', tM?String(tM.reps):'');
-    if(ex.dropSet) dropData[ex.id]={weight:tM?String(Math.round(parseFloat(tM.weight)*0.7/5)*5):'',reps:'',done:false};
-    // every sub gets its own pre-populated slot from its OWN history
+    // main — scheme-aware (standard / pyramid / tempo), warm-ups included
+    setData[ex.id]=buildSets(ex);
+    const tg=getSetTargets(ex);
+    const topW=tg[0]&&tg[0].weight;
+    if(ex.dropSet) dropData[ex.id]={weight:topW?String(round5(topW*0.7)):'',reps:'',done:false};
+    // every sub gets its own slot, prefilled from its OWN history
     (ex.subs||[]).forEach(sub=>{
-      if(!sub.id) return;
-      const tS=getTarget(getLastPerf(sub.id),ex.reps);
-      setData[sub.id]=blankSets(ex.sets, tS?String(tS.weight):'', tS?String(tS.reps):'');
-      if(ex.dropSet) dropData[sub.id]={weight:tS?String(Math.round(parseFloat(tS.weight)*0.7/5)*5):'',reps:'',done:false};
+      if(!sub||!sub.id) return;
+      const proxy={...ex,id:sub.id,basedOn:ex.basedOn||ex.id};
+      setData[sub.id]=buildSets(proxy);
+      const stg=getSetTargets(proxy);
+      const sw=stg[0]&&stg[0].weight;
+      if(ex.dropSet) dropData[sub.id]={weight:sw?String(round5(sw*0.7)):'',reps:'',done:false};
     });
   });
   S.session={dayId,setData,dropData,activeSubs:{},startTime:Date.now()};
@@ -749,15 +927,17 @@ function normalizeSession(){
   if(typeof s.startTime!=='number' || !isFinite(s.startTime)) s.startTime=Date.now();
 
   const validSet=x=>x&&typeof x==='object';
-  const fixSlot=(id,count)=>{
+  const fixSlot=(id,count,warmCount)=>{
     if(!Array.isArray(s.setData[id])) { s.setData[id]=blankSets(count); return; }
-    s.setData[id]=s.setData[id].map(x=>validSet(x)?{
+    s.setData[id]=s.setData[id].map((x,i)=>validSet(x)?{
       weight:x.weight==null?'':String(x.weight),
       reps:x.reps==null?'':String(x.reps),
       done:!!x.done,
-      rpe:(typeof x.rpe==='number')?x.rpe:null
-    }:{weight:'',reps:'',done:false,rpe:null});
-    while(s.setData[id].length<count) s.setData[id].push({weight:'',reps:'',done:false,rpe:null});
+      rpe:(typeof x.rpe==='number')?x.rpe:null,
+      warm:(x.warm!=null)?!!x.warm:(i<warmCount),
+      pre:!!x.pre
+    }:{weight:'',reps:'',done:false,rpe:null,warm:i<warmCount,pre:false});
+    while(s.setData[id].length<count) s.setData[id].push({weight:'',reps:'',done:false,rpe:null,warm:false,pre:false});
   };
   const fixDrop=id=>{
     const d=s.dropData[id];
@@ -766,12 +946,13 @@ function normalizeSession(){
   };
 
   day.exercises.forEach(ex=>{
-    const n=Math.max(1,ex.sets|0);
-    fixSlot(ex.id,n);
+    const n=setCountFor(ex);
+    const wc=(ex.warmup&&ex.warmup.length)||0;
+    fixSlot(ex.id,n,wc);
     if(ex.dropSet) fixDrop(ex.id);
     (ex.subs||[]).forEach(sub=>{
       if(!sub||!sub.id) return;
-      fixSlot(sub.id,n);
+      fixSlot(sub.id,n,wc);
       if(ex.dropSet) fixDrop(sub.id);
     });
     // drop any activeSub index that points at a sub that no longer exists
@@ -797,7 +978,9 @@ function activeSubFor(ex){
 
 function updSet(id,idx,f,v){
   const arr=S.session&&S.session.setData[id]; if(!arr||!arr[idx])return;
-  arr[idx][f]=v; saveSession(S.session);
+  arr[idx][f]=v;
+  if(f==='weight'||f==='reps') arr[idx].pre=false;   // you touched it, it's real now
+  saveSession(S.session);
 }
 function updDrop(id,f,v){
   const d=S.session&&S.session.dropData[id]; if(!d)return;
@@ -805,7 +988,9 @@ function updDrop(id,f,v){
 }
 function togSet(id,idx,rest){
   const arr=S.session&&S.session.setData[id]; if(!arr||!arr[idx])return;
-  arr[idx].done=!arr[idx].done; saveSession(S.session);
+  arr[idx].done=!arr[idx].done;
+  if(arr[idx].done) arr[idx].pre=false;
+  saveSession(S.session);
   if(arr[idx].done) startRest(id+'_'+idx, rest); else stopRest(id+'_'+idx);
   render();
 }
@@ -841,7 +1026,7 @@ function sessionPRs(){
   const out=[];
   day.exercises.forEach(ex=>{
     const id=activeIdFor(ex);
-    const cur=best1RM((S.session.setData[id]||[]).filter(s=>s.done||s.weight));
+    const cur=best1RM(workingOnly(S.session.setData[id]).filter(s=>s.done));
     if(!cur) return;
     if(cur>allTimeBest(id)) out.push(id);
   });
@@ -862,7 +1047,7 @@ function finishWorkout(){
   const sets={},drops={},used=[];
   day.exercises.forEach(ex=>{
     const id=activeIdFor(ex);
-    const arr=(S.session.setData[id]||[]).filter(s=>s.done||s.weight||s.reps);
+    const arr=workingOnly(S.session.setData[id]).filter(s=>s.done||(!s.pre&&(s.weight||s.reps)));
     if(arr.length) sets[id]=arr;
     const d=S.session.dropData[id];
     if(ex.dropSet&&d&&(d.done||d.weight)) drops[id]=d;
@@ -1176,7 +1361,7 @@ function exCard(ex){
   const drop=S.session.dropData[id]||{weight:'',reps:'',done:false};
   const name=sub?sub.name:ex.name;
   const note=sub?sub.note:ex.note;
-  const last=getLastPerf(id);
+  const last=workingOnly(getLastPerf(id));
   const lastDrop=getLastDrop(id);
   const tgt=getTarget(last,ex.reps);
   const allW=sets.every(s=>s.done);
@@ -1193,9 +1378,11 @@ function exCard(ex){
     <div class="ex-name">${allD?'✓ ':''}${esc(name)}</div>
     <div class="ex-header-right">
       ${hasForm?`<button class="pill-btn" onclick="S.formModal='${id}';render()">Form</button>`:''}
-      <div class="ex-badge">${ex.sets}×${esc(ex.reps)}</div>
+      <div class="ex-badge">${ex.sets}×${esc(String(ex.reps).replace(/,/g,'·'))}</div>
     </div></div>`;
   if(note) h+=`<div class="ex-note">${esc(note)}</div>`;
+  if(ex.scheme==='pyramid') h+=`<div class="scheme-tag pyr">REVERSE PYRAMID · heaviest set first</div>`;
+  if(ex.scheme==='tempo')   h+=`<div class="scheme-tag tmp">TEMPO ${esc(ex.tempo||'4-1-X-0')} · ~${(parseInt(String(ex.reps))||8)*6}s under tension</div>`;
 
   // sub chips — one per sub, tracked separately
   if((ex.subs||[]).length&&!allD){
@@ -1219,21 +1406,31 @@ function exCard(ex){
     </div>${rm?`<div class="last-rm">Est. 1RM ${rm}lb</div>`:''}${hint?`<div class="last-hint">${hint}</div>`:''}</div>`;
   }
 
+  const perSet=getSetTargets(ex);
+  const warmCount=sets.filter(s=>s.warm).length;
   h+=`<div class="sets-area">`;
+  if(warmCount) h+=`<div class="warm-head">Warm-up · not counted</div>`;
+  let workIdx=0;
   sets.forEach((set,i)=>{
     const rk=id+'_'+i;
+    const isWarm=!!set.warm;
+    if(!isWarm && warmCount && workIdx===0) h+=`<div class="work-head">Working sets</div>`;
+    const t = isWarm ? null : (perSet[workIdx]||null);
+    const phW = t&&t.weight ? t.weight : 'lb';
+    const phR = t&&t.reps ? t.reps : (isTimeBased(ex.reps)?'sec':'reps');
     h+=`<div class="set-row">
-      <div class="set-num">${i+1}</div>
-      <input class="set-input${set.done?' done':''}" type="number" inputmode="decimal" placeholder="${tgt?tgt.weight:'lb'}" value="${esc(set.weight)}" ${set.done?'readonly':''} onchange="updSet('${id}',${i},'weight',this.value)">
-      <input class="set-input${set.done?' done':''}" type="number" inputmode="numeric" placeholder="${tgt?tgt.reps:(isTimeBased(ex.reps)?'sec':'reps')}" value="${esc(set.reps)}" ${set.done?'readonly':''} onchange="updSet('${id}',${i},'reps',this.value)">
-      <button class="check-btn${set.done?' done':''}" onclick="togSet('${id}',${i},${rest})">${set.done?'✓':'○'}</button>
+      <div class="${isWarm?'warm-label':'set-num'}">${isWarm?'W'+(i+1):(workIdx+1)}</div>
+      <input class="set-input${isWarm?' warm-inp':''}${set.done?' done':''}" type="number" inputmode="decimal" placeholder="${esc(phW)}" value="${esc(set.weight)}" ${set.done?'readonly':''} onchange="updSet('${id}',${i},'weight',this.value)">
+      <input class="set-input${isWarm?' warm-inp':''}${set.done?' done':''}" type="number" inputmode="numeric" placeholder="${esc(phR)}" value="${esc(set.reps)}" ${set.done?'readonly':''} onchange="updSet('${id}',${i},'reps',this.value)">
+      <button class="check-btn${isWarm?' warm-btn':''}${set.done?' done':''}" onclick="togSet('${id}',${i},${isWarm?45:rest})">${set.done?'✓':'○'}</button>
     </div>`;
-    if(set.done){
+    if(set.done && !isWarm){
       h+=`<div class="rpe-row"><span class="rpe-label">RPE</span>
         ${[6,7,8,9,10].map(r=>`<button class="rpe-btn${set.rpe===r?' sel':''}" onclick="updSet('${id}',${i},'rpe',${set.rpe===r?'null':r});render()">${r}</button>`).join('')}
         ${set.rpe?`<span class="rpe-hint">${RPE_LABELS[set.rpe]}</span>`:''}</div>`;
     }
     h+=restBanner(rk);
+    if(!isWarm) workIdx++;
   });
   h+=`</div>`;
 
@@ -1552,7 +1749,8 @@ function view(){
     getProgram().forEach(d=>{
       const last=[...S.history].reverse().find(e=>e.dayId===d.id);
       const active=S.session&&S.session.dayId===d.id;
-      const cls=active?' is-active':(d.id==='hiit'&&!last)?' is-hiit':last?' has-history':'';
+      const tint = d.id==='hiit'?' is-hiit' : d.id==='pyramid'?' is-pyr' : d.id==='tempo'?' is-tmp' : '';
+      const cls=active?' is-active':(tint&&!last)?tint:last?' has-history':(tint||'');
       body+=`<div class="day-card${cls}" onclick="handleDayTap('${d.id}')">
         ${last&&!active?'<div class="green-dot"></div>':''}
         <div class="day-card-type">${esc(d.type)}</div>
@@ -1645,7 +1843,7 @@ Object.assign(window,{
   edDraftSet,edSaveDraft,edAddSub,edRemoveSub,edResetProgram
 });
 // Exposed for debugging from the Safari console if anything ever misbehaves
-window.__dev={calcProg,getTarget,getLastPerf,mergeHistory,backupString,view,normalizeSession,
+window.__dev={calcProg,getTarget,getLastPerf,mergeHistory,backupString,view,normalizeSession,getSetTargets,buildSets,estimateWeight,workingOnly,setCountFor,repsForSet,
   sessionPRs,activeIdFor,allTimeBest,getProgram,lookupName,lookupMuscle,DEFAULT_PROGRAM,FORM,LIBRARY};
 
 /* ══════════════════════════════════════════════════════════════
