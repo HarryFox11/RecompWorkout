@@ -205,6 +205,69 @@ button{outline:none;cursor:pointer;font-family:inherit}
 .lib-name{font-size:14px;font-weight:600}
 .lib-meta{font-size:11.5px;color:#888880;margin-top:2px}
 .err-card{background:#fdf2f1;border:1.5px solid #f5c6c2;border-radius:12px;padding:18px}
+
+/* ── kettlebell days + interval clock ─────────────────────────── */
+.day-card.is-kb{background:#fff6ec;border-color:#f3d2a8}
+.day-card.is-kb .day-card-type,.day-card.is-kb .day-card-sub{color:#a85f0a}
+.day-card.is-kb .day-card-name{color:#a85f0a}
+.blk{margin:0 0 22px;border:1.5px solid #e6e3dc;border-radius:14px;background:#fbfaf8;overflow:hidden}
+.blk-clock{border-color:#f3d2a8;background:#fffdfa}
+.blk-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:14px 16px 10px}
+.blk-title{font-size:16px;font-weight:700;color:#1a1a18;letter-spacing:-.01em}
+.blk-meta{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.07em;color:#a09c93;margin-top:3px;text-transform:uppercase}
+.blk-clock .blk-meta{color:#c07f28}
+.blk-num{flex:none;width:24px;height:24px;border-radius:50%;background:#eae7e0;color:#8a867d;font-family:ui-monospace,monospace;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.blk-clock .blk-num{background:#f7e3c6;color:#a85f0a}
+.blk-note{font-size:13px;line-height:1.5;color:#6e6a62;padding:0 16px 12px}
+.blk-order{margin:0 16px 12px;border:1px solid #f0e4d2;border-radius:9px;overflow:hidden;background:#fff}
+.blk-ord-row{display:flex;align-items:center;gap:8px;padding:8px 11px;border-bottom:1px solid #f6efe4;font-size:13px}
+.blk-ord-row:last-child{border-bottom:none}
+.blk-ord-min{flex:none;font-family:ui-monospace,monospace;font-size:9.5px;letter-spacing:.05em;color:#c07f28;background:#fdf3e4;padding:3px 6px;border-radius:4px;min-width:46px;text-align:center;text-transform:uppercase}
+.blk-ord-nm{flex:1;font-weight:600;color:#2a2a26}
+.blk-ord-rp{flex:none;font-family:ui-monospace,monospace;font-size:11px;color:#8a867d}
+.btn-clock{display:block;width:calc(100% - 32px);margin:0 16px 8px;padding:15px;border:none;border-radius:11px;background:#a85f0a;color:#fff;font-size:15px;font-weight:700;letter-spacing:-.01em;cursor:pointer}
+.btn-clock:active{background:#8d4e06}
+.btn-clock.running{background:#2d7a4f}
+.blk-done-lbl{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.06em;color:#2d7a4f;text-align:center;padding:0 16px 12px;text-transform:uppercase}
+.blk-body{padding:4px 0 2px}
+.blk-body .ex-card{margin:0 12px 12px;border-radius:11px}
+
+.clk{min-height:100vh;display:flex;flex-direction:column;background:#12120f;color:#fff;padding:18px 20px 26px}
+.clk-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.clk-blk{font-family:ui-monospace,monospace;font-size:10.5px;letter-spacing:.14em;color:#f0b463;text-transform:uppercase}
+.clk-elapsed{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.06em;color:#6d6a62}
+.clk-dial{position:relative;margin:10px auto 0;width:min(78vw,300px);aspect-ratio:1}
+.clk-svg{width:100%;height:100%;transform:rotate(-90deg)}
+.clk-trk{fill:none;stroke:#26251f;stroke-width:9}
+.clk-arc{fill:none;stroke:#f0b463;stroke-width:9;stroke-linecap:round;stroke-dasharray:552.92;transition:stroke-dashoffset .2s linear}
+.clk-ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.clk-time{font-family:ui-monospace,monospace;font-size:clamp(46px,15vw,66px);font-weight:700;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.clk-time.hot{color:#ffb84d}
+.clk-round{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.14em;color:#8a867d;text-transform:uppercase}
+.clk-now{margin-top:20px;text-align:center}
+.clk-now-lbl{font-family:ui-monospace,monospace;font-size:9.5px;letter-spacing:.18em;color:#f0b463;margin-bottom:5px}
+.clk-now-nm{font-size:clamp(24px,7vw,32px);font-weight:700;letter-spacing:-.02em;line-height:1.15}
+.clk-now-rp{font-family:ui-monospace,monospace;font-size:15px;color:#c9c5bb;margin-top:7px;letter-spacing:.02em}
+.clk-cue{font-size:13px;line-height:1.5;color:#8f8b82;margin:14px 4px 0;text-align:center}
+.clk-next{margin-top:auto;padding:13px 15px;background:#1c1b17;border:1px solid #2c2b24;border-radius:11px;display:flex;align-items:center;gap:11px}
+.clk-next-lbl{flex:none;font-family:ui-monospace,monospace;font-size:9px;letter-spacing:.14em;color:#6d6a62}
+.clk-next-nm{flex:1;font-size:14px;font-weight:600;color:#d6d2c8}
+.clk-next-rp{flex:none;font-family:ui-monospace,monospace;font-size:11px;color:#8a867d}
+.clk-btns{display:flex;gap:10px;margin-top:12px}
+.clk-btn{flex:1;padding:15px;border-radius:11px;border:1.5px solid #34332b;background:#1c1b17;color:#d6d2c8;font-size:14px;font-weight:600;cursor:pointer}
+.clk-btn:active{background:#26251f}
+.clk-btn.go{background:#f0b463;border-color:#f0b463;color:#12120f}
+.clk-btn.end{border-color:#4a2420;color:#e08a7f}
+.clk-paused{text-align:center;padding:14px;margin-top:14px;background:#221f18;border:1px solid #3d3527;border-radius:11px}
+.clk-paused-t{font-size:17px;font-weight:700;color:#f0b463}
+.clk-paused-s{font-size:12.5px;color:#8a867d;margin-top:3px}
+.clk-run-banner{margin:0 16px 12px;padding:12px 14px;background:#edf7f1;border:1.5px solid #b8ddc9;border-radius:9px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.clk-run-t{flex:1;font-size:13.5px;font-weight:700;color:#2d7a4f}
+.clk-run-a{font-size:16px;color:#2d7a4f}
+
+.pausebars{display:inline-flex;gap:3px;vertical-align:-1px;margin-right:7px}
+.pausebars i{display:block;width:3.5px;height:13px;border-radius:1.5px;background:currentColor}
+.pausebars.big i{width:8px;height:30px;border-radius:3px}
 </style>
 </head>
 <body>
@@ -260,6 +323,74 @@ const PRESS_SUBS = [
   {id:'arnold_press', name:'Single Arm DB Arnold Press', note:'Palm faces you, rotate to palm-forward as you press. Closest match to the landmine arc. Start 20lbs.'},
   {id:'db_shoulder_press_strict', name:'DB Shoulder Press (strict)', note:'Elbows FORWARD not flared, stop at ear height. Strict only.'},
   {id:'cable_chest_press_sub', name:'Cable Press (chest height)', note:'Press forward not overhead. Zero shoulder risk when the shoulder feels off.'}
+];
+
+/* ── Kettlebell substitution banks ───────────────────────────────
+   Bells owned: 25lb, 35lb, 50lb. Every KB movement has a lighter
+   option, a no-skill option and a bodyweight option so a missing
+   bell or an off day never cancels the session. Each sub is its own
+   tracked exercise with its own history. */
+const KB_SWING_SUBS = [
+  {id:'kb_1arm_swing_s', name:'Single-Arm Swing', note:'Same hinge, one hand. Free arm mirrors the movement. Go one bell lighter — 35lb. Grip and anti-rotation both get harder.'},
+  {id:'kb_dead_swing', name:'Dead-Stop Swing', note:'Bell returns to the floor between every rep. Removes the rebound so each rep is a fresh hinge. Best when your form is drifting.'},
+  {id:'kb_deadlift_s', name:'KB Deadlift', note:'No ballistic at all. Bell between the feet, hinge and stand. Use this if the back or shoulder is talking — same pattern, zero impact.'},
+  {id:'kb_rdl_s', name:'KB Romanian Deadlift', note:'Two hands, knees soft and fixed, push hips back until you feel the hamstrings, stand tall. Slow and controlled.'},
+  {id:'db_swing_s', name:'DB Swing', note:'Hold one dumbbell vertically by the head. Identical hinge if no bell is free.'},
+  {id:'kb_good_morning_s', name:'Racked Good Morning', note:'Bell in the rack, hinge to horizontal, stand. Loads the hinge with no speed at all.'}
+];
+const KB_SQUAT_SUBS = [
+  {id:'kb_front_squat_s', name:'Front Rack Squat', note:'Bell in the rack position at the shoulder, one side at a time. Harder on the core than a goblet — the load is off-centre.'},
+  {id:'kb_sumo_squat_s', name:'KB Sumo Squat', note:'Wide stance, bell hanging between the legs, sit straight down. Easier on the knees, more adductor.'},
+  {id:'kb_tempo_bw_squat_s', bw:true, name:'Tempo Bodyweight Squat', note:'3s down, 1s pause at the bottom, stand. No bell needed. Hands out front for balance.'},
+  {id:'kb_rev_lunge_s', name:'Goblet Reverse Lunge', note:'Step BACK not forward — much kinder on the knee. Bell at the chest. Alternate legs. Low impact, no jumping.'},
+  {id:'kb_split_squat_s', name:'Goblet Split Squat', note:'Feet planted in a lunge stance, drop straight down. All the work, none of the stepping. Do all reps one side then swap.'}
+];
+const KB_HALO_SUBS = [
+  {id:'kb_atw_s', name:'Around-the-World', note:'Bell circles the waist, hand to hand. Same warming effect lower down, no overhead position at all.'},
+  {id:'kb_arm_bar_s', name:'KB Arm Bar', note:'On your side, bell locked out, roll onto the stomach. Superb thoracic and shoulder opener. 25lb, 30s a side, move slowly.'},
+  {id:'kb_pass_s', bw:true, name:'Band Pass-Through', note:'Band or towel overhead and behind, wide grip. Pure mobility, no load.'},
+  {id:'kb_prone_ty_s', bw:true, name:'Prone T-Y Raise', note:'Face down on the floor, thumbs up, lift arms into a T then a Y. Light or no weight. Wakes up the lower traps.'}
+];
+const KB_CHOP_SUBS = [
+  {id:'kb_russian_twist_s', name:'Russian Twist', note:'Seated, heels light, bell travels hip to hip. Rotate from the ribs not the arms.'},
+  {id:'kb_hp_plank_s', name:'High Plank Pull-Through', note:'Plank position, reach under and drag the bell across. Anti-rotation under fatigue.'},
+  {id:'kb_suitcase_s', name:'Suitcase Carry', note:'One bell, one hand, walk tall. Fighting the sideways lean is the exercise. 50lb, 40s a side.'},
+  {id:'kb_dead_bug_s', bw:true, name:'Dead Bug', note:'On your back, arms up. Lower opposite arm and leg, lower back stays flat. No bell needed.'},
+  {id:'kb_pallof_s', bw:true, name:'Band Pallof Press', note:'Sideways to a band, press out, hold 2s. Resist the rotation. Direct hockey carry-over.'}
+];
+const KB_CARRY_SUBS = [
+  {id:'kb_racked_carry_s', name:'Racked Carry', note:'Bell in the rack at the shoulder. Ribs down, breathe shallow. Brutal on the core, easy on the shoulder.'},
+  {id:'kb_oh_carry_s', name:'Overhead Carry', note:'Locked out overhead, bicep by the ear. Best shoulder stability drill you own. Start 25lb.'},
+  {id:'kb_farmer_carry_s', name:'Farmer Carry', note:'Two bells, one each side. Balanced load, pure grip and trap work. Go heaviest here.'},
+  {id:'kb_waiter_carry_s', name:'Waiter Carry', note:'Bell bottoms-up overhead. Hardest version. 25lb only, and it is still hard.'},
+  {id:'kb_plank_hold_s', bw:true, name:'Plank Hold', note:'No walking, no bell. Squeeze glutes and quads, straight line heels to head.'}
+];
+const KB_BURPEE_SUBS = [
+  {id:'kb_squat_thrust_s', bw:true, name:'Step-Back Squat Thrust', note:'Step back to the plank instead of jumping, no push-up, stand up instead of jumping. Same breathing, zero impact on the shins.'},
+  {id:'kb_inchworm_s', bw:true, name:'Inchworm Walkout', note:'Hinge, walk the hands out to a plank, walk back, stand. Low impact, opens the hamstrings.'},
+  {id:'kb_mtn_climber_s', bw:true, name:'Mountain Climbers', note:'Plank, drive knees to chest alternately. Fast but the feet stay low — no jumping.'},
+  {id:'kb_bear_crawl_s', bw:true, name:'Bear Crawl', note:'Knees an inch off the floor, opposite hand and foot, crawl forward and back. Deceptively savage.'},
+  {id:'kb_extra_swing_s', name:'Extra Swings', note:'If the shins are sore, swap the burpee out entirely and swing instead. Keeps the heart rate up with no ground contact.'}
+];
+const KB_PUSHUP_SUBS = [
+  {id:'kb_incline_pu_s', name:'Hands-on-Bells Push-Up', note:'Hands on the handles of two bells. The deeper range plus the wobble makes it harder than it looks — and the neutral wrist is kinder.'},
+  {id:'kb_elev_pu_s', name:'Elevated Push-Up', note:'Hands on a bench or step. Easier. Use it to keep the reps clean rather than grinding half-reps on the floor.'},
+  {id:'kb_floor_press_pu_s', name:'KB Floor Press', note:'Loaded pressing with no shoulder end range at all. Straight swap if the wrists or shoulder complain.'},
+  {id:'kb_tempo_pu_s', name:'Tempo Push-Up', note:'3s down, 1s on the chest, drive up. Cut the reps in half. Far more stimulus per rep.'},
+  {id:'kb_knee_pu_s', name:'Knee Push-Up', note:'Knees down, everything else identical. Chest still touches. Better than a sloppy full push-up.'}
+];
+const KB_GETUP_SUBS = [
+  {id:'kb_half_getup_s', name:'Half Get-Up', note:'Go as far as sitting tall on the hand, then reverse. Gets 80% of the shoulder benefit with none of the hard part.'},
+  {id:'kb_getup_elbow_s', name:'Get-Up to Elbow', note:'Punch the bell up, roll to the elbow, come back down. The entry only. Where everyone should start.'},
+  {id:'kb_naked_getup_s', bw:true, name:'Bodyweight Get-Up', note:'Same sequence, fist up instead of a bell. Learn the pattern with nothing to drop.'},
+  {id:'kb_side_plank_s', bw:true, name:'Side Plank', note:'If the floor work is not happening today. 30s a side, hips stacked and lifted.'}
+];
+const KB_COMPLEX_SUBS = [
+  {id:'kb_abc_noclean_s', name:'Swing + Squat Complex', note:'NO CLEAN. 5 two-hand swings, then 5 goblet squats, then rest. Same lungs, none of the wrist-banging. Use this until the clean feels automatic.'},
+  {id:'kb_abc_nopress_s', name:'Clean + Front Squat', note:'Drop the press. 2 cleans, 3 front squats each side. Keeps the rack work, removes all overhead load.'},
+  {id:'kb_abc_dead_s', name:'Dead-Clean + Press', note:'Bell starts on the floor every single rep. Slower and more honest — no momentum to hide behind, easier to learn.'},
+  {id:'kb_abc_swingpress_s', name:'Swing + Push Press', note:'10 swings then 5 push press each side. No rack position needed at all.'},
+  {id:'kb_abc_light_s', name:'Light ABC (25lb)', note:'Same complex, smallest bell. Do this for the first two or three sessions while the sequence becomes automatic.'}
 ];
 
 const DEFAULT_PROGRAM = [
@@ -428,6 +559,99 @@ const DEFAULT_PROGRAM = [
       note:'4s letting it come back up under control, 1s hard squeeze at full extension. Elbows glued to your sides.',
       subs:TRICEP_SUBS},
   ]},
+  /* ── KETTLEBELL DAYS ───────────────────────────────────────────
+     Home sessions, 25lb / 35lb / 50lb bells. Block-structured: each
+     block carries its own clock. Weights below are starting points —
+     once you log a session the app progresses them like any lift. */
+  { id:'kb_swing', name:'KB Swing', type:'Kettlebell', focus:'Ballistic · 25 min', kb:true,
+    blocks:[
+      {kind:'sets', label:'Prep', minutes:4, note:'Wake the hips and shoulders up. Do not rush this — the swings are only as good as the hinge.'},
+      {kind:'clock', label:'Swing block', minutes:16, interval:60, rounds:16,
+        ids:['kbs_swing','kbs_goblet','kbs_1arm','kbs_chop'],
+        note:'One movement at the top of every minute. Finish the reps, rest what is left of the minute. Four rounds through. If a minute leaves you under 15 seconds of rest, drop 2 reps next round — do not let form go.'},
+      {kind:'sets', label:'Finisher', minutes:5, note:'Grip and trunk under fatigue. Walk tall, breathe shallow.'}
+    ],
+    exercises:[
+      {id:'kbs_halo', name:'Halo', sets:2, reps:'5', rest:30, dropSet:false, muscle:'Cardio', defaultWeight:25, bell:true, block:0,
+        repLabel:'5 each direction',
+        note:'25lb. Bell by the horns, circle the head close and slow. 5 each way. Best shoulder warm-up there is.', subs:KB_HALO_SUBS},
+      {id:'kbs_pry', name:'Prying Goblet Squat', sets:2, reps:'5', rest:30, dropSet:false, muscle:'Legs', defaultWeight:35, bell:true, block:0,
+        note:'35lb. Sit into the bottom and stay there. Push the knees out with the elbows, rock side to side, then stand. This is the hip opener.', subs:KB_SQUAT_SUBS},
+
+      {id:'kbs_swing', name:'Two-Hand Swing', sets:4, reps:'15', rest:0, noRest:true, dropSet:false, muscle:'Cardio', defaultWeight:50, bell:true, block:1,
+        note:'50lb. HINGE, not a squat. Hips snap, the bell floats to chest height on its own. Glutes and abs lock hard at the top.', subs:KB_SWING_SUBS},
+      {id:'kbs_goblet', name:'Goblet Squat', sets:4, reps:'10', rest:0, noRest:true, dropSet:false, muscle:'Legs', defaultWeight:35, bell:true, block:1,
+        note:'35lb. Bell at the chest, elbows inside the knees. Push the knees OUT over the toes on the way down — this one is corrective for you.', subs:KB_SQUAT_SUBS},
+      {id:'kbs_1arm', name:'Single-Arm Swing', sets:4, reps:'16', rest:0, noRest:true, dropSet:false, muscle:'Cardio', defaultWeight:35, bell:true, block:1,
+        repLabel:'8 each side',
+        note:'35lb. 8 a side, switch at the top of a swing. Do not let the shoulder get dragged forward — the lat stays tight and the bell stays in the socket.', subs:KB_SWING_SUBS},
+      {id:'kbs_chop', name:'Wood Chop', sets:4, reps:'20', rest:0, noRest:true, dropSet:false, muscle:'Core', defaultWeight:25, bell:true, block:1,
+        repLabel:'10 each side',
+        note:'25lb. This minute is the recovery minute — move smoothly, breathe. Bell travels hip to opposite shoulder, rotation comes from the ribs.', subs:KB_CHOP_SUBS},
+
+      {id:'kbs_carry', name:'Suitcase Carry', sets:2, reps:'40s', rest:30, dropSet:false, muscle:'Core', defaultWeight:50, bell:true, block:2,
+        repLabel:'40s each side',
+        note:'50lb. One bell, one hand, 20s a side. Do not lean away from it — stay dead vertical. Shoulder packed down.', subs:KB_CARRY_SUBS},
+      {id:'kbs_plank', name:'Plank Hold', sets:2, reps:'45s', rest:30, dropSet:false, muscle:'Core', block:2,
+        note:'Bodyweight. Glutes, quads and abs all squeezed. Straight line heels to head, no sag and no pike.', subs:KB_CHOP_SUBS},
+    ]},
+
+  { id:'kb_complex', name:'KB Complex', type:'Kettlebell', focus:'Armor Building · 30 min', kb:true,
+    blocks:[
+      {kind:'sets', label:'Prep', minutes:4, note:'Halos to open the shoulder, get-ups to switch it on. Light and deliberate.'},
+      {kind:'clock', label:'The complex', minutes:20, interval:120, rounds:10,
+        ids:['kbc_abc'],
+        note:'One complex at the top of every 2 minutes, 10 rounds. The rest is built in — the work takes 45-60s, you get the remainder. If you are not getting at least 45s back, go down a bell.'},
+      {kind:'clock', label:'Swing finisher', minutes:5, interval:60, rounds:5,
+        ids:['kbc_swing'],
+        note:'Five minutes, 15 swings at the top of each. 75 swings to close. Heaviest bell.'}
+    ],
+    exercises:[
+      {id:'kbc_halo', name:'Halo', sets:2, reps:'5', rest:30, dropSet:false, muscle:'Cardio', defaultWeight:25, bell:true, block:0,
+        repLabel:'5 each direction',
+        note:'25lb. Slow circles, close to the head. Five each direction.', subs:KB_HALO_SUBS},
+      {id:'kbc_getup', name:'Turkish Get-Up', sets:2, reps:'2', rest:60, dropSet:false, muscle:'Shoulders', defaultWeight:25, bell:true, block:0,
+        repLabel:'1 each side',
+        note:'25lb, and keep it there for a few weeks. Eyes ON the bell the whole way up and down. This is skill practice, not a workout — one rep a side, perfect. Best single exercise for a shoulder that has been unstable.', subs:KB_GETUP_SUBS},
+
+      {id:'kbc_abc', name:'Armor Building Complex', sets:10, reps:'1', rest:0, noRest:true, dropSet:false, muscle:'Cardio', defaultWeight:35, bell:true, block:1,
+        repLabel:'1 full ABC (both sides)',
+        note:'35lb, one bell. RIGHT: 2 cleans, 1 press, 3 front squats. Switch hands. LEFT: same. That is one round. Clean = the bell is guided into the rack, not curled — tame the arc by pulling it close, and the handle should settle on the heel of the hand with no bang. If the clean is not clean, tap the sub button and use the no-clean version until it is.', subs:KB_COMPLEX_SUBS},
+
+      {id:'kbc_swing', name:'Two-Hand Swing', sets:5, reps:'15', rest:0, noRest:true, dropSet:false, muscle:'Cardio', defaultWeight:50, bell:true, block:2,
+        note:'50lb. Last five minutes. Hinge hard, float the bell, lock out at the top. Breathe out sharply at the top of every rep.', subs:KB_SWING_SUBS},
+    ]},
+
+  { id:'kb_grind', name:'KB Grinder', type:'Kettlebell', focus:'Sweat · 30 min', kb:true,
+    blocks:[
+      {kind:'sets', label:'Prep', minutes:4, note:'Short and sharp — the clock does the rest.'},
+      {kind:'clock', label:'The grinder', minutes:20, interval:60, rounds:20,
+        ids:['kbg_swing','kbg_burpee','kbg_pushup','kbg_goblet','kbg_carry'],
+        note:'Five stations, four times through, 20 straight minutes. This is the hardest day — pace it from round one. If you blow up by round 3 you went too heavy.'},
+      {kind:'sets', label:'Finisher', minutes:5, note:'Core, then done.'}
+    ],
+    exercises:[
+      {id:'kbg_halo', name:'Halo', sets:2, reps:'5', rest:20, dropSet:false, muscle:'Cardio', defaultWeight:25, bell:true, block:0,
+        repLabel:'5 each direction', note:'25lb. Five each way.', subs:KB_HALO_SUBS},
+      {id:'kbg_pry', name:'Prying Goblet Squat', sets:2, reps:'5', rest:20, dropSet:false, muscle:'Legs', defaultWeight:35, bell:true, block:0,
+        note:'35lb. Sit in the bottom, elbows pushing the knees out, then stand.', subs:KB_SQUAT_SUBS},
+
+      {id:'kbg_swing', name:'Two-Hand Swing', sets:4, reps:'15', rest:0, noRest:true, dropSet:false, muscle:'Cardio', defaultWeight:50, bell:true, block:1,
+        note:'50lb. Hinge and snap. This station sets the pace for the whole block — do not sprint it.', subs:KB_SWING_SUBS},
+      {id:'kbg_burpee', name:'Step-Back Burpee', sets:4, reps:'8', rest:0, noRest:true, dropSet:false, muscle:'Cardio', block:1,
+        note:'STEP back into the plank, step back in, stand up. No jumping at either end — your shins and knees stay out of it. Chest to floor on every rep.', subs:KB_BURPEE_SUBS},
+      {id:'kbg_pushup', name:'Push-Up', sets:4, reps:'12', rest:0, noRest:true, dropSet:false, muscle:'Chest', block:1,
+        note:'Elbows 45°, not flared — same rule as your incline press. Chest to the floor, body rigid. Drop to the elevated version rather than grinding half-reps.', subs:KB_PUSHUP_SUBS},
+      {id:'kbg_goblet', name:'Goblet Squat', sets:4, reps:'10', rest:0, noRest:true, dropSet:false, muscle:'Legs', defaultWeight:35, bell:true, block:1,
+        note:'35lb. Knees track OUT. Full depth, chest up, elbows inside the knees.', subs:KB_SQUAT_SUBS},
+      {id:'kbg_carry', name:'Racked Carry', sets:4, reps:'40s', rest:0, noRest:true, dropSet:false, muscle:'Core', defaultWeight:35, bell:true, block:1,
+        repLabel:'40s · 20s each side',
+        note:'35lb. Bell in the rack, ribs pulled down, walk. This is the breather station — but the core never switches off.', subs:KB_CARRY_SUBS},
+
+      {id:'kbg_core', name:'Wood Chop', sets:2, reps:'20', rest:30, dropSet:false, muscle:'Core', defaultWeight:25, bell:true, block:2,
+        repLabel:'10 each side',
+        note:'25lb. Hip to opposite shoulder, rotate from the ribs. Then you are done.', subs:KB_CHOP_SUBS},
+    ]},
 ];
 /* ══════════════════════════════════════════════════════════════
    2. EXERCISE LIBRARY (for the program editor "add exercise" list)
@@ -459,12 +683,99 @@ const LIBRARY = [
   {id:'lib_dead_bug', name:'Dead Bug', sets:3, reps:'10-12', rest:60, muscle:'Core', note:'Opposite arm and leg lower slowly, lower back pressed flat. Deceptively hard.'},
   {id:'lib_pushup', name:'Push-Ups', sets:3, reps:'15-20', rest:60, muscle:'Chest', note:'Chest to floor, 3s descent, elbows 45°. Feet up = harder, hands up = easier.'},
   {id:'lib_inverted_row', name:'Inverted Row', sets:3, reps:'12-20', rest:90, muscle:'Back', note:'Bar at hip height, body rigid, chest to bar. More horizontal = harder.'},
+  {id:'lib_kb_swing', name:'KB Two-Hand Swing', sets:4, reps:'15', rest:60, muscle:'Cardio', note:'Hinge, do not squat. Hips snap, the bell floats. Glutes and abs lock at the top. 50lb.'},
+  {id:'lib_kb_1arm_swing', name:'KB Single-Arm Swing', sets:4, reps:'16', rest:60, muscle:'Cardio', note:'8 a side. Shoulder stays packed, body stays square. One bell lighter than two-hand. 35lb.'},
+  {id:'lib_kb_goblet', name:'Goblet Squat', sets:3, reps:'10-12', rest:75, muscle:'Legs', note:'Bell at the chest, knees track OUT over the toes. Corrective for inward knee collapse. 35lb.'},
+  {id:'lib_kb_front_squat', name:'KB Front Rack Squat', sets:3, reps:'8-10', rest:90, muscle:'Legs', note:'Bell racked at one shoulder. Off-centre load, so the core works hard to stay square.'},
+  {id:'lib_kb_halo', name:'KB Halo', sets:2, reps:'5', rest:30, muscle:'Cardio', note:'Bell by the horns, circle the head close and slow. Ribs down. Best shoulder warm-up there is. 25lb.'},
+  {id:'lib_kb_getup', name:'Turkish Get-Up', sets:2, reps:'2', rest:60, muscle:'Shoulders', note:'Eyes on the bell the whole way. Skill practice — 25lb, one rep a side, perfect. Best exercise for an unstable shoulder.'},
+  {id:'lib_kb_hk_press', name:'KB Half-Kneeling Press', sets:3, reps:'6-8', rest:90, muscle:'Shoulders', note:'One knee down. No leg drive, no back arch possible. The strictest and safest overhead press.'},
+  {id:'lib_kb_bu_press', name:'KB Bottoms-Up Press', sets:3, reps:'5-6', rest:90, muscle:'Shoulders', note:'Bell upside down, squeeze the handle. Rehab-grade rotator cuff work. 25lb will feel heavy.'},
+  {id:'lib_kb_chop', name:'KB Wood Chop', sets:3, reps:'20', rest:45, muscle:'Core', note:'10 a side, hip to opposite shoulder. Rotate from the ribs. Closest thing to a hockey shot. 25lb.'},
+  {id:'lib_kb_racked_carry', name:'KB Racked Carry', sets:3, reps:'40s', rest:45, muscle:'Core', note:'Bell racked, ribs pulled down. Brutal on the core, nothing overhead. 35lb.'},
+  {id:'lib_kb_suitcase', name:'KB Suitcase Carry', sets:3, reps:'40s', rest:45, muscle:'Core', note:'One bell one hand, stand dead vertical. Refusing to lean is the exercise. Go heavy — 50lb.'},
+  {id:'lib_kb_oh_carry', name:'KB Overhead Carry', sets:3, reps:'30s', rest:60, muscle:'Shoulders', note:'Locked out overhead, bicep by the ear, ribs down. Best shoulder stability drill. Start 25lb.'},
+  {id:'lib_kb_abc', name:'Armor Building Complex', sets:10, reps:'1', rest:60, muscle:'Cardio', note:'One bell. 2 cleans, 1 press, 3 front squats — each side. Best bang-for-buck KB session there is. 35lb.'},
+  {id:'lib_step_burpee', name:'Step-Back Burpee', sets:4, reps:'8-10', rest:45, muscle:'Cardio', note:'Step back and step in — never jump. Chest to floor. Keeps the impact off your shins.'},
 ];
 
 /* ══════════════════════════════════════════════════════════════
    3. FORM CUES — keyed by exercise id (mains AND subs)
    ══════════════════════════════════════════════════════════════ */
 const FORM = {
+  /* ── kettlebell: main movements ─────────────────────────────── */
+  kbs_halo:{c:["Bell by the horns, upside down, close to the chest","Circle it around the head — as close as you can without hitting it","Ribs stay DOWN, no arching the lower back","Slow. This is mobility, not a rep to rush","5 one direction, then 5 the other"],b:"Breathe normally throughout",s:"The single best shoulder warm-up you can do with a bell. It takes the shoulder through its full range under light, controlled load — exactly what an unstable joint wants before you load it. 25lb, every kettlebell session."},
+  kbc_halo:{c:["Bell by the horns, upside down, close to the chest","Circle it around the head — as close as you can without hitting it","Ribs stay DOWN, no arching the lower back","Slow. This is mobility, not a rep to rush","5 one direction, then 5 the other"],b:"Breathe normally throughout",s:"The single best shoulder warm-up you can do with a bell. 25lb, every kettlebell session."},
+  kbg_halo:{c:["Bell by the horns, upside down, close to the chest","Circle it around the head, close to it","Ribs down — no lower-back arch","Slow and deliberate","5 each direction"],b:"Breathe normally throughout",s:"Your shoulder warm-up. Never skip it to save 90 seconds."},
+  kbs_pry:{c:["Bell at the chest by the horns, feet a little wider than shoulders","Sit all the way down and STAY there","Elbows inside the knees, push the knees outward","Rock gently side to side, then forward and back","Stand up tall, squeeze the glutes"],b:"Deep breaths in the bottom position",s:"You are prying the hips open, not training the legs. Because the bell is in front it pulls you into a more upright squat and encourages the knees to track OUT — which is exactly the correction you need."},
+  kbg_pry:{c:["Bell at the chest, feet slightly wide","Sit to the bottom and stay","Elbows push the knees out","Rock side to side, then stand"],b:"Deep breaths at the bottom",s:"Hip opener and a knee-tracking drill in one. Front-loading pulls the knees out."},
+  kbs_swing:{c:["Feet shoulder width, bell a foot in front of you", "HINGE — hips go back, shins stay near vertical. This is not a squat", "Chest proud, back flat, eyes on the horizon", "Hips snap forward hard, glutes and abs lock at the top", "The bell floats to chest height on its own. Never lift it with the arms", "Let it fall, catch it with the hips, repeat"],b:"Sharp exhale at the top of every rep — a hiss through the teeth",s:"Swings are actively GOOD for your shoulder. The bell pulls the arm forward and the shoulder has to work to stay packed in the socket, which is exactly the stability you want. The arm is a rope — all the power is hips. If you feel it in the shoulders or lower back, you are lifting instead of hinging."},
+  kbg_swing:{c:["Feet shoulder width, bell a foot in front of you", "HINGE — hips go back, shins stay near vertical. This is not a squat", "Chest proud, back flat, eyes on the horizon", "Hips snap forward hard, glutes and abs lock at the top", "The bell floats to chest height on its own. Never lift it with the arms", "Let it fall, catch it with the hips, repeat"],b:"Sharp exhale at the top of every rep",s:"Hips do the work, the arm is a rope. Glutes and abs lock hard at the top."},
+  kbc_swing:{c:["Feet shoulder width, bell a foot in front of you", "HINGE — hips go back, shins stay near vertical. This is not a squat", "Chest proud, back flat, eyes on the horizon", "Hips snap forward hard, glutes and abs lock at the top", "The bell floats to chest height on its own. Never lift it with the arms", "Let it fall, catch it with the hips, repeat"],b:"Sharp exhale at the top of every rep",s:"Last block of the day. Form first — a sloppy swing under fatigue is where backs get hurt. If the bell stops floating, stop the set."},
+  kbs_1arm:{c:["Same hinge, one hand on the handle","Free arm mirrors the working arm — do not let it dangle","Keep the shoulder PACKED — lat tight, do not let the bell drag it forward","Body stays square, resist the twist","8 reps, then swap hands at the top of a swing"],b:"Sharp exhale at the top",s:"One bell on one side means your core has to stop you rotating — that anti-rotation demand is why this beats the two-hand version for hockey. Go one bell lighter than your two-hand swing."},
+  kbs_goblet:{c:["Bell at the chest by the horns, elbows tucked in","Feet shoulder width or slightly wider","Sit straight DOWN, knees tracking out over the toes","Elbows inside the knees at the bottom, chest tall","Drive up through the whole foot, squeeze the glutes"],b:"Inhale on the way down, exhale on the drive up",s:"This one is corrective for you. Your knees want to collapse inward, and holding the load in front automatically encourages them to track out. Push the knees against the elbows at the bottom to feel it."},
+  kbg_goblet:{c:["Bell at the chest, elbows tucked","Sit straight down, knees tracking OUT","Elbows inside the knees at the bottom","Drive up through the whole foot"],b:"Inhale down, exhale up",s:"Knees out, not in. The front load helps you do that automatically."},
+  kbs_chop:{c:["Bell in both hands, start low outside one hip","Sweep it diagonally up to the opposite shoulder","Rotation comes from the RIBS, not the arms","Pivot the back foot, let the hips follow","Control it back down on the same line"],b:"Exhale on the way up",s:"This is the closest thing in the gym to a hockey shot. Rotational power through a braced trunk. 25lb is plenty — speed and range matter more than load."},
+  kbg_core:{c:["Bell in both hands low outside one hip","Sweep diagonally to the opposite shoulder","Rotate from the ribs, pivot the back foot","Control the way down"],b:"Exhale on the way up",s:"Rotational core work. Light bell, full range."},
+  kbs_carry:{c:["One bell, one hand, hanging at your side","Stand DEAD vertical — do not lean away from it","Shoulder packed down and back, do not shrug","Ribs down, abs braced, walk normally","20 seconds, swap hands, 20 more"],b:"Short shallow breaths, core stays braced",s:"The whole exercise is refusing to bend sideways. Go heavy — 50lb. If you are leaning, it is too heavy or you have stopped bracing."},
+  kbg_carry:{c:["Bell in the rack position at one shoulder","Elbow tight to the ribs, wrist straight","Ribs pulled DOWN — this is the hard part","Walk tall and normally, do not waddle","20 seconds a side"],b:"Short shallow breaths — the rack position restricts them on purpose",s:"The rack position is the breathing challenge. It is also completely safe for the shoulder because nothing goes overhead. This is your breather station — but the core never switches off."},
+  kbs_plank:{c:["Forearms down, elbows under the shoulders","Squeeze the glutes, then the quads, then the abs","Straight line from heels to head","No sag in the hips, no pike upward","Breathe — do not just hold your breath and shake"],b:"Slow controlled breaths through the nose",s:"Quality over duration. 45 hard seconds beats 2 soft minutes."},
+  kbc_getup:{c:["Lie on your side, both hands on the bell, roll onto your back","Bell pressed up, elbow LOCKED. Same-side knee bent, foot flat","Free arm at 45° on the floor","Roll to the elbow, then post up onto the hand","Sweep the straight leg back into a half-kneel","Stand up. Then reverse every step exactly"],b:"Steady breathing — never hold your breath",s:"EYES ON THE BELL the whole way up and down. This is the best single exercise for a shoulder that has been unstable: it demands stability through every angle the joint has. Treat it as skill practice — 25lb, one rep a side, perfect. Do not chase weight here for months."},
+  kbc_abc:{c:["ONE bell. Right hand: 2 cleans, 1 press, 3 front squats","Clean — hinge, pull the bell close to the body, spear the hand through. It should SETTLE into the rack, not bang the wrist","Press from the rack: ribs down, elbow drives up, lock out with the bicep by the ear","Front squat with the bell still racked: sit down between the hips, chest tall","Switch hands. Repeat everything on the left. That is one round"],b:"Exhale on each clean and each press. Breathe in the rack between reps",s:"Dan John's Armor Building Complex — the single best bang-for-buck kettlebell session there is. If the clean bangs your wrist, you are curling it: pull the bell in TIGHT and let the arm rotate around it. If it still bangs after a few sessions, use the Swing + Squat sub — it trains the same lungs with none of the skill."},
+  kbg_burpee:{c:["STEP back into the plank, one foot at a time. No jumping","Chest touches the floor, elbows track back at 45°","Push up, STEP the feet back in one at a time","Stand up tall. No jump at the top either","Steady rhythm — this is a breathing drill, not a sprint"],b:"Exhale as you push up off the floor",s:"Stepping instead of jumping is deliberate: it takes the ground impact off your shins and the landing off your knees, and you lose almost nothing in conditioning. Never jump these."},
+  kbg_pushup:{c:["Hands slightly wider than the shoulders","Body one rigid line — squeeze glutes and abs","Elbows at 45° from the torso, NOT flared to 90°","Chest to the floor on every rep","Push the floor away, do not let the hips sag"],b:"Inhale down, exhale on the push",s:"Elbows at 45° is the same rule as your incline press, and it matters for the same reason — flaring to 90° puts the shoulder in the impingement position. Drop to the elevated version rather than grinding half-reps."},
+
+  /* ── kettlebell: substitutions ──────────────────────────────── */
+  kb_1arm_swing_s:{c:["Same hinge, one hand","Free arm mirrors the working arm","Shoulder packed — do not let the bell drag it forward","Stay square, resist the twist"],b:"Sharp exhale at the top",s:"Anti-rotation on top of the hinge. One bell lighter than your two-hand swing."},
+  kb_dead_swing:{c:["Bell starts on the floor, a foot in front of you","Hinge, hike it back between the legs, snap the hips","At the top of the backswing, park it back on the floor","Reset your grip and position every single rep"],b:"Exhale at the top of each swing",s:"No rebound means every rep is a fresh, honest hinge. This is the fix when your swings start drifting into squats."},
+  kb_deadlift_s:{c:["Bell between the feet, handle in line with the ankles","Hinge down, chest proud, back flat","Both hands on the handle, take the slack out","Stand up by driving the hips forward","Lower it under control, do not drop it"],b:"Exhale as you stand",s:"The hinge with zero ballistic load. This is the swap when the back or shoulder is complaining — same pattern, no speed."},
+  kb_rdl_s:{c:["Standing tall, bell in both hands at the hips","Knees SOFT and fixed — they do not bend further","Push the hips straight back, bell slides down the thighs","Stop when you feel the hamstrings, not when you touch the floor","Squeeze the glutes to stand"],b:"Inhale on the way down, exhale standing",s:"Pure hamstring and glute stretch under load. Slow — 3 seconds down."},
+  db_swing_s:{c:["Hold one dumbbell vertically by the top head, both hands","Identical hinge to a kettlebell swing","Hips snap, the weight floats up","Do not let it pull you forward at the top"],b:"Sharp exhale at the top",s:"Works fine if no bell is free. The grip is worse, so go lighter."},
+  kb_good_morning_s:{c:["Bell in the rack at one shoulder, or two hands at the chest","Knees soft, hinge until the torso is near horizontal","Back flat throughout, ribs down","Stand by driving the hips forward"],b:"Inhale down, exhale up",s:"Loads the hinge with no speed at all. Good when you want posterior chain work but the shins or back are not up for swings."},
+  kb_front_squat_s:{c:["Bell in the rack at one shoulder, elbow tight to the ribs","Feet shoulder width","Sit straight down between the hips, knees tracking out","Chest tall — the off-centre load wants to fold you sideways","Drive up, stay vertical"],b:"Inhale down, exhale up",s:"Harder on the core than a goblet because the load is on one side. Do all reps one side, then swap."},
+  kb_sumo_squat_s:{c:["Wide stance, toes turned out 30°","Bell hanging between the legs in both hands","Sit STRAIGHT down, knees over the toes","Chest up, back flat","Drive up through the heels, squeeze the glutes"],b:"Inhale down, exhale up",s:"Kinder on the knees than a narrow squat and more adductor. A good option on a day the knees feel cranky."},
+  kb_tempo_bw_squat_s:{c:["No weight. Arms out in front for balance","3 seconds down","1 second pause at the bottom","Stand up at normal speed","Knees track out over the toes the whole time"],b:"Inhale down, exhale up",s:"No bell needed. The slow eccentric gives you real stimulus from bodyweight, and it is the best version for grooving your knee tracking."},
+  kb_rev_lunge_s:{c:["Bell at the chest, goblet grip","Step BACKWARD into the lunge — never forward","Back knee lowers toward the floor, front shin stays vertical","Push through the front foot to stand","Alternate legs"],b:"Exhale as you stand",s:"Stepping back rather than forward loads the front leg without the braking force that irritates knees. Low impact, so your shins stay out of it."},
+  kb_split_squat_s:{c:["Bell at the chest, feet already in a lunge stance","Both feet stay planted — no stepping","Drop straight down, back knee toward the floor","Front shin vertical, torso upright","All reps one side, then swap"],b:"Inhale down, exhale up",s:"All of the single-leg work, none of the stepping. The most knee-friendly loaded leg exercise you own."},
+  kb_hk_press_s:{c:["Half-kneeling: one knee down, opposite knee up at 90°","Bell in the rack on the side of the DOWN knee","Squeeze the down-side glute, ribs pulled down","Press straight up, elbow driving under the bell","Lock out with the bicep by the ear"],b:"Exhale on the press",s:"The strictest overhead press there is. The half-kneeling stance removes all leg drive and physically prevents you arching the lower back to cheat the bell up. If a press is going to be safe for your shoulder, it is this one."},
+  kb_bu_press_s:{c:["Bell UPSIDE DOWN, handle squeezed as hard as you can","Wrist dead straight, forearm vertical","Press slowly — speed will dump it","Everything from the hand to the shoulder is fighting to balance it","Lower just as slowly"],b:"Exhale on the press, brace hard",s:"Rehab-grade rotator cuff work disguised as a press. Balancing the bell forces the small stabilisers to fire in a way no normal press does. 25lb will feel absurdly heavy — that is correct."},
+  kb_push_press_s:{c:["Bell in the rack, feet shoulder width","Short sharp DIP of the knees","Drive the legs and let that momentum start the bell","Finish with the arm, lock out overhead","Lower under control back to the rack"],b:"Exhale on the drive",s:"Use the legs to get past the hard part. This is how you keep the volume when a strict press is failing — not by grinding ugly reps."},
+  kb_floor_press_s:{c:["On your back, knees bent, bell in one hand at the chest","Press straight up, wrist stacked over the elbow","Lower until the upper arm touches the floor — the floor is your stop","Pause, then press again","Elbow stays at about 45° from the body"],b:"Inhale down, exhale on the press",s:"The floor stops you short of the end range where an unstable shoulder gets into trouble. All the pressing, none of the risk."},
+  kb_seesaw_press_s:{c:["Two bells, both in the rack","One presses up as the other comes down","Continuous, no pause at the bottom","Ribs down — do not let the lower back arch as you alternate"],b:"Exhale on each press",s:"The constant tension makes this a conditioning movement as much as a strength one. Lighter than your strict press."},
+  kb_atw_s:{c:["Bell in one hand, standing tall","Pass it around the waist, hand to hand behind your back","Keep it close, keep it moving","Stay upright — do not sway with it","Change direction halfway"],b:"Breathe normally",s:"Same warming effect as a halo but nothing goes near overhead. Use it on a day the shoulder feels touchy."},
+  kb_arm_bar_s:{c:["On your side, bell pressed up, elbow locked","Top leg sweeps back and over, hips rotate toward the floor","Chest opens toward the ceiling, eyes stay ON the bell","Hold and breathe — 30 seconds","Reverse carefully to come out"],b:"Deep slow breaths in the stretch",s:"Superb thoracic and shoulder opener, and it builds exactly the kind of end-range stability your shoulder wants. 25lb, move slowly, never rush the exit."},
+  kb_pass_s:{c:["Band or towel in both hands, wide grip","Arms straight, lift overhead and continue behind you","Go only as far as you can WITHOUT bending the elbows","Return on the same path","Narrow the grip slightly as it gets easier"],b:"Exhale as the arms go back",s:"Pure mobility, zero load. Good first thing if the shoulders are stiff."},
+  kb_prone_ty_s:{c:["Face down on the floor, forehead resting down","Thumbs pointing UP to the ceiling","Lift the arms into a T, hold 2s, lower","Then into a Y overhead, hold 2s, lower","Very light or no weight at all"],b:"Exhale as you lift",s:"Wakes up the lower traps and rear delts — the muscles that hold the shoulder blade where it belongs. This is prep, not training."},
+  kb_russian_twist_s:{c:["Seated, knees bent, heels light on the floor","Bell held at the chest","Rotate and touch the bell down beside one hip, then the other","Rotation from the RIBS, chest turns with the arms","Do not let the lower back round"],b:"Exhale on each rotation",s:"Simple rotational core. Keep the chest up and actually turn — do not just swing the arms across a static torso."},
+  kb_hp_plank_s:{c:["High plank, bell just outside one hand","Reach under with the opposite hand and drag it across","Hips stay LEVEL — that is the whole exercise","Reset and drag it back","Slow and controlled"],b:"Breathe steadily, never hold",s:"Anti-rotation under fatigue with a shoulder-stability bonus from the single-arm support. Harder than it looks."},
+  kb_suitcase_s:{c:["One bell, one hand, at your side","Stand dead vertical, do not lean away","Shoulder packed down, no shrugging","Ribs down, abs braced, walk normally"],b:"Short shallow breaths, stay braced",s:"Refusing to bend sideways is the exercise. Go heavy."},
+  kb_dead_bug_s:{c:["On your back, arms straight up, knees up at 90°","Press the lower back FLAT into the floor and keep it there","Lower one arm overhead and the opposite leg toward the floor","Stop the moment the back wants to arch","Return and switch sides"],b:"Exhale slowly as you extend",s:"No bell needed. Far harder than it looks if you keep the lower back genuinely flat."},
+  kb_pallof_s:{c:["Stand sideways to a band at chest height","Hands at the sternum, press straight out","Hold 2 seconds at full extension","Resist the pull that wants to rotate you","Return slowly, do not let it snap back"],b:"Exhale on the press-out",s:"Anti-rotation, which is what your trunk actually does in hockey. Direct carry-over."},
+  kb_racked_carry_s:{c:["Bell in the rack at one shoulder, elbow tight to the ribs","Wrist straight, bell resting on the forearm","Ribs pulled DOWN hard","Walk tall and normal","Swap sides halfway"],b:"Short shallow breaths — the position restricts them on purpose",s:"Brutal on the core, completely safe for the shoulder. Nothing goes overhead."},
+  kb_oh_carry_s:{c:["Bell locked out overhead, elbow straight","Bicep beside the ear, shoulder pushed UP into the socket","Ribs down — the lower back must not arch","Walk slowly and deliberately","Bring it down under control, never drop it"],b:"Short controlled breaths",s:"The best shoulder stability drill you own now the joint is healthy. Start at 25lb and stay there until 60 seconds is easy."},
+  kb_farmer_carry_s:{c:["A bell in each hand at your sides","Shoulders packed down and back","Stand tall, ribs down","Walk normally — no waddling, no leaning"],b:"Short shallow breaths, core braced",s:"Balanced load means you can go heaviest here. Pure grip and trap work."},
+  kb_waiter_carry_s:{c:["Bell BOTTOMS-UP overhead, handle squeezed hard","Elbow locked, bicep by the ear","Wrist dead straight","Walk slowly, tiny steps","25lb only"],b:"Short controlled breaths",s:"The hardest carry there is. Every stabiliser in the shoulder is working at once. Stop the moment the wrist starts to bend."},
+  kb_plank_hold_s:{c:["Forearms down, elbows under the shoulders","Squeeze glutes, quads, abs","Straight line heels to head","No sag, no pike"],b:"Slow controlled nose breathing",s:"No bell, no walking. Quality over duration."},
+  kb_squat_thrust_s:{c:["STEP back into a plank, one foot at a time","No push-up","STEP the feet back in","Stand up — no jump","Steady, repeatable rhythm"],b:"Exhale as you stand",s:"A burpee with the impact and the push-up removed. Same breathing cost, nothing for your shins to complain about."},
+  kb_inchworm_s:{c:["Stand tall, hinge and put the hands on the floor","Walk the hands out to a full plank","Hold 1 second","Walk the hands back to the feet","Stand up tall"],b:"Exhale walking out",s:"Low impact, and it opens the hamstrings while it gets you breathing. Good early in a session."},
+  kb_mtn_climber_s:{c:["High plank, hands under the shoulders","Drive one knee toward the chest, then the other","Hips stay LOW and level — no bouncing up and down","Feet stay close to the floor","Fast but controlled"],b:"Quick shallow breathing, keep the core braced",s:"Fast breathing with no ground impact. Good burpee swap when the shins are sore."},
+  kb_bear_crawl_s:{c:["Hands and feet down, knees an inch off the floor","Opposite hand and foot move together","Hips stay LOW and level","Small steps, crawl forward then backward","Do not let the hips sway side to side"],b:"Steady breathing, core braced throughout",s:"Deceptively savage full-body conditioning. If your hips are swinging, your steps are too big."},
+  kb_extra_swing_s:{c:["Standard two-hand swing","Hinge, snap, float","Glutes and abs lock at the top"],b:"Sharp exhale at the top",s:"Straight burpee swap when the shins or knees have had enough. No ground contact at all."},
+  kb_incline_pu_s:{c:["Hands on the HANDLES of two bells, bells on the floor","Squeeze the handles hard — they want to tip","Body one rigid line","Lower until the chest passes below the handles","Elbows at 45°, not flared"],b:"Inhale down, exhale on the push",s:"The extra depth plus the wobble makes this harder than a floor push-up, and the neutral wrist is far kinder if your wrists complain."},
+  kb_elev_pu_s:{c:["Hands on a bench, step or the sofa","Body one rigid line from heels to head","Chest to the surface on every rep","Elbows 45°","The higher the hands, the easier it gets"],b:"Inhale down, exhale on the push",s:"Use this to keep every rep clean rather than grinding half-reps on the floor. Clean reps at an easier angle beat ugly reps at a hard one."},
+  kb_floor_press_pu_s:{c:["On your back, bell in one hand at the chest","Press straight up, wrist over the elbow","Lower until the upper arm touches the floor","Pause, press again"],b:"Inhale down, exhale on the press",s:"Loaded pressing with the risky end range physically removed. Straight swap if the wrists or shoulder complain about push-ups."},
+  kb_tempo_pu_s:{c:["Standard push-up position","3 seconds down","1 second with the chest on the floor","Drive up at normal speed","Halve your normal reps"],b:"Inhale on the 3-second descent",s:"Far more stimulus per rep. Six of these beats fifteen fast ones."},
+  kb_knee_pu_s:{c:["Knees on the floor, everything else identical","Body straight from knees to head — do not sit back","Chest still touches the floor","Elbows 45°"],b:"Inhale down, exhale on the push",s:"Better than a sloppy full push-up. No ego here."},
+  kb_half_getup_s:{c:["Same start: on your side, roll to your back, bell pressed up","Elbow LOCKED, eyes on the bell","Roll to the elbow, post to the hand","Sweep the leg back to a half-kneel","STOP there. Reverse back down"],b:"Steady breathing, never hold",s:"You get most of the shoulder benefit without the stand-up, which is the part people rush and butcher. Start here."},
+  kb_getup_elbow_s:{c:["On your back, bell pressed up, elbow locked","Same-side knee bent, foot flat","Free arm at 45° on the floor","Drive the foot and roll onto the free elbow","Eyes on the bell. Lower back down"],b:"Steady breathing",s:"The entry only. This is where everybody should start, and there is no shame in staying here for a month."},
+  kb_naked_getup_s:{c:["No bell — closed fist pointing at the ceiling instead","Full get-up sequence, start to finish","Eyes on the fist the whole way","Move slowly and learn each step"],b:"Steady breathing",s:"Learn the pattern with nothing that can fall on you. Do this before you ever load it."},
+  kb_side_plank_s:{c:["On your side, elbow under the shoulder","Hips STACKED, one on top of the other","Lift the hips into a straight line","Squeeze the bottom glute","30 seconds a side"],b:"Slow controlled breathing",s:"Lateral trunk work when the floor get-ups are not happening today."},
+  kb_abc_noclean_s:{c:["NO CLEAN. 5 two-hand swings","Straight into 5 goblet squats","Put the bell down, rest the remainder of the interval","Same bell for both"],b:"Exhale at the top of each swing and each squat",s:"Same lungs, same legs, none of the wrist-banging. Use this until the clean feels automatic — there is no rush."},
+  kb_abc_nopress_s:{c:["Right hand: 2 cleans, then 3 front squats","Switch hands, repeat on the left","No overhead pressing at all","Bell settles into the rack, never bangs"],b:"Exhale on each clean, breathe in the rack",s:"Keeps the rack work and the legs, removes every bit of overhead load. Use this if the shoulder is having an off week."},
+  kb_abc_dead_s:{c:["Bell starts on the FLOOR for every single rep","Hinge, pull it in tight, spear the hand through to the rack","Press, then front squat","Return it to the floor and reset before the next rep"],b:"Exhale on each clean and press",s:"Slower and more honest — no momentum to hide behind. The best way to actually learn the clean."},
+  kb_abc_swingpress_s:{c:["10 two-hand swings","Then 5 push press each side","No rack position to hold, no clean to learn","Put the bell down between movements"],b:"Exhale on each swing and each press",s:"All the conditioning with the two technical bits removed. A good bridge if the rack position is uncomfortable."},
+  kb_abc_light_s:{c:["Exact same complex — 2 cleans, 1 press, 3 front squats each side","Smallest bell, 25lb","Focus entirely on the clean landing softly in the rack"],b:"Exhale on each clean and press",s:"Do this for your first two or three sessions. Learn the sequence at a weight where mistakes cost nothing."},
+
   face_pull:{c:["Anchor high on the stack — above head height","Rope attachment, overhand grip, thumbs pointing back","Pull to forehead level, elbows flaring out and up","At the end position externally rotate — hands behind ears","Control the return, don't let it yank you forward"],b:"Exhale on the pull",s:"Your #1 shoulder health exercise. It strengthens the posterior cuff and external rotators that stabilise against subluxation. Light weight, perfect form, every session, no exceptions."},
   incline_db:{c:["Bench at 30-45° — higher means more upper chest and less shoulder stress","Grip just outside shoulder width, wrists stacked over elbows","Lower to mid-chest, elbows at 45° from the torso","Pause at the bottom, drive up and in, don't lock out","Shoulder blades retracted and depressed the whole set"],b:"Inhale down, exhale on the push",s:"Elbows at 45° is the single most important cue for your shoulder. Flaring to 90° puts the joint in the impingement position."},
   cable_fly:{c:["Cables at chest height or slightly above","Split stance, step forward for stability","Slight FIXED bend in the elbow — never changes","Initiate with the chest, think hugging a barrel","Squeeze hard at centre, hold 1s, controlled return"],b:"Exhale as the cables come together",s:"Keep it in the horizontal plane. An upward arc turns this into an impingement drill."},
@@ -675,10 +986,20 @@ function getTarget(last, repsStr){
   const tr=Math.min(avgR+1,top);
   return {weight:Math.round(avgW/5)*5,reps:tr,label:`Same weight — push for ${tr}+ reps`};
 }
-function overloadHint(last,repsStr){
+function overloadHint(last,repsStr,ex){
   if(!Array.isArray(last)||isTimeBased(repsStr)) return '';
   const p=String(repsStr).split('-'),top=parseInt(p[p.length-1]),bot=parseInt(p[0]);
   if(!top) return '';
+  if(ex&&ex.bell&&!ex.bw&&last.length){
+    const cur=snapBell(Math.max.apply(null,last.map(s=>parseFloat(s.weight)||0)));
+    if(last.every(s=>parseInt(s.reps)>=top)){
+      const up=nextBell(cur);
+      return up ? `Topped out at ${cur}lb — move up to the ${up}lb bell`
+                : `Topped out on your heaviest bell — add reps, or it's time for a bigger one`;
+    }
+    return last.every(s=>parseInt(s.reps)>=bot) ? 'Solid — push for more reps on this bell'
+                                                : 'Build reps before changing bell';
+  }
   if(last.every(s=>parseInt(s.reps)>=top)) return 'Hit the top of the range — add weight';
   if(last.every(s=>parseInt(s.reps)>=bot)) return 'Solid — push for more reps';
   return 'Build reps before adding weight';
@@ -823,9 +1144,50 @@ function lastAvgWeight(sourceId){
   return v.reduce((a,s)=>a+parseFloat(s.weight),0)/v.length;
 }
 
+/* ── KETTLEBELLS ───────────────────────────────────────────────
+   Bells do not micro-load. The normal engine adds 5lb when you top
+   out a rep range, which is meaningless when the next bell you own
+   is 18lb heavier. So for bell work: add REPS on the bell you have,
+   and only change bell when there is genuinely one to change to.
+   BUYING A NEW BELL? Add its weight to this list and the app will
+   start programming it. */
+const BELLS=[25,35,50];
+function snapBell(w){
+  if(w==null||!isFinite(w)) return BELLS[0];
+  let b=BELLS[0]; BELLS.forEach(x=>{ if(x<=w) b=x; }); return b;
+}
+function nextBell(w){ return BELLS.find(x=>x>w)||null; }
+
+function bellTargets(ex){
+  const n=Math.max(1,ex.sets|0), out=[];
+  const start=snapBell(ex.defaultWeight);
+  const last=workingOnly(getLastPerf(ex.id)).filter(s=>s.weight&&s.reps);
+  if(!last.length){
+    for(let i=0;i<n;i++) out.push({weight:start,reps:repsForSet(ex,i)});
+    return out;
+  }
+  const cur=snapBell(Math.max.apply(null,last.map(s=>parseFloat(s.weight)||0))||start);
+  const p=String(ex.reps).split('-'), top=parseInt(p[p.length-1]);
+  // a carry measured in seconds can never be "maxed on reps"
+  const timed=isTimeBased(ex.reps);
+  const maxed=!timed&&!!top&&last.every(s=>parseInt(s.reps)>=top);
+  const lastReps=Math.max.apply(null,last.map(s=>parseInt(s.reps)||0));
+  for(let i=0;i<n;i++){
+    if(!maxed){ out.push({weight:cur,reps:repsForSet(ex,i)}); continue; }
+    const pres=parseInt(repsForSet(ex,i))||lastReps;
+    const up=nextBell(cur);
+    // a heavier bell is a big jump, so drop back to the prescribed reps
+    if(up) out.push({weight:up,reps:String(pres)});
+    // no heavier bell — earn it by adding reps, capped at prescribed +6
+    else   out.push({weight:cur,reps:String(Math.min(pres+6,lastReps+2))});
+  }
+  return out;
+}
+
 // Returns one {weight,reps} per WORKING set
 function getSetTargets(ex){
   const n=Math.max(1,ex.sets|0), out=[];
+  if(ex.bell&&!ex.bw) return bellTargets(ex);
 
   if(ex.scheme==='pyramid'){
     const topReps=parseInt(repsForSet(ex,0))||6;
@@ -861,7 +1223,11 @@ function getSetTargets(ex){
   }
 
   const t=getTarget(workingOnly(getLastPerf(ex.id)),ex.reps);
-  for(let i=0;i<n;i++) out.push({weight:t?t.weight:null,reps:t?t.reps:repsForSet(ex,i)});
+  for(let i=0;i<n;i++) out.push({
+    // no history yet? fall back to the prescribed bell / load
+    weight: t ? t.weight : (ex.defaultWeight||null),
+    reps:   t ? t.reps   : repsForSet(ex,i)
+  });
   return out;
 }
 
@@ -900,13 +1266,15 @@ function startWorkout(dayId){
     (ex.subs||[]).forEach(sub=>{
       if(!sub||!sub.id) return;
       const proxy={...ex,id:sub.id,basedOn:ex.basedOn||ex.id};
+      // a bodyweight or band substitute inherits the slot, not the bell
+      if(sub.bw){ proxy.bell=false; proxy.bw=true; delete proxy.defaultWeight; }
       setData[sub.id]=buildSets(proxy);
       const stg=getSetTargets(proxy);
       const sw=stg[0]&&stg[0].weight;
       if(ex.dropSet) dropData[sub.id]={weight:sw?String(round5(sw*0.7)):'',reps:'',done:false};
     });
   });
-  S.session={dayId,setData,dropData,activeSubs:{},startTime:Date.now()};
+  S.session={dayId,setData,dropData,activeSubs:{},clock:null,startTime:Date.now()};
   S.elapsed=0; S.restTimers={}; S.paused=false; S.pausedAt=null;
   saveSession(S.session); startElapsed(); go('workout');
 }
@@ -925,6 +1293,17 @@ function normalizeSession(){
   if(!s.dropData  || typeof s.dropData!=='object')  s.dropData={};
   if(!s.activeSubs|| typeof s.activeSubs!=='object')s.activeSubs={};
   if(typeof s.startTime!=='number' || !isFinite(s.startTime)) s.startTime=Date.now();
+  // clock must be a valid, live handle on a real clock block or nothing at all
+  if(s.clock){
+    const c=s.clock, b=((day.blocks||[])[c&&c.bi]);
+    if(!c || typeof c!=='object' || typeof c.startTs!=='number' || !isFinite(c.startTs)
+       || !b || b.kind!=='clock') s.clock=null;
+    else {
+      if(typeof c.pauseAcc!=='number'||!isFinite(c.pauseAcc)) c.pauseAcc=0;
+      if(typeof c.pausedAt!=='number') c.pausedAt=null;
+      if(typeof c.lastRound!=='number') c.lastRound=-1;
+    }
+  } else s.clock=null;
 
   const validSet=x=>x&&typeof x==='object';
   const fixSlot=(id,count,warmCount)=>{
@@ -1041,7 +1420,7 @@ function confirmFinish(){
   finishWorkout();
 }
 function finishWorkout(){
-  clearAllRest(); clearInterval(elapsedIv);
+  clearAllRest(); clearInterval(elapsedIv); stopClockTimer();
   const day=getDay(S.session.dayId);
   const dur=Math.max(1,Math.round((Date.now()-S.session.startTime)/60000));
   const sets={},drops={},used=[];
@@ -1064,15 +1443,21 @@ function finishWorkout(){
 }
 function discardWorkout(){
   if(!confirm('Discard this workout? All logged sets will be lost.')) return;
-  clearAllRest(); clearInterval(elapsedIv);
+  clearAllRest(); clearInterval(elapsedIv); stopClockTimer();
   S.session=null; saveSession(null); go('home');
 }
-function pauseWorkout(){ S.paused=true; S.pausedAt=Date.now(); clearInterval(elapsedIv); render(); }
+function pauseWorkout(){
+  S.paused=true; S.pausedAt=Date.now(); clearInterval(elapsedIv);
+  if(S.session&&S.session.clock&&!S.session.clock.pausedAt){ S.session.clock.pausedAt=Date.now(); saveSession(S.session); }
+  render();
+}
 function resumeWorkout(){
   if(!S.paused||!S.pausedAt) return;
   const delta=Date.now()-S.pausedAt;
   if(S.session){ S.session.startTime+=delta; saveSession(S.session); }
   Object.keys(S.restTimers).forEach(k=>{ if(!S.restTimers[k].done) S.restTimers[k].endTs+=delta; });
+  const c=S.session&&S.session.clock;
+  if(c&&c.pausedAt){ c.pauseAcc=(c.pauseAcc||0)+(Date.now()-c.pausedAt); c.pausedAt=null; c.lastBeep=null; saveSession(S.session); runClock(); }
   S.paused=false; S.pausedAt=null; startElapsed(); render();
 }
 function startElapsed(){
@@ -1084,8 +1469,129 @@ function startElapsed(){
   },1000);
 }
 
+/* ── INTERVAL CLOCK — EMOM / E2MOM / any fixed interval ───────
+   Absolute timestamps throughout, so a locked screen, a throttled
+   background tab or a suspended AudioContext cannot drift it. Every
+   round that elapses is logged the instant it does, against the
+   station's ACTIVE exercise id, so substitutions keep their own
+   history exactly like anywhere else in the app. */
+const CLK_R=88, CLK_C=2*Math.PI*CLK_R;
+let clockIv=null;
+
+function curDay(){ return S.session?getDay(S.session.dayId):null; }
+function exById(id){ const d=curDay(); return d?(d.exercises||[]).find(e=>e.id===id)||null:null; }
+function blockOf(i){ const d=curDay(); return ((d&&d.blocks)||[])[i]||null; }
+function blockExercises(bi){ const d=curDay(); return d?(d.exercises||[]).filter(e=>e.block===bi):[]; }
+function clockRounds(b){ return Math.max(1, b.rounds || Math.round((b.minutes*60)/(b.interval||60))); }
+function clockKind(b){ const i=b.interval||60; return i===60?'EMOM':i===120?'E2MOM':i===180?'E3MOM':i+'s intervals'; }
+function dispName(ex){ const s=activeSubFor(ex); return s?s.name:(ex?ex.name:''); }
+
+function clockElapsed(){
+  const c=S.session&&S.session.clock; if(!c) return 0;
+  const now=c.pausedAt||Date.now();
+  return Math.max(0,Math.floor((now-c.startTs-(c.pauseAcc||0))/1000));
+}
+function clockInfo(){
+  const c=S.session&&S.session.clock; if(!c) return null;
+  const b=blockOf(c.bi); if(!b||b.kind!=='clock') return null;
+  const iv=Math.max(5,b.interval||60), rounds=clockRounds(b), ids=b.ids||[], n=ids.length||1;
+  const el=clockElapsed(), r=Math.floor(el/iv);
+  return {b,iv,rounds,ids,n,elapsed:el,round:r,
+    rem: r>=rounds?0:(iv-(el%iv)),
+    finished: r>=rounds,
+    station: exById(ids[r%n]),
+    cycle: Math.floor(r/n),
+    next: (r+1<rounds) ? exById(ids[(r+1)%n]) : null,
+    nextCycle: Math.floor((r+1)/n),
+    paused: !!c.pausedAt};
+}
+
+/* Log one completed round against the active exercise for that station */
+function logRound(b,r){
+  if(!S.session) return;
+  const ids=b.ids||[], n=ids.length||1;
+  const ex=exById(ids[r%n]); if(!ex) return;
+  const id=activeIdFor(ex);
+  const arr=S.session.setData[id]; if(!Array.isArray(arr)) return;
+  const wc=(ex.warmup&&ex.warmup.length)||0, k=Math.floor(r/n), s=arr[wc+k];
+  if(!s||s.done) return;
+  s.done=true; s.pre=false;
+  if(!s.reps)   s.reps=repsForSet(ex,k);
+  if(!s.weight && ex.defaultWeight) s.weight=String(ex.defaultWeight);
+  saveSession(S.session);
+}
+
+function startClock(bi){
+  if(!S.session) return;
+  const b=blockOf(bi); if(!b||b.kind!=='clock') return;
+  unlockAudio();
+  S.session.clock={bi,startTs:Date.now(),pauseAcc:0,pausedAt:null,lastBeep:null,lastRound:-1,painted:-1};
+  saveSession(S.session);
+  tone(980,0.2,1); setTimeout(()=>tone(1320,0.34,1),210);
+  runClock(); go('clock');
+}
+function runClock(){ clearInterval(clockIv); clockIv=setInterval(clockTick,200); }
+function stopClockTimer(){ clearInterval(clockIv); clockIv=null; }
+
+function clockTick(){
+  const c=S.session&&S.session.clock;
+  if(!c){ stopClockTimer(); return; }
+  if(c.pausedAt) return;
+  const i=clockInfo(); if(!i){ stopClockTimer(); return; }
+
+  // log every round that has fully elapsed since the last tick
+  const upTo=Math.min(i.round,i.rounds)-1;
+  while(c.lastRound<upTo){ c.lastRound++; logRound(i.b,c.lastRound); }
+
+  if(i.finished){ finishClock(); return; }
+
+  const key=i.round+':'+i.rem;
+  if(c.lastBeep!==key){
+    c.lastBeep=key;
+    if(i.rem===3||i.rem===2||i.rem===1) tone(760,0.15,0.95);
+    if(i.rem===i.iv&&i.round>0){ tone(980,0.2,1); setTimeout(()=>tone(1320,0.34,1),210); }
+  }
+  paintClock(i);
+}
+function paintClock(i){
+  const c=S.session.clock;
+  if(c.painted!==i.round){ c.painted=i.round; render(); return; }   // new station, full repaint
+  const t=document.getElementById('clk-time');
+  if(t){ t.textContent=fmtTime(i.rem); t.classList.toggle('hot',i.rem<=3); }
+  const rg=document.getElementById('clk-ring');
+  if(rg) rg.style.strokeDashoffset=String(CLK_C*(1-i.rem/i.iv));
+  const el=document.getElementById('clk-elapsed');
+  if(el) el.textContent=fmtTime(i.elapsed)+' / '+fmtTime(i.rounds*i.iv);
+}
+function finishClock(){
+  stopClockTimer();
+  const c=S.session&&S.session.clock; if(!c) return;
+  const b=blockOf(c.bi);
+  if(b){ const R=clockRounds(b); for(let r=0;r<R;r++) logRound(b,r); }
+  S.session.clock=null; saveSession(S.session);
+  tone(880,0.3,1); setTimeout(()=>tone(660,0.55,1),330);
+  go('workout');
+}
+function endClockEarly(){
+  if(!confirm('End this block early? Rounds you already finished stay logged.')) return;
+  stopClockTimer();
+  if(S.session){ S.session.clock=null; saveSession(S.session); }
+  go('workout');
+}
+function pauseClock(){
+  const c=S.session&&S.session.clock; if(!c||c.pausedAt) return;
+  c.pausedAt=Date.now(); saveSession(S.session); render();
+}
+function resumeClock(){
+  const c=S.session&&S.session.clock; if(!c||!c.pausedAt) return;
+  c.pauseAcc=(c.pauseAcc||0)+(Date.now()-c.pausedAt);
+  c.pausedAt=null; c.lastBeep=null; saveSession(S.session);
+  unlockAudio(); runClock(); render();
+}
+
 /* ── REST TIMERS ─────────────────────────────────────────────── */
 function startRest(key,dur){
+  if(dur===0) return;          // interval-clock blocks handle their own timing
   stopRest(key);
   const secs=Math.max(5,dur|0||90);
   const endTs=Date.now()+secs*1000;
@@ -1123,7 +1629,7 @@ function go(sc){
 function handleDayTap(dayId){
   if(S.session&&S.session.dayId===dayId){ go('workout'); return; }
   if(S.session&&!confirm('A workout is already in progress. Discard it and start this one?')) return;
-  if(S.session){ clearAllRest(); clearInterval(elapsedIv); S.session=null; saveSession(null); }
+  if(S.session){ clearAllRest(); clearInterval(elapsedIv); stopClockTimer(); S.session=null; saveSession(null); }
   startWorkout(dayId);
 }
 
@@ -1318,7 +1824,7 @@ function render(){
   }
 }
 function hardReset(){
-  clearAllRest(); clearInterval(elapsedIv);
+  clearAllRest(); clearInterval(elapsedIv); stopClockTimer();
   S.screen='home'; S.formModal=null; S.edDay=null; S.edMode=null; S.edDraft=null; S.paused=false;
   lsSet(K.screen,'home');
   render();
@@ -1369,7 +1875,7 @@ function exCard(ex){
   const anyD=sets.some(s=>s.done);
   const lastWorkDone=sets.length?sets[sets.length-1].done:false;
   const isPR=sessionPRs().includes(id);
-  const rest=ex.rest||90;
+  const rest=ex.noRest?0:(ex.rest||90);   // clock blocks time themselves
   const hasForm=!!FORM[id];
 
   let h=`<div class="ex-card${anyD&&!allD?' any-done':''}${allD?' all-done':''}">`;
@@ -1399,7 +1905,7 @@ function exCard(ex){
 
   if(last&&last.length){
     const rm=best1RM(last.filter(s=>s.done||s.weight));
-    const hint=overloadHint(last,ex.reps);
+    const hint=overloadHint(last,ex.reps,ex);
     h+=`<div class="last-box"><div class="last-label">Last time${sub?' · '+esc(sub.name):''}</div><div class="last-chips">
       ${last.map(s=>`<span class="last-chip">${s.weight?esc(s.weight)+'lb':'—'} × ${esc(s.reps||'—')}${s.rpe?' @'+s.rpe:''}</span>`).join('')}
       ${ex.dropSet&&lastDrop?`<span class="last-chip drop">↓ ${esc(lastDrop.weight||'?')}lb × ${esc(lastDrop.reps||'?')}</span>`:''}
@@ -1443,6 +1949,115 @@ function exCard(ex){
         <input class="set-input drop-inp${drop.done?' done':''}" type="number" inputmode="numeric" placeholder="reps" value="${esc(drop.reps)}" ${drop.done?'readonly':''} onchange="updDrop('${id}','reps',this.value)">
         <button class="check-btn drop-btn${drop.done?' done':''}" onclick="togDrop('${id}')">${drop.done?'✓':'○'}</button>
       </div>${restBanner(id+'_drop')}</div>`;
+  }
+  return h+`</div>`;
+}
+
+/* ── block card (kettlebell days) ─────────────────────────────── */
+function countClockDone(b){
+  let n=0;
+  (b.ids||[]).forEach(id=>{
+    const e=exById(id); if(!e) return;
+    const arr=S.session.setData[activeIdFor(e)]||[];
+    n+=arr.filter(s=>s&&s.done&&!s.warm).length;
+  });
+  return n;
+}
+function blockCard(b,bi){
+  const exs=blockExercises(bi);
+  const isClock=b.kind==='clock';
+  const live=S.session.clock&&S.session.clock.bi===bi;
+  let h=`<div class="blk${isClock?' blk-clock':''}">
+    <div class="blk-head">
+      <div><div class="blk-title">${esc(b.label)}</div>
+      <div class="blk-meta">${isClock?`${clockKind(b)} · ${b.minutes} min · ${clockRounds(b)} rounds`:`${b.minutes} min`}</div></div>
+      <div class="blk-num">${bi+1}</div>
+    </div>`;
+  if(b.note) h+=`<div class="blk-note">${esc(b.note)}</div>`;
+
+  if(isClock){
+    const ids=b.ids||[];
+    if(ids.length>1){
+      h+=`<div class="blk-order">`;
+      ids.forEach((id,k)=>{
+        const e=exById(id); if(!e) return;
+        h+=`<div class="blk-ord-row">
+          <span class="blk-ord-min">${b.interval===60?'min '+(k+1):'slot '+(k+1)}</span>
+          <span class="blk-ord-nm">${esc(dispName(e))}</span>
+          <span class="blk-ord-rp">${esc(e.repLabel||e.reps)}</span></div>`;
+      });
+      h+=`</div>`;
+    }
+    if(live){
+      h+=`<div class="clk-run-banner" onclick="go('clock')">
+        <div class="clk-run-t">Clock running — tap to return</div><div class="clk-run-a">→</div></div>`;
+    }else{
+      const done=countClockDone(b), R=clockRounds(b);
+      h+=`<button class="btn-clock" onclick="startClock(${bi})">▶ ${done>=R?'Run again':'Start'} ${b.minutes}-minute clock</button>`;
+      if(done) h+=`<div class="blk-done-lbl">${done} / ${R} rounds logged</div>`;
+      else h+=`<div class="blk-done-lbl" style="color:#a09c93">Pick your bells and subs below first</div>`;
+    }
+  }
+  h+=`<div class="blk-body">${exs.map(exCard).join('')}</div>`;
+  return h+`</div>`;
+}
+
+/* ── the clock screen ─────────────────────────────────────────── */
+function clockView(){
+  const i=clockInfo();
+  if(!i) return `<div class="pad"><div class="card">This block isn't running.</div>
+    <button class="btn-secondary" style="margin-top:12px" onclick="go('workout')">Back to workout</button></div>`;
+  const st=i.station;
+  const id=st?activeIdFor(st):'';
+  const sd=(st&&S.session.setData[id])||[];
+  const wc=(st&&st.warmup&&st.warmup.length)||0;
+  const row=sd[wc+i.cycle];
+  const wt=(row&&row.weight)||(st&&st.defaultWeight)||'';
+  const rp=st?(st.repLabel||(isTimeBased(st.reps)?st.reps:st.reps+' reps')):'';
+  const cue=st?(activeSubFor(st)?activeSubFor(st).note:st.note):'';
+  const nx=i.next, nrp=nx?(nx.repLabel||(isTimeBased(nx.reps)?nx.reps:nx.reps+' reps')):'';
+
+  let h=`<div class="clk">
+    <div class="clk-top">
+      <div class="clk-blk">${esc(i.b.label)} · ${clockKind(i.b)}</div>
+      <div class="clk-elapsed" id="clk-elapsed">${fmtTime(i.elapsed)} / ${fmtTime(i.rounds*i.iv)}</div>
+    </div>
+    <div class="clk-dial">
+      <svg class="clk-svg" viewBox="0 0 200 200" aria-hidden="true">
+        <circle class="clk-trk" cx="100" cy="100" r="${CLK_R}"></circle>
+        <circle class="clk-arc" id="clk-ring" cx="100" cy="100" r="${CLK_R}"
+          style="stroke-dashoffset:${CLK_C*(1-i.rem/i.iv)}"></circle>
+      </svg>
+      <div class="clk-ctr">
+        <div class="clk-time${i.rem<=3?' hot':''}" id="clk-time">${fmtTime(i.rem)}</div>
+        <div class="clk-round" id="clk-round">Round ${i.round+1} / ${i.rounds}</div>
+      </div>
+    </div>
+    <div class="clk-now">
+      <div class="clk-now-lbl">NOW</div>
+      <div class="clk-now-nm">${esc(dispName(st))}</div>
+      <div class="clk-now-rp">${esc(rp)}${wt?' · '+esc(String(wt))+' lb':''}</div>
+    </div>`;
+  if(cue) h+=`<div class="clk-cue">${esc(cue)}</div>`;
+
+  if(i.paused){
+    h+=`<div class="clk-paused">
+      <div class="clk-paused-t"><span class="pausebars"><i></i><i></i></span>Paused</div>
+      <div class="clk-paused-s">Clock stopped where it was. Nothing lost.</div></div>
+    <div class="clk-btns">
+      <button class="clk-btn go" onclick="resumeClock()">▶ Resume</button>
+      <button class="clk-btn end" onclick="endClockEarly()">End block</button></div>`;
+  }else{
+    // On a one-movement block the next round is the same movement, so the
+    // useful thing to show is the rest you have left before it comes round.
+    const single=i.n===1;
+    h+=`<div class="clk-next">
+      <div class="clk-next-lbl">${nx?(single?'THEN':'UP<br>NEXT'):'DONE'}</div>
+      <div class="clk-next-nm">${nx?(single?'Rest, then round '+(i.round+2):esc(dispName(nx))):'Last round — finish it'}</div>
+      <div class="clk-next-rp">${nx?(single?'of '+i.rounds:esc(nrp)):'—'}</div></div>
+    <div class="clk-btns">
+      <button class="clk-btn" onclick="pauseClock()"><span class="pausebars"><i></i><i></i></span>Pause</button>
+      <button class="clk-btn end" onclick="endClockEarly()">End block</button></div>`;
   }
   return h+`</div>`;
 }
@@ -1718,10 +2333,13 @@ function view(){
     if(S.screen==='workout') S.screen='home';
   }
   if(!S.session && S.screen==='workout') S.screen='home';
+  // the clock screen only exists while a clock is actually running
+  if(S.screen==='clock' && !(S.session&&S.session.clock)) S.screen=S.session?'workout':'home';
+  if(S.screen==='clock') return clockView();   // full-bleed, no header or tabs
 
   const day=S.session?getDay(S.session.dayId):null;
   const p=calcProg();
-  const titles={home:'Choose a day',workout:day?day.name:'Workout',summary:'Done',history:'History',stats:'Stats',program:'Program'};
+  const titles={home:'Choose a day',workout:day?day.name:'Workout',summary:'Done',history:'History',stats:'Stats',program:'Program',clock:'Clock'};
   const badge=S.screen==='workout'?(day?day.type:''):S.screen==='summary'?'✓':'—';
 
   let header=`<div class="header"><div class="header-row">
@@ -1736,7 +2354,7 @@ function view(){
         <div class="prog-lbl">${p.done} / ${p.total} sets</div>
         ${S.paused
           ?`<button class="hdr-btn resume" onclick="resumeWorkout()">▶ Resume</button>`
-          :`<button class="hdr-btn pause" onclick="pauseWorkout()">⏸ Pause</button>`}
+          :`<button class="hdr-btn pause" onclick="pauseWorkout()"><span class="pausebars"><i></i><i></i></span>Pause</button>`}
       </div>`;
   }
   header+=`</div>`;
@@ -1749,7 +2367,7 @@ function view(){
     getProgram().forEach(d=>{
       const last=[...S.history].reverse().find(e=>e.dayId===d.id);
       const active=S.session&&S.session.dayId===d.id;
-      const tint = d.id==='hiit'?' is-hiit' : d.id==='pyramid'?' is-pyr' : d.id==='tempo'?' is-tmp' : '';
+      const tint = d.kb?' is-kb' : d.id==='hiit'?' is-hiit' : d.id==='pyramid'?' is-pyr' : d.id==='tempo'?' is-tmp' : '';
       const cls=active?' is-active':(tint&&!last)?tint:last?' has-history':(tint||'');
       body+=`<div class="day-card${cls}" onclick="handleDayTap('${d.id}')">
         ${last&&!active?'<div class="green-dot"></div>':''}
@@ -1767,14 +2385,17 @@ function view(){
     if(S.paused){
       body=`<div class="pad">${navTabs('workout')}
         <div class="card warn" style="text-align:center;padding:26px 20px">
-          <div style="font-size:32px;margin-bottom:8px">⏸</div>
+          <div style="margin-bottom:10px;color:#b86e00"><span class="pausebars big"><i></i><i></i></span></div>
           <div style="font-size:18px;font-weight:700;color:#b86e00">Paused</div>
           <div style="font-size:13px;color:#888880;margin-top:4px">Timer stopped. Take your time.</div></div>
         <button class="btn-amber" onclick="resumeWorkout()">▶ Resume workout</button>
         <button class="btn-ghost" style="margin-top:10px" onclick="discardWorkout()">Discard workout</button></div>`;
     }else{
+      const workBody = (day.blocks&&day.blocks.length)
+        ? day.blocks.map((b,bi)=>blockCard(b,bi)).join('')
+        : day.exercises.map(exCard).join('');
       body=`<div class="pad">${navTabs('workout')}
-        ${day.exercises.map(exCard).join('')}
+        ${workBody}
         <div style="margin-top:26px">
           <button class="btn-primary" onclick="confirmFinish()">✓ Finish workout</button>
           <div class="hint-txt">Nothing saves until you tap this</div>
@@ -1878,6 +2499,17 @@ window.__dev={calcProg,getTarget,getLastPerf,mergeHistory,backupString,view,norm
       S.elapsed=Math.floor((Date.now()-S.session.startTime)/1000);
       S.screen='workout';
       startElapsed();
+      // A clock left running: pick it back up if it's still inside its
+      // window, otherwise log what elapsed and retire it cleanly.
+      if(S.session.clock){
+        const i=clockInfo();
+        if(!i || i.finished){
+          if(i){ const R=clockRounds(i.b); for(let r=0;r<R;r++) logRound(i.b,r); }
+          S.session.clock=null; await saveSession(S.session);
+        }else{
+          S.screen='clock'; runClock();
+        }
+      }
     }
   }
 
@@ -1888,6 +2520,7 @@ window.__dev={calcProg,getTarget,getLastPerf,mergeHistory,backupString,view,norm
   document.addEventListener('visibilitychange',()=>{
     if(document.visibilityState!=='visible') return;
     unlockAudio();
+    if(S.session&&S.session.clock&&!S.session.clock.pausedAt){ runClock(); clockTick(); }
     idbGet(K.hist).then(h=>{
       const merged=mergeHistory(S.history,h);
       if(merged.length!==S.history.length){ S.history=merged; saveHistory(merged); render(); }
