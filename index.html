@@ -1058,7 +1058,22 @@ const S = {
 };
 let elapsedIv=null;
 
-const getProgram = () => Array.isArray(S.program)&&S.program.length ? S.program : DEFAULT_PROGRAM;
+/* Your saved program is a snapshot of the days as they were the last
+   time you edited one. Without this merge, every day added to the app
+   afterwards would be invisible to you forever, because the snapshot
+   would simply replace the defaults. So: your days and your edits always
+   win, and any default day your snapshot has never seen is appended.
+   Nothing can delete a day, so a day missing from the snapshot can only
+   mean it is newer than the snapshot. */
+function mergeProgram(saved){
+  if(!Array.isArray(saved)||!saved.length) return DEFAULT_PROGRAM;
+  const seen={};
+  saved.forEach(d=>{ if(d&&d.id) seen[d.id]=1; });
+  const fresh=DEFAULT_PROGRAM.filter(d=>d&&d.id&&!seen[d.id]);
+  if(!fresh.length) return saved;
+  return saved.filter(d=>d&&d.id&&Array.isArray(d.exercises)).concat(fresh);
+}
+const getProgram = () => mergeProgram(S.program);
 const getDay = id => getProgram().find(d=>d.id===id);
 const allExercises = () => getProgram().flatMap(d=>d.exercises);
 
