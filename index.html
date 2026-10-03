@@ -268,6 +268,14 @@ button{outline:none;cursor:pointer;font-family:inherit}
 .pausebars{display:inline-flex;gap:3px;vertical-align:-1px;margin-right:7px}
 .pausebars i{display:block;width:3.5px;height:13px;border-radius:1.5px;background:currentColor}
 .pausebars.big i{width:8px;height:30px;border-radius:3px}
+
+.day-card.is-arm{background:#eef6f4;border-color:#b3d9d0}
+.day-card.is-arm .day-card-type,.day-card.is-arm .day-card-sub{color:#1d6b5c}
+.day-card.is-arm .day-card-name{color:#1d6b5c}
+
+.day-card.is-str{background:#f1f0f7;border-color:#c5c1dd}
+.day-card.is-str .day-card-type,.day-card.is-str .day-card-sub{color:#4a4379}
+.day-card.is-str .day-card-name{color:#4a4379}
 </style>
 </head>
 <body>
@@ -391,6 +399,124 @@ const KB_COMPLEX_SUBS = [
   {id:'kb_abc_dead_s', name:'Dead-Clean + Press', note:'Bell starts on the floor every single rep. Slower and more honest — no momentum to hide behind, easier to learn.'},
   {id:'kb_abc_swingpress_s', name:'Swing + Push Press', note:'10 swings then 5 push press each side. No rack position needed at all.'},
   {id:'kb_abc_light_s', name:'Light ABC (25lb)', note:'Same complex, smallest bell. Do this for the first two or three sessions while the sequence becomes automatic.'}
+];
+
+/* ── Arms & Delts banks ──────────────────────────────────────────
+   Home-first (bells and a band), with the gym option listed too, so
+   the same day works in either place. With a 25lb smallest bell some
+   movements simply cannot be done with a bell — laterals and rear
+   delts are band or light-dumbbell by design, not by omission. */
+const ADS_PRESS_SUBS = [
+  {id:'ads_bu_press', name:'Bottoms-Up Press', note:'Bell upside down, handle squeezed hard. Forces the cuff to switch on. 25lb and it will feel heavy.'},
+  {id:'ads_db_press', name:'DB Shoulder Press', note:'Seated or standing, elbows FORWARD not flared, stop at ear height. The gym default.'},
+  {id:'ads_landmine', name:'Landmine Press', note:'Half-kneeling, the arc keeps the shoulder in the safest plane. Your most shoulder-friendly press.'},
+  {id:'ads_push_press', name:'Push Press', note:'Small dip of the knees to drive it past the hard part. Use it to keep volume when strict reps are failing.'},
+  {id:'ads_arnold_ad', name:'DB Arnold Press', note:'Palm faces you, rotate to palm-forward as you press. More front delt through a longer range.'},
+  {id:'ads_floor_press_ad', name:'KB Floor Press', note:'On your back, the floor stops you short of the risky range. Zero overhead load when the shoulder is off.'}
+];
+const ADS_LATERAL_SUBS = [
+  {id:'ads_cable_lat', name:'Cable Lateral Raise', bw:true, note:'Constant tension top to bottom. The best version if you are at the gym. Light, slight forward lean, thumb up.'},
+  {id:'ads_seated_lat_ad', name:'Seated DB Lateral', bw:true, note:'Seated kills all leg drive and swing. Strict, shoulder height only, 10-15lb is plenty.'},
+  {id:'ads_bent_lat_ad', name:'Bent-Over Lateral', bw:true, note:'Hinge 45° with a FLAT back, raise out to the sides. Rear and side delt together. Keep it light so the back stays out of it.'},
+  {id:'ads_band_lat', name:'Band Lateral Raise', bw:true, note:'Stand on the band, raise to shoulder height. Tension builds exactly where the movement is hardest. Ideal at home.'},
+  {id:'ads_partial_lat', name:'Lean-Away Lateral', bw:true, note:'Hold a post, lean away, raise the outside arm. The lean lengthens the side delt so even a light weight bites.'}
+];
+const ADS_REAR_SUBS = [
+  {id:'ads_band_pullapart_s', name:'Band Pull-Apart', bw:true, note:'Arms straight, pull the band apart to the chest, squeeze the blades. Endless reps, zero joint cost.'},
+  {id:'ads_rear_fly', name:'Bent-Over Rear Delt Fly', bw:true, note:'Chest on an incline bench if you have one, which takes the lower back out entirely. Light, thumbs down.'},
+  {id:'ads_prone_y_ad', name:'Prone Y-Raise', bw:true, note:'Face down, thumbs up, lift into a Y. Lower traps and rear delts. Little or no weight.'},
+  {id:'ads_cable_face', name:'Cable Face Pull', bw:true, note:'High anchor, rope, pull to the forehead and externally rotate at the end. The gym version.'}
+];
+const ADS_CURL_SUBS = [
+  {id:'ads_db_curl_ad', name:'DB Curl', note:'Elbows pinned to the ribs, supinate hard at the top. The straightforward version.'},
+  {id:'ads_preacher_ad', name:'Seated Preacher Curl', note:'Elbows braced on the inner thighs. Swinging is physically impossible, so the bicep does all of it.'},
+  {id:'ads_conc_curl_ad', name:'Concentration Curl', note:'Elbow on the inner knee, one arm at a time, squeeze 2s at the top. Maximum isolation.'},
+  {id:'ads_band_curl', name:'Band Curl', bw:true, note:'Hardest at the top where the bicep is strongest. Great for high-rep burnout sets at home.'},
+  {id:'ads_chin_up', name:'Chin-Up', bw:true, note:'Underhand, chin over the bar. The single best bicep builder there is if you have a bar. Assisted or negatives count.'}
+];
+const ADS_TRI_SUBS = [
+  {id:'ads_pushdown_ad', name:'Tricep Pushdown', bw:true, note:'Elbows glued to the sides, only the forearm moves. Squeeze hard at full extension.'},
+  {id:'ads_lying_ext_ad', name:'Lying DB Extension', note:'Flat on a bench or the floor, lower toward the forehead, elbows fixed. Classic mass builder.'},
+  {id:'ads_bench_dip_ad', name:'Bench Dip', bw:true, note:'Hands on a bench behind you, lower to upper arms parallel. Elbows track BACK, not out.'},
+  {id:'ads_diamond_pu', name:'Diamond Push-Up', bw:true, note:'Hands together under the chest. Brutal on the triceps, no equipment at all.'},
+  {id:'ads_kick_back', name:'DB Kickback', note:'Hinge with a flat back, upper arm locked parallel to the floor, extend. Light, squeeze, slow.'}
+];
+const ADS_CORE_SUBS = [
+  {id:'ads_pallof_ad', name:'Pallof Press', bw:true, note:'Sideways to a band, press out, hold 2s. Anti-rotation. No spinal flexion at all, so the lower back stays happy.'},
+  {id:'ads_side_plank_ad', name:'Side Plank', bw:true, note:'Hips stacked and lifted, squeeze the bottom glute. Builds the lateral trunk without loading the spine.'},
+  {id:'ads_hollow', name:'Hollow Hold', bw:true, note:'Lower back PRESSED into the floor, shoulders and legs just off it. If the back arches, bend the knees.'},
+  {id:'ads_bird_dog', name:'Bird Dog', bw:true, note:'Opposite arm and leg out, hips level, hold 2s. Low-load and genuinely good for a sore lower back.'},
+  {id:'ads_suitcase_ad', name:'Suitcase Carry', note:'One bell, one hand, stand dead vertical and walk. Anti-lean, no bending of the spine.'}
+];
+
+/* ── Home Strength ladders ───────────────────────────────────────
+   Bodyweight only progresses if the movement gets HARDER. Adding
+   reps forever stops working once you can do twenty. These two lists
+   are ordered easy to hard on purpose: when you hit the top of the
+   rep range on every set, move one step down the list and start the
+   rep range again. That is your progressive overload. */
+const HS_PUSH_SUBS = [
+  {id:'hs_knee_pu', name:'1 · Knee Push-Up', bw:true, note:'EASIEST. Knees down, body straight from knees to head, chest still touches. Start here if 10 full reps is a grind.'},
+  {id:'hs_incline_pu', name:'2 · Hands-Elevated Push-Up', bw:true, note:'Hands on a bench, step or couch. The higher the hands, the easier. Lower the surface over time and you are progressing.'},
+  {id:'hs_tempo_pu', name:'3 · Tempo Push-Up', bw:true, note:'Standard push-up, 3s down, 1s paused on the chest, drive up. Same position, far more tension per rep.'},
+  {id:'hs_feet_pu', name:'4 · Feet-Elevated Push-Up', bw:true, note:'Feet on a bench. Shifts the load toward the upper chest and shoulders, and adds maybe 15% to the effective weight.'},
+  {id:'hs_deficit_pu', name:'5 · Deficit Push-Up', bw:true, note:'Hands on the handles of two bells so your chest drops BELOW them. The extra range is where the growth is. Neutral wrists too.'},
+  {id:'hs_archer_pu', name:'6 · Archer Push-Up', bw:true, note:'Wide hands, lower toward ONE hand while the other arm stays straight. Most of your bodyweight on one side. A genuine step up.'},
+  {id:'hs_weighted_pu', name:'7 · Weighted Push-Up', bw:true, note:'HARDEST. Loaded backpack, or a bell carefully set on your upper back. Once bodyweight is easy this is how you keep adding load.'}
+];
+const HS_PULL_SUBS = [
+  {id:'hs_band_row', name:'1 · Seated Band Row', bw:true, note:'EASIEST, and spine-friendly. Band round your feet, sit tall, row to the belly, squeeze the blades 1s. Shorten the band to make it harder.'},
+  {id:'hs_band_pulldown', name:'2 · Band Lat Pulldown', bw:true, note:'Band anchored high or in a door, kneel and pull to the collarbone. Drive the elbows down and back. Pure lat work with no spinal load.'},
+  {id:'hs_kb_row_sup', name:'3 · Supported KB Row', note:'Free hand braced on a bench or chair so your back is supported, not holding a hinge. Row the bell to the hip, elbow back not out.'},
+  {id:'hs_inverted_row', name:'4 · Inverted Row', bw:true, note:'Under a table or a bar at hip height, body rigid, chest to the edge. The more horizontal you are, the harder it gets.'},
+  {id:'hs_chin_neg', name:'5 · Chin-Up Negative', bw:true, note:'Jump or step to the top, then lower for 5 full seconds. The single best way to earn your first proper chin-up.'},
+  {id:'hs_chin_up', name:'6 · Chin-Up', bw:true, note:'Underhand, dead hang to chin over the bar. The best upper body builder there is, and it hammers your biceps at the same time.'},
+  {id:'hs_weighted_chin', name:'7 · Weighted Chin-Up', bw:true, note:'HARDEST. Bell hung from a belt or held between the feet. Where you go once bodyweight chin-ups are comfortable for 10.'}
+];
+
+/* ── Home Push / Home Pull ladders ───────────────────────────────
+   Built for 25/35/50lb bells, bands and a chin/dip tower. The first
+   few entries in each dip and chin ladder need NO tower at all, so
+   both days work today and get better when the tower arrives.
+   Band assistance is a real step, not a shortcut: thick band, then
+   thinner, then negatives, then unassisted. */
+const HP_DIP_SUBS = [
+  {id:'hp_floor_press', name:'KB Floor Press', note:'NO TOWER. On your back, press one bell from the floor. The floor stops you short of the end range, so it is the safest pressing you own.'},
+  {id:'hp_cg_pushup', name:'Close-Grip Push-Up', bw:true, note:'NO TOWER. Hands just inside shoulder width, elbows track back along the ribs. Nearest thing to a dip with nothing but the floor.'},
+  {id:'hp_chair_dip', name:'Bench / Chair Dip', bw:true, note:'NO TOWER. Hands on a chair behind you, feet out front. Harder on the shoulder than a proper dip, so stop at parallel and do not sink.'},
+  {id:'hp_band_dip', name:'Band-Assisted Dip', bw:true, note:'Band looped over the bars and under your knees. Where to start on the tower. Thinner band as you get stronger.'},
+  {id:'hp_dip', name:'Dip', bw:true, note:'Slight forward lean for chest, upright for triceps. Stop when the upper arms reach parallel. Never below.'},
+  {id:'hp_weighted_dip', name:'Weighted Dip', note:'HARDEST. Bell hung from a dip belt. Start with the 25lb. This is how you keep adding load for years.'}
+];
+const HP_CHIN_SUBS = [
+  {id:'hpl_band_row', name:'1 · Seated Band Row', bw:true, note:'EASIEST, zero spinal load. Band round the feet, sit tall, row to the belly, squeeze 1s. Shorten the band to progress.'},
+  {id:'hpl_pulldown', name:'2 · Band Lat Pulldown', bw:true, note:'Band anchored high or over the tower. Kneel, pull to the collarbone, drive the elbows down and back. Builds width with no bar needed.'},
+  {id:'hpl_inverted', name:'3 · Inverted Row', bw:true, note:'Under a table or a low bar, body rigid, chest to the edge. Walk the feet out to make it harder. Great bridge toward a chin-up.'},
+  {id:'hpl_chin_neg', name:'4 · Chin-Up Negative', bw:true, note:'Jump or step to the top, lower for a full 5 seconds. You are far stronger lowering than lifting, which is why this builds the chin-up fastest.'},
+  {id:'hpl_chin', name:'5 · Chin-Up (unassisted)', bw:true, note:'No band. Dead hang to chin over the bar, controlled 3s lower. The goal. Even one clean rep counts as a set when you get there.'},
+  {id:'hpl_chin_wt', name:'6 · Weighted Chin-Up', note:'HARDEST. Bell on a belt or between the feet. Where you go once ten bodyweight reps feel comfortable.'},
+  {id:'hpl_kb_row_alt', name:'Supported KB Row', note:'ALTERNATIVE, not a ladder step. Free hand braced on a chair so your back is supported. Use on days the bar is not happening.'}
+];
+const HP_ROW_SUBS = [
+  {id:'hpr_band_row_s', name:'Seated Band Row', bw:true, note:'Band round the feet, sit tall, row to the belly. Zero load on the spine, so always available.'},
+  {id:'hpr_inverted_s', name:'Inverted Row', bw:true, note:'Under a table or low bar. Bodyweight pulling you scale by changing your body angle.'},
+  {id:'hpr_renegade', name:'Renegade Row', note:'Plank on two bells, row one at a time, hips dead level. Back and core together. Go lighter than you think.'},
+  {id:'hpr_gorilla', name:'Gorilla Row', note:'Two bells between the feet, hinge with a FLAT supported back, row them alternately. Heavier than single-arm. Only when the back feels good.'},
+  {id:'hpr_band_pullover', name:'Band Pullover', bw:true, note:'Band anchored high, arms straight, pull down to the hips using only the lats. Pure isolation, no elbow involvement.'}
+];
+const HP_PRESS_SUBS = [
+  {id:'hpp_bu_press', name:'Bottoms-Up Press', note:'Bell upside down, handle squeezed hard. Rotator cuff work disguised as a press. 25lb will feel heavy.'},
+  {id:'hpp_push_press', name:'Push Press', note:'Small dip of the knees to drive past the sticking point. Keeps volume when strict reps are failing.'},
+  {id:'hpp_seesaw', name:'See-Saw Press', note:'Two bells, one up as the other comes down. Continuous tension, more conditioning cost.'},
+  {id:'hpp_z_press', name:'Z Press (seated on floor)', note:'Seated, legs straight out. No leg drive and nowhere to hide. Brutal on the core and the strictest press there is.'},
+  {id:'hpp_band_press', name:'Band Overhead Press', bw:true, note:'Stand on the band, press overhead. Hardest at lockout where you are strongest. Good for high-rep finishing.'}
+];
+const HP_HANG_SUBS = [
+  {id:'hph_knee_raise', name:'Hanging Knee Raise', bw:true, note:'Hang from the bar, curl the pelvis and raise the knees to the chest. Control the lower, no swinging. The tower makes this available.'},
+  {id:'hph_leg_raise', name:'Hanging Leg Raise', bw:true, note:'Legs straight. Much harder. Only once knee raises are easy for 15.'},
+  {id:'hph_hollow_s', name:'Hollow Hold', bw:true, note:'NO TOWER. Lower back pressed flat, shoulders and legs just off the floor. Bend the knees if the back arches.'},
+  {id:'hph_dead_bug_s', name:'Dead Bug', bw:true, note:'NO TOWER. Lower back flat, lower opposite arm and leg slowly. Builds the bracing that protects your lower back.'},
+  {id:'hph_side_plank_s', name:'Side Plank', bw:true, note:'NO TOWER. Hips stacked and lifted, bottom glute squeezed. 30s a side.'}
 ];
 
 const DEFAULT_PROGRAM = [
@@ -567,7 +693,7 @@ const DEFAULT_PROGRAM = [
     blocks:[
       {kind:'sets', label:'Prep', minutes:4, note:'Wake the hips and shoulders up. Do not rush this — the swings are only as good as the hinge.'},
       {kind:'clock', label:'Swing block', minutes:16, interval:60, rounds:16,
-        ids:['kbs_swing','kbs_goblet','kbs_1arm','kbs_chop'],
+        ids:['kbs_swing','kbs_goblet','kbs_pushup','kbs_chop'],
         note:'One movement at the top of every minute. Finish the reps, rest what is left of the minute. Four rounds through. If a minute leaves you under 15 seconds of rest, drop 2 reps next round — do not let form go.'},
       {kind:'sets', label:'Finisher', minutes:5, note:'Grip and trunk under fatigue. Walk tall, breathe shallow.'}
     ],
@@ -579,12 +705,11 @@ const DEFAULT_PROGRAM = [
         note:'35lb. Sit into the bottom and stay there. Push the knees out with the elbows, rock side to side, then stand. This is the hip opener.', subs:KB_SQUAT_SUBS},
 
       {id:'kbs_swing', name:'Two-Hand Swing', sets:4, reps:'15', rest:0, noRest:true, dropSet:false, muscle:'Cardio', defaultWeight:50, bell:true, block:1,
-        note:'50lb. HINGE, not a squat. Hips snap, the bell floats to chest height on its own. Glutes and abs lock hard at the top.', subs:KB_SWING_SUBS},
+        note:'50lb. HINGE, not a squat. Hips snap, the bell floats up on its own. At the top stand TALL and squeeze the glutes — do not lean back. Leaning back at the top is the number one cause of a sore lower back from swings.', subs:KB_SWING_SUBS},
       {id:'kbs_goblet', name:'Goblet Squat', sets:4, reps:'10', rest:0, noRest:true, dropSet:false, muscle:'Legs', defaultWeight:35, bell:true, block:1,
         note:'35lb. Bell at the chest, elbows inside the knees. Push the knees OUT over the toes on the way down — this one is corrective for you.', subs:KB_SQUAT_SUBS},
-      {id:'kbs_1arm', name:'Single-Arm Swing', sets:4, reps:'16', rest:0, noRest:true, dropSet:false, muscle:'Cardio', defaultWeight:35, bell:true, block:1,
-        repLabel:'8 each side',
-        note:'35lb. 8 a side, switch at the top of a swing. Do not let the shoulder get dragged forward — the lat stays tight and the bell stays in the socket.', subs:KB_SWING_SUBS},
+      {id:'kbs_pushup', name:'Push-Up', sets:4, reps:'12', rest:0, noRest:true, dropSet:false, muscle:'Chest', block:1,
+        note:'Elbows 45°, chest to the floor, body rigid. This minute used to be more swings. It is a push-up now so the session has ONE hinging station instead of two, which halves what your lower back absorbs.', subs:KB_PUSHUP_SUBS},
       {id:'kbs_chop', name:'Wood Chop', sets:4, reps:'20', rest:0, noRest:true, dropSet:false, muscle:'Core', defaultWeight:25, bell:true, block:1,
         repLabel:'10 each side',
         note:'25lb. This minute is the recovery minute — move smoothly, breathe. Bell travels hip to opposite shoulder, rotation comes from the ribs.', subs:KB_CHOP_SUBS},
@@ -652,6 +777,114 @@ const DEFAULT_PROGRAM = [
         repLabel:'10 each side',
         note:'25lb. Hip to opposite shoulder, rotate from the ribs. Then you are done.', subs:KB_CHOP_SUBS},
     ]},
+
+  { id:'arms_delts', name:'Arms & Delts', type:'Hypertrophy', focus:'Upper Body Density · 28 min', kb:true, tint:'arm',
+    blocks:[
+      {kind:'sets', label:'Shoulder prep', minutes:3, note:'Two minutes here buys you every press that follows. Light, no grinding.'},
+      {kind:'clock', label:'Delt EMOM', minutes:9, interval:60, rounds:9,
+        ids:['ad_press','ad_lateral','ad_rear'],
+        note:'Press, side delt, rear delt, three rounds through. Only the press is heavy. The other two are light on purpose: side and rear delts respond to clean reps and blood, not to load you have to heave.'},
+      {kind:'clock', label:'Arm density', minutes:12, interval:60, rounds:12,
+        ids:['ad_curl','ad_tri','ad_hammer','ad_cgpush'],
+        note:'Biceps and triceps alternate, so each one rests while the other works and you can keep the pace up for twelve straight minutes. This is where the sweat comes from. Pick weights you can finish inside 35 seconds.'},
+      {kind:'sets', label:'Core finisher', minutes:4, note:'Anti-extension only. Nothing here bends or loads your lower back.'}
+    ],
+    exercises:[
+      {id:'ad_bandpull', name:'Band Pull-Apart', sets:2, reps:'15', rest:30, dropSet:false, muscle:'Cardio', block:0,
+        note:'Band at chest height, arms straight, pull apart and squeeze the shoulder blades. Wakes up everything that holds the shoulder back where it belongs.', subs:ADS_REAR_SUBS},
+      {id:'ad_halo', name:'Halo', sets:2, reps:'5', rest:30, dropSet:false, muscle:'Cardio', defaultWeight:25, bell:true, block:0,
+        repLabel:'5 each direction',
+        note:'25lb. Slow circles close to the head, ribs down. Five each way.', subs:KB_HALO_SUBS},
+
+      {id:'ad_press', name:'Half-Kneeling Press', sets:3, reps:'8', rest:0, noRest:true, dropSet:false, muscle:'Shoulders', defaultWeight:35, bell:true, block:1,
+        repLabel:'8 each side',
+        note:'35lb. One knee down, squeeze that glute, ribs pulled DOWN. The stance makes it impossible to arch your lower back to get the bell up, which is exactly why it is the press you want right now.', subs:ADS_PRESS_SUBS},
+      {id:'ad_lateral', name:'Lateral Raise', sets:3, reps:'15', rest:0, noRest:true, dropSet:false, muscle:'Shoulders', block:1,
+        note:'BAND or light dumbbells, 10-15lb. Your lightest bell is far too heavy for this one. Thumb up, lead with the elbow, stop at shoulder height. If you can swing it up, it is too heavy.', subs:ADS_LATERAL_SUBS},
+      {id:'ad_rear', name:'Rear Delt / Face Pull', sets:3, reps:'15-20', rest:0, noRest:true, dropSet:false, muscle:'Shoulders', block:1,
+        note:'Band at home, cable at the gym. Pull to the forehead, elbows high, externally rotate at the end. Rear delts are what make shoulders look three-dimensional from the side.', subs:ADS_REAR_SUBS},
+
+      {id:'ad_curl', name:'KB Curl', sets:3, reps:'12', rest:0, noRest:true, dropSet:false, muscle:'Biceps', defaultWeight:25, bell:true, block:2,
+        note:'25lb, one bell in both hands or one per side. Elbows pinned to the ribs, no swinging. The bell hangs below the hands so the bottom of the rep is harder than a dumbbell.', subs:ADS_CURL_SUBS},
+      {id:'ad_tri', name:'Overhead Tricep Extension', sets:3, reps:'12', rest:0, noRest:true, dropSet:false, muscle:'Triceps', defaultWeight:25, bell:true, block:2,
+        note:'25lb, both hands on one bell overhead. Lower behind the head, elbows point UP and stay near your ears. Best stretch on the long head of the tricep, which is most of your arm size.', subs:ADS_TRI_SUBS},
+      {id:'ad_hammer', name:'Hammer Curl', sets:3, reps:'12', rest:0, noRest:true, dropSet:false, muscle:'Biceps', block:2,
+        note:'Neutral grip, palms facing each other, dumbbells or a bell per hand. Hits the brachialis, which sits UNDER the bicep and pushes it up. This is the one most people skip.', subs:ADS_CURL_SUBS},
+      {id:'ad_cgpush', name:'Close-Grip Push-Up', sets:3, reps:'15', rest:0, noRest:true, dropSet:false, muscle:'Triceps', block:2,
+        note:'Hands just inside shoulder width, elbows track BACK along the ribs, not out. Finishes the triceps off with zero setup. Drop to your knees rather than grinding half reps.', subs:ADS_TRI_SUBS},
+
+      {id:'ad_deadbug', name:'Dead Bug', sets:2, reps:'12', rest:30, dropSet:false, muscle:'Core', block:3,
+        repLabel:'12 total, alternating',
+        note:'On your back, lower back PRESSED flat into the floor and it never leaves. Lower opposite arm and leg slowly. Teaches your trunk to brace, which is the thing that protects a sore lower back.', subs:ADS_CORE_SUBS},
+      {id:'ad_plank', name:'Plank Hold', sets:2, reps:'45s', rest:30, dropSet:false, muscle:'Core', block:3,
+        note:'Glutes, quads and abs all squeezed, straight line heels to head. No sag. Anti-extension work, which is the opposite of what irritated your back today.', subs:ADS_CORE_SUBS},
+    ]},
+
+  /* Straight sets, real rest, taken close to failure. Deliberately NOT
+     a clock day: the whole point is that the set ends when the muscle
+     is done, not when a timer says so. */
+  { id:'home_strength', name:'Home Strength', type:'Hypertrophy', focus:'Straight Sets · 35 min', tint:'str',
+    exercises:[
+      {id:'hs_push', name:'Push-Up', sets:4, reps:'10-15', rest:90, dropSet:true, muscle:'Chest',
+        note:'Pick the hardest variant you can do for 10 clean reps. Stop each set 1-2 reps short of failure, then take the LAST set all the way. When you hit 15 on every set, move one step up the ladder and start again at 10.', subs:HS_PUSH_SUBS},
+      {id:'hs_pull', name:'Row / Pull', sets:4, reps:'8-12', rest:90, dropSet:false, muscle:'Back',
+        note:'Same rule: hardest version you can do for 8 clean reps. Squeeze the shoulder blades for a full second at the top of every rep. This is the biggest gap in your week, so do not rush it.', subs:HS_PULL_SUBS},
+      {id:'hs_press', name:'Half-Kneeling Press', sets:3, reps:'6-8', rest:90, dropSet:false, muscle:'Shoulders', defaultWeight:35, bell:true,
+        repLabel:'6-8 each side',
+        note:'35lb. Heaviest pressing you own, so treat it as the strength movement. One knee down, glute squeezed, ribs down. Stop at 1 rep in reserve, no grinding.', subs:ADS_PRESS_SUBS},
+      {id:'hs_fly', name:'Band Chest Fly', sets:3, reps:'12-15', rest:60, dropSet:true, muscle:'Chest',
+        note:'Band round your back, arms slightly bent and FIXED, hug it together and squeeze 1s. Push-ups never load the stretched position properly, this does. Chase the burn, not the resistance.', subs:FLY_SUBS},
+      {id:'hs_curl', name:'KB Curl', sets:3, reps:'10-12', rest:60, dropSet:true, muscle:'Biceps', defaultWeight:25, bell:true,
+        note:'25lb. Elbows pinned, no swing, 3 second lower, full extension at the bottom. Last set to failure, then drop to a band and keep going until you cannot.', subs:ADS_CURL_SUBS},
+      {id:'hs_tri', name:'Overhead Tricep Extension', sets:3, reps:'10-12', rest:60, dropSet:true, muscle:'Triceps', defaultWeight:25, bell:true,
+        note:'25lb, both hands on one bell. Elbows point up and stay by your ears. Deep stretch behind the head, drive up. Last set to failure then drop straight into close-grip push-ups.', subs:ADS_TRI_SUBS},
+      {id:'hs_core', name:'Dead Bug', sets:2, reps:'12', rest:45, dropSet:false, muscle:'Core',
+        repLabel:'12 total, alternating',
+        note:'Lower back pressed flat and it stays flat. Slow. Builds the bracing your back was missing during the swings, which is the thing that actually gets it stronger.', subs:ADS_CORE_SUBS},
+    ]},
+
+  /* ── THE TWO LONG HOME DAYS ────────────────────────────────────
+     Bells, bands and a chin/dip tower. Straight sets, real rest,
+     every set taken to within 1-2 reps of failure and the last set
+     all the way. These are the days that build. */
+  { id:'home_push', name:'Home Push', type:'Hypertrophy', focus:'Chest · Delts · Triceps · 50 min', tint:'str',
+    exercises:[
+      {id:'hp_dip_main', name:'Dip', sets:4, reps:'6-10', rest:120, dropSet:false, muscle:'Chest',
+        note:'YOUR HEAVIEST PRESS. Start with a band under the knees and go to a thinner band as you get stronger. Slight forward lean works the chest, upright works the triceps. STOP when your upper arms reach parallel, never sink below it. No tower yet? Tap Close-Grip Push-Up or KB Floor Press.', subs:HP_DIP_SUBS},
+      {id:'hp_push', name:'Push-Up', sets:4, reps:'10-15', rest:90, dropSet:true, muscle:'Chest',
+        note:'Hardest variant you can do for 10 clean reps. Stop 1-2 short of failure, last set all the way. Hit 15 on every set and you move one step up the ladder.', subs:HS_PUSH_SUBS},
+      {id:'hp_press', name:'Half-Kneeling Press', sets:4, reps:'6-8', rest:120, dropSet:false, muscle:'Shoulders', defaultWeight:35, bell:true,
+        repLabel:'6-8 each side',
+        note:'35lb. One knee down, glute squeezed, ribs pulled down so the lower back cannot arch. Your main overhead strength work. Stop with 1 rep in reserve.', subs:HP_PRESS_SUBS},
+      {id:'hp_fly', name:'Band Chest Fly', sets:3, reps:'12-15', rest:60, dropSet:true, muscle:'Chest',
+        note:'Band round your back, arms slightly bent and FIXED. Dips and push-ups never load the stretched position properly. This does. Squeeze 1s in the middle.', subs:FLY_SUBS},
+      {id:'hp_lateral', name:'Band Lateral Raise', sets:4, reps:'15-20', rest:45, dropSet:true, muscle:'Shoulders',
+        note:'Band underfoot. Thumb up, lead with the elbow, shoulder height only. Side delts are what give you width, and they respond to high reps and constant tension rather than load.', subs:ADS_LATERAL_SUBS},
+      {id:'hp_tri', name:'Overhead Tricep Extension', sets:3, reps:'10-12', rest:60, dropSet:true, muscle:'Triceps', defaultWeight:25, bell:true,
+        note:'25lb, both hands on one bell. Elbows point up and stay by your ears. Deep stretch behind the head. Last set to failure, then drop into close-grip push-ups until you cannot.', subs:ADS_TRI_SUBS},
+      {id:'hp_core', name:'Hanging Knee Raise', sets:3, reps:'12-15', rest:45, dropSet:false, muscle:'Core',
+        note:'Hang from the tower, curl the pelvis, knees to chest, control the lower. No swinging. No tower? Tap Hollow Hold or Dead Bug.', subs:HP_HANG_SUBS},
+    ]},
+
+  { id:'home_pull', name:'Home Pull', type:'Hypertrophy', focus:'Back · Biceps · Rear Delts · 50 min', tint:'str',
+    exercises:[
+      {id:'hpl_chin_main', name:'Assisted Chin-Up', sets:4, reps:'6-10', rest:120, dropSet:false, muscle:'Back',
+        note:'Loop a band under your knees or one foot, THICKEST band to start. Underhand grip, dead hang, chin over the bar, 3 second lower. As you get stronger: thinner band, then negatives, then unassisted. Each step is tracked separately so you can see it happening.', subs:HP_CHIN_SUBS},
+      {id:'hpl_row', name:'Supported KB Row', sets:4, reps:'8-12', rest:90, dropSet:false, muscle:'Back', defaultWeight:50, bell:true,
+        repLabel:'8-12 each side',
+        note:'50lb. Free hand braced on a chair or bench so your back is SUPPORTED, never holding a hinge. Row to the hip, elbow back not out, full stretch at the bottom, hard squeeze at the top.', subs:HP_ROW_SUBS},
+      {id:'hpl_pull', name:'Band Lat Pulldown', sets:3, reps:'12-15', rest:60, dropSet:true, muscle:'Back',
+        note:'Band anchored high or over the tower. Kneel, pull to the collarbone, drive the elbows DOWN and back. This is the width builder. Zero load on your spine.', subs:HP_ROW_SUBS},
+      {id:'hpl_rear', name:'Rear Delt / Face Pull', sets:4, reps:'15-20', rest:45, dropSet:false, muscle:'Shoulders',
+        note:'Band at forehead height. Pull to the face, elbows high, rotate so the hands finish behind your ears. Shoulder health and three-dimensional delts in one movement.', subs:ADS_REAR_SUBS},
+      {id:'hpl_curl', name:'KB Curl', sets:3, reps:'10-12', rest:60, dropSet:true, muscle:'Biceps', defaultWeight:25, bell:true,
+        note:'25lb. Elbows pinned, no swing, 3 second lower, full extension at the bottom. Last set to failure then drop straight to a band and keep going.', subs:ADS_CURL_SUBS},
+      {id:'hpl_hammer', name:'Hammer Curl', sets:3, reps:'12-15', rest:60, dropSet:true, muscle:'Biceps',
+        note:'Neutral grip, palms facing each other, a bell per hand or a band. Hits the brachialis, which sits under the bicep and pushes it up as it grows.', subs:ADS_CURL_SUBS},
+      {id:'hpl_core', name:'Dead Bug', sets:3, reps:'12', rest:45, dropSet:false, muscle:'Core',
+        repLabel:'12 total, alternating',
+        note:'Lower back pressed flat and it stays flat. Slow. This is the work that makes your back strong enough for everything else.', subs:ADS_CORE_SUBS},
+    ]},
 ];
 /* ══════════════════════════════════════════════════════════════
    2. EXERCISE LIBRARY (for the program editor "add exercise" list)
@@ -703,6 +936,132 @@ const LIBRARY = [
    3. FORM CUES — keyed by exercise id (mains AND subs)
    ══════════════════════════════════════════════════════════════ */
 const FORM = {
+  kbs_pushup:{c:["Hands slightly wider than the shoulders","Body one rigid line, glutes and abs squeezed","Elbows 45° from the ribs, NOT flared to 90°","Chest to the floor every rep","Drop to your knees rather than grinding half reps"],b:"Inhale down, exhale on the push",s:"This minute used to be a second set of swings. It is a push-up now so the session has one hinging station instead of two, which halves what your lower back absorbs. Same rule as always on elbows: 45°, never flared."},
+
+  /* ── Home Push / Home Pull ──────────────────────────────────── */
+  hp_dip_main:{c:["Band looped over the bars and under your knees to start","Grip the bars, arms locked, shoulders pulled DOWN away from your ears","Lower under control, slight forward lean for chest","STOP when your upper arms reach parallel to the floor","Drive up, do not slam the lockout","Thinner band as you get stronger, then no band"],b:"Inhale down, exhale on the push",s:"Your heaviest pressing movement, and the reason the tower is worth buying. One caution: the bottom of a dip puts the shoulder into deep extension, which is the position your shoulder likes least. Parallel and no further, keep the shoulders packed down, and if it ever feels loose or clicky down there, swap to close-grip push-ups that day. No ego on depth."},
+  hp_push:{c:["Hardest variant you can do for 10 clean reps","Body one rigid line, glutes and abs squeezed","Elbows 45° from the ribs, NOT flared to 90°","Chest to the floor every rep","Stop 1-2 reps short, last set to failure"],b:"Inhale down, exhale on the push",s:"Hit 15 reps on all four sets and the movement has become too easy. Move one step up the ladder and start again at 10. That is your progression now that you cannot just grab a heavier dumbbell."},
+  hp_press:{c:["One knee down, opposite knee up at 90°","Bell racked on the side of the down knee","Squeeze the down-side glute, ribs pulled DOWN","Press straight up, elbow driving under the bell","Lock out with the bicep beside your ear","Stop with 1 rep left, never grind"],b:"Exhale on the press, brace the trunk",s:"Your main overhead strength work. The half-kneeling stance makes it impossible to arch your lower back to heave the bell up, which is exactly what you want while the back is rebuilding. When 35lb for 8 gets easy, slow the lowering to 4 seconds before you think about a heavier bell."},
+  hp_fly:{c:["Band around your back, a handle in each hand","Arms slightly bent and that bend never changes","Open out until you feel a real stretch across the chest","Hug back together, squeeze 1s in the middle","Light tension, high reps, perfect control"],b:"Exhale as the hands come together",s:"Dips and push-ups load the chest hardest near lockout and barely at all in the stretch. This covers the half they miss. Do not chase heavy bands."},
+  hp_lateral:{c:["Stand on the middle of the band, handle in each hand","Slight forward lean from the hips","Thumb up, lead with the ELBOW","Raise to shoulder height only, never higher","3 second lower, resist the band pulling you down"],b:"Exhale as you raise",s:"Side delts are what give a physique width from the front, and they are the one muscle that genuinely prefers high reps and constant tension to heavy load. Bands are arguably better here than dumbbells."},
+  hp_tri:{c:["Both hands cupped under one bell, pressed overhead","Elbows point UP and stay beside your ears","Lower behind the head until you feel the stretch","Drive up without letting the elbows flare","Last set to failure, then straight into close-grip push-ups"],b:"Inhale down, exhale on the extension",s:"The long head of the tricep is most of your arm's size and it only loads properly with the arm overhead. Flaring elbows means it is too heavy."},
+  hp_core:{c:["Dead hang from the bar, shoulders packed down","Curl the PELVIS first, then raise the knees","Knees to chest, hold 1s","Lower slowly, no swinging or kipping","If you swing, you are using momentum, not abs"],b:"Exhale as the knees come up",s:"Curling the pelvis is the whole exercise. Just lifting the knees with a flat back is hip flexor work. The tower makes this available and it is one of the best ab movements there is."},
+  hpl_chin_main:{c:["Band looped under your knees or one foot, THICKEST band first","Underhand grip, hands shoulder width","Start from a dead hang, arms straight","Pull until your chin clears the bar","Lower under control for 3 seconds","No kipping, no swinging"],b:"Exhale on the way up",s:"Not being able to do one yet is completely normal and the band is the right answer, not a compromise. The path is: thick band, thinner band, negatives, then your first unassisted rep. Each of those is a separate step in the ladder with its own history, so you will see the progress even when it feels slow."},
+  hpl_row:{c:["Free hand braced flat on a chair, bench or your knee","Back flat and SUPPORTED, never holding a hinge unaided","Row the bell to the hip, elbow back not out","Full stretch at the bottom, let the shoulder blade travel","Hard squeeze for 1s at the top"],b:"Exhale on the pull",s:"Bracing the free hand is what keeps this off your lower back. 50lb is your heaviest bell, so this will eventually become the limiting movement. When it does, slow the lowering and add reps before you buy anything."},
+  hpl_pull:{c:["Band anchored high, or thrown over the top of the tower","Kneel facing it, arms overhead, slight backward lean","Pull to the collarbone, driving the ELBOWS down and back","Squeeze the lats 1s","Control the return to a full stretch overhead"],b:"Exhale on the pull",s:"This is the width builder, and it loads the lats in a way rows cannot. Zero spinal load, so it is always available even on a bad back day."},
+  hpl_rear:{c:["Band anchored at roughly forehead height","Pull toward your face, elbows high and wide","Rotate at the end so the hands finish behind your ears","Squeeze 1s, control the return","Light band, high reps, every session"],b:"Exhale on the pull",s:"Doubles as your shoulder health work. These are the muscles that hold the joint stable, and they are what make delts look three-dimensional from the side."},
+  hpl_curl:{c:["25lb, one bell in both hands or one per side","Elbows pinned to the ribs and they stay there","Curl without the elbows drifting forward","Squeeze hard at the top for a full second","3 second lower, all the way to straight","Last set to failure, then drop to a band"],b:"Exhale on the way up",s:"Full extension at the bottom of every rep. Chin-ups already hit your biceps hard, so this is the finishing work rather than the main event."},
+  hpl_hammer:{c:["Neutral grip, palms facing each other throughout","A bell per hand by the handle, or a band","Elbows pinned to the ribs","No wrist rotation at all","Squeeze at the top, 3 second lower"],b:"Exhale on the way up",s:"Hits the brachialis, which sits underneath the bicep and physically pushes it upward as it grows. Most people skip it and wonder why their arms stall."},
+  hpl_core:{c:["On your back, arms up, knees up at 90°","Press the lower back FLAT into the floor first","It stays flat for every rep","Lower opposite arm and leg slowly","Stop the instant the back wants to arch"],b:"Exhale slowly as you extend",s:"The work that makes your back strong enough for everything else. Slow and small beats big and fast."},
+
+  /* ── dip ladder ─────────────────────────────────────────────── */
+  hp_floor_press:{c:["On your back, knees bent, bell in one hand at the chest","Press straight up, wrist stacked over the elbow","Lower until the upper arm touches the floor","Pause, then press again","Elbow at about 45° from the body"],b:"Inhale down, exhale on the press",s:"The floor physically stops you short of the range that bothers an unstable shoulder. Needs no tower at all."},
+  hp_cg_pushup:{c:["Hands just inside shoulder width","Body one rigid line, glutes and abs squeezed","Elbows track BACK along the ribs, not out","Chest to the floor every rep","Knees down rather than half reps"],b:"Inhale down, exhale on the push",s:"The closest thing to a dip you can do with nothing but the floor. Elbows back is what makes it a tricep movement."},
+  hp_chair_dip:{c:["Hands on a chair or bench behind you, fingers forward","Feet out in front, legs straight for harder","Lower until the upper arms are parallel","Elbows track BACK, never flare out","Push through the heels of the hands"],b:"Exhale on the push",s:"Honest warning: this version is harder on the shoulder than a proper parallel-bar dip, because your arms are behind your torso. Keep it shallow, and prefer the tower version once you have it."},
+  hp_band_dip:{c:["Band looped over both bars, knees resting in it","Arms locked at the top, shoulders pulled down","Lower to upper arms parallel, no further","Drive up through the band's help","Thinner band as you get stronger"],b:"Inhale down, exhale on the push",s:"Where to start on the tower. The band helps most at the bottom, which is exactly where you are weakest and where the shoulder is most vulnerable."},
+  hp_dip:{c:["Grip the bars, press to a locked-out start","Shoulders pulled DOWN away from the ears","Slight forward lean for chest, upright for triceps","Lower to upper arms parallel and stop","Drive up under control"],b:"Inhale down, exhale on the push",s:"Parallel is the floor, not a target to beat. Going deeper adds shoulder risk and almost no extra muscle."},
+  hp_weighted_dip:{c:["Bell hung from a dip belt, or squeezed between the feet","Start with the 25lb bell","Same depth rule: parallel and no further","Controlled 3 second lower"],b:"Inhale down, exhale on the push",s:"Once bodyweight dips are comfortable for 10, this is how you keep adding load for years without owning a rack."},
+
+  /* ── chin ladder ────────────────────────────────────────────── */
+  hpl_band_row:{c:["Sit tall, band looped round your feet","Handles in each hand, arms extended","Row to the belly, elbows back along the ribs","Squeeze the shoulder blades 1s","Control the return to a full stretch"],b:"Exhale on the pull",s:"Step 1 and the most back-friendly pull you own. Nothing loads the spine. Step further into the band to make it harder."},
+  hpl_pulldown:{c:["Band anchored high or over the tower","Kneel, arms overhead","Pull to the collarbone, elbows down and back","Squeeze the lats, control the return"],b:"Exhale on the pull",s:"Step 2. Trains the exact pulling direction a chin-up needs, with resistance you can dial precisely."},
+  hpl_inverted:{c:["Under a table or a bar at hip height","Body rigid, heels on the floor","Pull the chest to the edge","Squeeze 1s, lower under control","Walk the feet out to make it harder"],b:"Exhale on the pull",s:"Step 3. The best bridge toward a chin-up because you scale it just by changing your body angle."},
+  hpl_chin_neg:{c:["Jump or step to the top, chin over the bar","Lower yourself for a full 5 seconds","Step back up, do not drop and repeat","3-5 reps is a full set"],b:"Breathe steadily, brace the trunk",s:"Step 4. You are roughly 40% stronger lowering than lifting, which is why negatives build the chin-up faster than anything else. Combine these with band-assisted sets and you will get there."},
+  hpl_chin:{c:["Underhand grip, hands shoulder width","Dead hang start, arms straight","Pull until the chin clears the bar","3 second lower","No kipping or swinging"],b:"Exhale on the way up",s:"Step 5, the goal. The best upper body builder there is, and it trains your biceps hard at the same time. Even one clean rep is a set worth logging."},
+  hpl_chin_wt:{c:["Bell on a dip belt or held between the feet","Dead hang start, chin clears the bar","Controlled 3 second lower","Start with the 25lb bell"],b:"Exhale on the way up",s:"Step 6. Where you go once ten clean bodyweight reps feel comfortable."},
+  hpl_kb_row_alt:{c:["Free hand braced on a chair or bench","Back flat and supported","Row to the hip, elbow back not out","Full stretch, hard squeeze"],b:"Exhale on the pull",s:"Not a ladder step, an alternative. Use it on days the bar is not happening or when you want more total back volume."},
+
+  /* ── row and press alternatives ─────────────────────────────── */
+  hpr_band_row_s:{c:["Sit tall, band round the feet","Row to the belly, elbows back","Squeeze the blades 1s","Full stretch on the return"],b:"Exhale on the pull",s:"Always available, never loads the spine."},
+  hpr_inverted_s:{c:["Under a table or low bar","Body rigid, chest to the edge","Squeeze 1s at the top","Feet further out is harder"],b:"Exhale on the pull",s:"Bodyweight pulling scaled by body angle."},
+  hpr_renegade:{c:["Plank position gripping two bells","Row one bell to the hip","Hips stay DEAD level, do not let them rotate","Set it down, then the other side","Feet wider makes it easier"],b:"Exhale on each row",s:"Back and anti-rotation core at once. Go much lighter than a normal row, the stability is the hard part."},
+  hpr_gorilla:{c:["Two bells between the feet, wide stance","Hinge with a FLAT back, chest proud","Row one bell to the hip while the other stays down","Alternate, keeping the torso still"],b:"Exhale on each row",s:"Heavier than single-arm rows because you can brace against the other bell. Only when the lower back feels fully good, since it holds the hinge throughout."},
+  hpr_band_pullover:{c:["Band anchored high, standing or kneeling","Arms STRAIGHT and they stay straight","Pull down to the hips using only the lats","Squeeze, control the return"],b:"Exhale on the pull",s:"Pure lat isolation with no biceps involvement at all. Great finisher when the arms are already cooked."},
+  hpp_bu_press:{c:["Bell upside down, handle squeezed hard","Wrist dead straight, forearm vertical","Press slowly, speed will dump it","Lower just as slowly"],b:"Exhale on the press, brace hard",s:"Rotator cuff work disguised as a press. 25lb will feel absurdly heavy and that is correct."},
+  hpp_push_press:{c:["Bell racked at the shoulder","Short sharp dip of the knees","Drive with the legs to start the bell","Finish the lockout with the arm","Control it back to the rack"],b:"Exhale on the drive",s:"Legs get you past the sticking point so you keep volume instead of grinding."},
+  hpp_seesaw:{c:["Two bells racked at the shoulders","One presses up as the other lowers","Continuous, no pause at the bottom","Ribs down, no lower-back arch"],b:"Exhale on each press",s:"The constant tension makes this conditioning as much as strength. Lighter than a strict press."},
+  hpp_z_press:{c:["Seated on the floor, legs straight out in front","Bell racked at the shoulder","Press straight overhead without leaning back","Ribs down, core braced hard"],b:"Exhale on the press",s:"No leg drive and nowhere to hide. The strictest overhead press there is, and it exposes any lower-back arching instantly. Go much lighter than standing."},
+  hpp_band_press:{c:["Stand on the middle of the band","Handle at the shoulder, press overhead","Resistance builds toward lockout","Control the return"],b:"Exhale on the press",s:"Hardest where you are strongest. Good for high-rep finishing after the heavy bell work."},
+
+  /* ── hanging core ───────────────────────────────────────────── */
+  hph_knee_raise:{c:["Dead hang, shoulders packed down","Curl the PELVIS first","Knees to chest, hold 1s","Lower slowly, no swinging"],b:"Exhale as the knees rise",s:"Curling the pelvis is the exercise. Lifting the knees with a flat back is just hip flexors."},
+  hph_leg_raise:{c:["Dead hang, legs straight","Raise to horizontal or higher","Control the lower completely","No swinging between reps"],b:"Exhale as the legs rise",s:"Much harder than knee raises. Earn it by getting 15 clean knee raises first."},
+  hph_hollow_s:{c:["On your back, lower back PRESSED into the floor","Shoulders and legs lifted just off the ground","The back never leaves the floor","Bend the knees to make it easier"],b:"Short controlled breaths, stay braced",s:"No tower needed. If the back arches, shorten the lever by bending the knees."},
+  hph_dead_bug_s:{c:["On your back, arms up, knees at 90°","Lower back flat and it stays flat","Lower opposite arm and leg slowly","Stop if the back wants to arch"],b:"Exhale slowly as you extend",s:"No tower needed, and genuinely good for a lower back that needs strengthening."},
+  hph_side_plank_s:{c:["On your side, elbow under the shoulder","Hips stacked one on top of the other","Lift the hips into a straight line","Squeeze the bottom glute"],b:"Slow controlled breathing",s:"Lateral trunk work with no spinal loading."},
+
+  /* ── Home Strength ──────────────────────────────────────────── */
+  hs_push:{c:["Pick the hardest variant you can manage for 10 clean reps","Hands slightly wider than the shoulders","Body one rigid line, glutes and abs squeezed","Elbows at 45° from the ribs, NOT flared to 90°","Chest to the floor every rep, no half reps","Stop 1-2 reps short, last set all the way to failure"],b:"Inhale down, exhale on the push",s:"This is the day that builds, so the rule is different from your kettlebell days: the set ends when the muscle is done, not when a clock says so. If 15 reps feels comfortable on all four sets, the movement is too easy and you move up the ladder. That is how bodyweight keeps working."},
+  hs_pull:{c:["Hardest version you can do for 8 clean reps","Pull with the elbows, not the hands","Squeeze the shoulder blades together and hold 1s","Full stretch at the bottom of every rep","Body stays rigid, no heaving with the lower back"],b:"Exhale on the pull",s:"Pulling is the biggest gap in your week, 8 sets against a minimum of 10, while chest sits at 17. Fixing that ratio is worth more to how you look and how your shoulders feel than any amount of extra pressing."},
+  hs_press:{c:["Half-kneeling: one knee down, opposite knee up","Bell racked on the side of the down knee","Squeeze that glute hard, ribs pulled DOWN","Press straight up, elbow driving under the bell","Lock out with the bicep beside your ear","Stop with 1 rep left, never grind the last one"],b:"Exhale on the press, brace the trunk",s:"Your heaviest pressing, so treat it as the strength lift of the day. The half-kneeling stance makes it impossible to arch your lower back to get the bell up, which is exactly what you want while the back is rebuilding."},
+  hs_fly:{c:["Band around your back, a handle in each hand","Arms slightly bent and that bend never changes","Open out until you feel a real stretch across the chest","Hug it back together, squeeze 1s at the middle","Light tension, high reps, perfect control"],b:"Exhale as the hands come together",s:"Push-ups load the chest hardest near lockout and barely at all in the stretch. This does the opposite, so the two together cover the whole muscle. Do not chase heavy bands here."},
+  hs_curl:{c:["25lb, one bell in both hands or one per side","Elbows pinned to the ribs and they stay there","Curl without the elbows drifting forward","Squeeze hard at the top for a full second","3 second lower, all the way to straight","Last set to failure, then drop to a band and keep going"],b:"Exhale on the way up",s:"Full extension at the bottom every single rep. Half reps at the top feel harder and build less. The drop set at the end is where the real burn comes from."},
+  hs_tri:{c:["Both hands cupped under one bell, pressed overhead","Elbows point UP and stay beside your ears","Lower behind the head until you feel the stretch","Drive up without letting the elbows flare","Last set to failure, then straight into close-grip push-ups"],b:"Inhale down, exhale on the extension",s:"The long head of the tricep is most of your arm's size and it only gets loaded properly with the arm overhead. Flaring elbows means the weight is too heavy."},
+  hs_core:{c:["On your back, arms up, knees up at 90°","Press the lower back FLAT into the floor first","It stays flat for every rep, no exceptions","Lower opposite arm and leg slowly","Stop the moment the back wants to arch"],b:"Exhale slowly as you extend",s:"You said your back just isn't strong enough yet. This is the exercise that fixes that, more than any amount of swinging. It trains the trunk to resist extension under load, which is the pattern that was failing."},
+
+  /* ── push-up ladder ─────────────────────────────────────────── */
+  hs_knee_pu:{c:["Knees on the floor, ankles crossed","Straight line from knees to head, do not sit back","Chest still touches the floor","Elbows 45°, not flared"],b:"Inhale down, exhale on the push",s:"Step 1. No shame here. Clean reps at an easy angle beat ugly reps at a hard one, every time."},
+  hs_incline_pu:{c:["Hands on a bench, step, counter or couch arm","Body one rigid line from heels to head","Chest to the surface on every rep","Lower the surface over the weeks"],b:"Inhale down, exhale on the push",s:"Step 2. The beauty of this one is that it is infinitely adjustable: every inch lower is a small progression you can actually feel."},
+  hs_tempo_pu:{c:["Standard push-up position","3 seconds down","1 second paused with the chest on the floor","Drive up at normal speed","Halve your usual reps"],b:"Inhale on the slow descent",s:"Step 3. Same position, much more time under tension. A great way to make standard push-ups hard again without needing anything new."},
+  hs_feet_pu:{c:["Feet on a bench or step, hands on the floor","Body one rigid line, do not let the hips sag","Chest to the floor","Elbows 45°, not flared"],b:"Inhale down, exhale on the push",s:"Step 4. Raising the feet shifts load onto the upper chest and front delts and adds roughly 15% to what you are pressing."},
+  hs_deficit_pu:{c:["Hands on the handles of two bells, bells on the floor","Squeeze the handles hard, they want to tip","Lower until your chest drops BELOW the handles","Push back up through the full range"],b:"Inhale down, exhale on the push",s:"Step 5. The extra depth is the point: the stretched position is where most of the growth happens, and a floor push-up never reaches it. Neutral wrists are a bonus if yours complain."},
+  hs_archer_pu:{c:["Hands much wider than shoulders","Lower toward ONE hand, the other arm stays straight","That straight arm just assists, it does not press","Alternate sides each rep or each set"],b:"Inhale down, exhale on the push",s:"Step 6. Most of your bodyweight through one arm. The honest bridge toward a one-arm push-up."},
+  hs_weighted_pu:{c:["Loaded backpack worn tight, or a bell set on the upper back","Have someone place the bell if you can","Body rigid, chest to the floor","Elbows 45°"],b:"Inhale down, exhale on the push",s:"Step 7. Once bodyweight is easy, this is how you keep adding load for years. A backpack with books is genuinely fine."},
+
+  /* ── pull ladder ────────────────────────────────────────────── */
+  hs_band_row:{c:["Sit tall, band looped round your feet","Handles in each hand, arms extended","Row to the belly, elbows back along the ribs","Squeeze the shoulder blades 1s","Control the return to a full stretch"],b:"Exhale on the pull",s:"Step 1, and the most back-friendly pull you own. Nothing is loading your spine at all. Shorten the band or step further into it to make it harder."},
+  hs_band_pulldown:{c:["Band anchored high, or in the top of a door","Kneel facing it, arms overhead","Pull to the collarbone, driving the elbows down and back","Squeeze the lats, control the return"],b:"Exhale on the pull",s:"Step 2. Pure lat work with zero spinal load. This is the movement that builds width."},
+  hs_kb_row_sup:{c:["Free hand braced flat on a bench, chair or your knee","Back flat and SUPPORTED, not holding a hinge","Row the bell to the hip, elbow back not out","Full stretch at the bottom, hard squeeze at the top"],b:"Exhale on the pull",s:"Step 3. Bracing the free hand is what keeps this off your lower back. Never do unsupported bent-over rows while the back is still rebuilding."},
+  hs_inverted_row:{c:["Under a sturdy table or a bar at hip height","Body rigid, heels on the floor","Pull the chest to the edge or the bar","Squeeze 1s, lower under control","Walk the feet out to make it harder"],b:"Exhale on the pull",s:"Step 4. Bodyweight pulling you can scale precisely by changing your body angle. The more horizontal, the harder."},
+  hs_chin_neg:{c:["Jump or step up to the top position, chin over the bar","Lower yourself for a full 5 seconds","Step back up, do not drop and repeat","3-5 reps is a full set"],b:"Breathe steadily, brace the trunk",s:"Step 5. You are far stronger lowering than lifting, so negatives let you train the movement before you can do one. This is how almost everyone earns their first chin-up."},
+  hs_chin_up:{c:["Underhand grip, hands shoulder width","Start from a dead hang, arms straight","Pull until the chin clears the bar","Lower under control, 3 seconds","No kipping or swinging"],b:"Exhale on the way up",s:"Step 6. The best single upper body builder there is, and it trains your biceps hard at the same time. Worth working toward on its own."},
+  hs_weighted_chin:{c:["Bell on a dip belt, or held between the feet","Dead hang start, chin clears the bar","Controlled 3 second lower","Start with the 25lb bell"],b:"Exhale on the way up",s:"Step 7. Where you go once ten clean bodyweight chin-ups feel comfortable."},
+
+  /* ── Arms & Delts ───────────────────────────────────────────── */
+  ad_bandpull:{c:["Band at chest height, arms straight out in front","Hands slightly wider than shoulders, palms down","Pull the band apart until your arms form a T","Squeeze the shoulder blades together and hold 1s","Control the return, do not let it snap back"],b:"Exhale as you pull apart",s:"Costs nothing and makes every press that follows feel better. Widen your grip if it's too hard, narrow it if it's too easy."},
+  ad_halo:{c:["Bell by the horns, upside down, close to the chest","Circle it around the head, as close as you can","Ribs stay DOWN, no arching the lower back","Slow and deliberate, 5 each direction"],b:"Breathe normally throughout",s:"Takes the shoulder through its full range under light control before you load it."},
+  ad_press:{c:["Half-kneeling: one knee down, opposite knee up at 90°","Bell racked on the side of the DOWN knee","Squeeze the down-side glute hard, ribs pulled down","Press straight up, elbow driving under the bell","Lock out with the bicep beside your ear"],b:"Exhale on the press, brace the trunk",s:"The stance makes it physically impossible to arch your lower back to muscle the bell up. With your back sore, this is the press to use. All the delt stimulus, none of the spinal load."},
+  ad_lateral:{c:["Band underfoot or 10-15lb dumbbells","Slight forward lean from the hips, not the lower back","Thumb up, lead with the ELBOW not the hand","Raise to shoulder height only, never higher","Lower slowly, 3 seconds, do not drop it"],b:"Exhale as you raise",s:"Your lightest bell is 25lb, which is far too heavy here and will turn this into a shrug. Band or light dumbbells. If you can swing it up, it's too heavy and the side delt isn't doing the work."},
+  ad_rear:{c:["Band or cable at roughly forehead height","Pull toward your face, elbows high and wide","At the end, rotate so your hands finish behind your ears","Squeeze 1s, control the return","Light weight, high reps, every time"],b:"Exhale on the pull",s:"Doubles as your shoulder-health work. Rear delts and external rotators are what hold the joint stable, and they're what give shoulders width from the side."},
+  ad_curl:{c:["25lb, both hands on one bell or one bell per hand","Elbows pinned to your ribs and they stay there","Curl up without letting the elbows drift forward","Squeeze hard at the top for a full second","Lower for 3 seconds, all the way to straight"],b:"Exhale on the way up",s:"The bell hangs below your hands, so the bottom of the rep is loaded harder than with a dumbbell. Full extension at the bottom every rep, that's where the growth is."},
+  ad_tri:{c:["Both hands cupped under one bell, pressed overhead","Elbows point UP at the ceiling and stay beside your ears","Lower the bell behind your head under control","Go until you feel a real stretch, then drive up","Elbows never flare out to the sides"],b:"Inhale down, exhale on the extension",s:"The long head of the tricep only gets properly stretched with the arm overhead, and the long head is most of your arm's size. If your elbows flare, you've gone too heavy."},
+  ad_hammer:{c:["Neutral grip, palms facing each other throughout","Dumbbells, or one bell per hand by the handle","Elbows pinned to the ribs","Curl without rotating the wrist at all","Squeeze at the top, lower for 3 seconds"],b:"Exhale on the way up",s:"Hits the brachialis, which sits underneath the bicep and physically pushes it upward as it grows. Most people skip it and wonder why their arms stall."},
+  ad_cgpush:{c:["Hands just INSIDE shoulder width","Body one rigid line, glutes and abs squeezed","Elbows track BACK along the ribs, not out to the sides","Chest to the floor on every rep","Push the floor away hard at the top"],b:"Inhale down, exhale on the push",s:"Elbows back rather than flared is what makes this a tricep exercise instead of a chest one, and it keeps the shoulder out of trouble. Knees down beats half reps."},
+  ad_deadbug:{c:["On your back, arms straight up, knees up at 90°","Press the lower back FLAT into the floor first","It stays flat for every single rep","Lower one arm overhead and the opposite leg","Stop the instant the back wants to arch, then switch"],b:"Exhale slowly as you extend",s:"This is rehab-grade work for exactly the back you're complaining about. It teaches the trunk to brace against extension, which is the thing that was failing during your swings. Slow and small beats big and fast."},
+  ad_plank:{c:["Forearms down, elbows directly under the shoulders","Squeeze glutes, then quads, then abs","Straight line from heels to head","No sag in the hips and no pike upward","Breathe, do not just hold your breath and shake"],b:"Slow controlled breaths through the nose",s:"Anti-extension: your trunk resists the lower back arching. That's the opposite of what irritated it today, and the reason it's here rather than sit-ups."},
+
+  /* ── Arms & Delts substitutions ─────────────────────────────── */
+  ads_bu_press:{c:["Bell upside down, handle squeezed as hard as you can","Wrist dead straight, forearm vertical","Press slowly, speed will dump it","Lower just as slowly"],b:"Exhale on the press, brace hard",s:"Rotator cuff work disguised as a press. 25lb will feel absurdly heavy and that's correct."},
+  ads_db_press:{c:["Seated or standing, dumbbells at shoulder height","Elbows FORWARD at about 30°, not flared wide","Press up and slightly in","Stop at ear height, do not slam the lockout","Ribs down, no lower-back arch"],b:"Exhale on the press",s:"Elbows forward keeps the shoulder in the safe plane. Flaring to a wide T is the position that causes impingement."},
+  ads_landmine:{c:["Half-kneeling at the end of a barbell in a corner","Press up and forward along the bar's arc","Elbow stays in front of the body","Full extension without locking hard"],b:"Exhale on the press",s:"The arc keeps the upper arm in the scapular plane, which is the single most shoulder-friendly way to press overhead."},
+  ads_push_press:{c:["Bell or dumbbells racked at the shoulders","Short sharp dip of the knees","Drive with the legs, let that start the weight","Finish the lockout with the arm","Lower under control to the rack"],b:"Exhale on the drive",s:"Legs get you past the sticking point so you keep the volume instead of grinding out ugly reps."},
+  ads_arnold_ad:{c:["Start with palms facing you at chest height","Rotate to palms-forward as you press up","Elbows stay forward throughout","Reverse the rotation on the way down"],b:"Exhale on the press",s:"The rotation gives the front delt a longer path under tension. Go lighter than a straight press."},
+  ads_floor_press_ad:{c:["On your back, knees bent, bell in one hand","Press straight up, wrist stacked over the elbow","Lower until the upper arm touches the floor","Pause, then press again"],b:"Inhale down, exhale on the press",s:"The floor physically stops you short of the end range where an unstable shoulder gets into trouble."},
+  ads_cable_lat:{c:["Cable at the lowest setting, opposite hand","Slight lean away from the stack","Thumb up, lead with the elbow","Shoulder height only, lower slowly"],b:"Exhale as you raise",s:"Constant tension through the whole range, which dumbbells can't give you at the bottom. The best lateral if you're at the gym."},
+  ads_seated_lat_ad:{c:["Seated upright on a bench","Dumbbells at your sides, 10-15lb","Thumb up, lead with the elbow","Shoulder height, no higher","3 second lower"],b:"Exhale as you raise",s:"Sitting removes every bit of leg drive and body english. Strict and light."},
+  ads_bent_lat_ad:{c:["Hinge to 45° with a FLAT back, or lie chest-down on an incline bench","Light dumbbells hanging straight down","Raise out to the sides, thumbs down","Squeeze the rear delts, control the lower"],b:"Exhale as you raise",s:"Use the incline bench version while your back is sore. Chest supported means the lower back does nothing at all."},
+  ads_band_lat:{c:["Stand on the middle of a band, handle in one hand","Raise out to the side, thumb up","Shoulder height only","Resist on the way down, the band wants to snap back"],b:"Exhale as you raise",s:"Band tension increases exactly where the side delt is strongest. The best home option by a distance."},
+  ads_partial_lat:{c:["Hold a post or rack with one hand, lean away","Weight in the outside hand","Raise to shoulder height from the lengthened position","Slow lower, full stretch at the bottom"],b:"Exhale as you raise",s:"Leaning away loads the side delt at a longer muscle length, so a light weight produces far more stimulus."},
+  ads_band_pullapart_s:{c:["Band at chest height, arms straight","Pull apart to a T, squeeze the blades","Control the return"],b:"Exhale as you pull",s:"Endless reps with no joint cost. Do them between sets of anything."},
+  ads_rear_fly:{c:["Chest down on an incline bench if you have one","Light dumbbells, thumbs down","Raise out to the sides, not backward","Squeeze 1s, lower slowly"],b:"Exhale as you raise",s:"Chest supported takes the lower back out of it completely, which matters this week."},
+  ads_prone_y_ad:{c:["Face down on the floor, forehead resting","Thumbs pointing up at the ceiling","Lift the arms into a Y overhead","Hold 2s, lower slowly","Little or no weight"],b:"Exhale as you lift",s:"Lower traps and rear delts, the muscles that keep the shoulder blade where it belongs."},
+  ads_cable_face:{c:["High anchor, rope attachment, overhand grip","Pull to forehead level, elbows high","Externally rotate at the end, hands behind the ears","Control the return"],b:"Exhale on the pull",s:"Your number one shoulder health exercise. Light, strict, high reps."},
+  ads_db_curl_ad:{c:["Dumbbells at your sides, palms forward","Elbows pinned to the ribs","Curl without the elbows drifting forward","Supinate hard and squeeze at the top","3 second lower to full extension"],b:"Exhale on the way up",s:"The eccentric is where most of the growth comes from. Do not drop the weight."},
+  ads_preacher_ad:{c:["Seated, elbows braced on the inner thighs or a preacher pad","Curl from a full stretch","Swinging is physically impossible here","Squeeze at the top, lower slowly"],b:"Exhale on the way up",s:"Loads the bicep hardest in the stretched position. Go lighter than a standing curl, it will feel much harder."},
+  ads_conc_curl_ad:{c:["Seated, elbow braced on the inner knee","One arm at a time","Curl to the shoulder, squeeze 2s","Lower all the way to straight"],b:"Exhale on the way up",s:"Maximum isolation. Nothing else can help, so the bicep does every bit of it."},
+  ads_band_curl:{c:["Stand on the band, handles in each hand","Elbows pinned, curl up","Hardest at the top where you're strongest","Resist the return"],b:"Exhale on the way up",s:"Perfect for a high-rep burnout at the end. Chase the pump, not the load."},
+  ads_chin_up:{c:["Underhand grip, hands shoulder width","Start from a dead hang, arms straight","Pull until your chin clears the bar","Lower under control, 3 seconds","Assisted or slow negatives both count"],b:"Exhale on the way up",s:"The best bicep builder there is, and it hits your back at the same time, which you're currently short on. If you can only do a few, do slow negatives."},
+  ads_pushdown_ad:{c:["Rope or bar at a high cable","Elbows GLUED to your sides and immobile","Only the forearm moves","Squeeze hard at full extension","Control the return to 90°"],b:"Exhale on the pushdown",s:"If your elbows are moving, the weight is too heavy and your back and shoulders are helping."},
+  ads_lying_ext_ad:{c:["Flat on a bench or the floor","Dumbbells above the chest, elbows pointing up","Lower toward the forehead, elbows fixed","Full stretch, then drive back up"],b:"Inhale down, exhale on the extension",s:"Classic mass builder for the triceps. Keep the elbows pointing at the ceiling the whole time."},
+  ads_bench_dip_ad:{c:["Hands on a bench behind you, fingers forward","Lower until the upper arms are parallel to the floor","Elbows track BACK, never flare out","Push through the heels of the hands","Feet closer is easier, further is harder"],b:"Exhale on the push",s:"Don't go deeper than parallel. Below that the shoulder takes the load in its most vulnerable position."},
+  ads_diamond_pu:{c:["Hands together under the chest, thumbs and fingers touching","Body one rigid line","Elbows track back along the ribs","Chest to the hands","Knees down if needed"],b:"Inhale down, exhale on the push",s:"Brutal triceps work with no equipment at all. A genuinely hard finisher."},
+  ads_kick_back:{c:["Hinge with a FLAT back, or brace a hand on a bench","Upper arm locked parallel to the floor","Extend from the elbow only","Squeeze 1s at full extension","Light weight, this is not a strength movement"],b:"Exhale on the extension",s:"Brace a hand on a bench so your lower back isn't holding the hinge. Peak contraction work, keep it light."},
+  ads_pallof_ad:{c:["Stand sideways to a band at chest height","Hands at the sternum, press straight out","Hold 2 seconds at full extension","Resist the pull that wants to rotate you","Return slowly"],b:"Exhale on the press-out",s:"Anti-rotation with zero spinal flexion. One of the safest and most useful core exercises for a sore back."},
+  ads_side_plank_ad:{c:["On your side, elbow directly under the shoulder","Hips STACKED one on top of the other","Lift the hips into a straight line","Squeeze the bottom glute","30 seconds a side"],b:"Slow controlled breathing",s:"Builds the lateral trunk without loading the spine at all."},
+  ads_hollow:{c:["On your back, lower back PRESSED into the floor","Shoulders and legs lifted just off the ground","The back never leaves the floor","Bend the knees to make it easier","Arms overhead to make it harder"],b:"Short controlled breaths, stay braced",s:"If your lower back arches off the floor, shorten the lever by bending the knees. Form is the entire exercise."},
+  ads_bird_dog:{c:["On hands and knees, back flat","Extend the opposite arm and leg","Hips stay LEVEL, do not let them rotate","Hold 2s, return under control","Slow and small"],b:"Exhale as you extend",s:"Low-load, genuinely good for a sore lower back, and it trains the bracing pattern that failed during your swings."},
+  ads_suitcase_ad:{c:["One bell, one hand, hanging at your side","Stand dead vertical, do not lean away from it","Shoulder packed down, no shrugging","Ribs down, walk normally"],b:"Short shallow breaths, core braced",s:"Anti-lean, no bending of the spine. Safe and useful even with a sore back."},
+
   /* ── kettlebell: main movements ─────────────────────────────── */
   kbs_halo:{c:["Bell by the horns, upside down, close to the chest","Circle it around the head — as close as you can without hitting it","Ribs stay DOWN, no arching the lower back","Slow. This is mobility, not a rep to rush","5 one direction, then 5 the other"],b:"Breathe normally throughout",s:"The single best shoulder warm-up you can do with a bell. It takes the shoulder through its full range under light, controlled load — exactly what an unstable joint wants before you load it. 25lb, every kettlebell session."},
   kbc_halo:{c:["Bell by the horns, upside down, close to the chest","Circle it around the head — as close as you can without hitting it","Ribs stay DOWN, no arching the lower back","Slow. This is mobility, not a rep to rush","5 one direction, then 5 the other"],b:"Breathe normally throughout",s:"The single best shoulder warm-up you can do with a bell. 25lb, every kettlebell session."},
@@ -2382,7 +2741,7 @@ function view(){
     getProgram().forEach(d=>{
       const last=[...S.history].reverse().find(e=>e.dayId===d.id);
       const active=S.session&&S.session.dayId===d.id;
-      const tint = d.kb?' is-kb' : d.id==='hiit'?' is-hiit' : d.id==='pyramid'?' is-pyr' : d.id==='tempo'?' is-tmp' : '';
+      const tint = d.tint?(' is-'+d.tint) : d.kb?' is-kb' : d.id==='hiit'?' is-hiit' : d.id==='pyramid'?' is-pyr' : d.id==='tempo'?' is-tmp' : '';
       const cls=active?' is-active':(tint&&!last)?tint:last?' has-history':(tint||'');
       body+=`<div class="day-card${cls}" onclick="handleDayTap('${d.id}')">
         ${last&&!active?'<div class="green-dot"></div>':''}
