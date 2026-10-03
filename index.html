@@ -276,6 +276,26 @@ button{outline:none;cursor:pointer;font-family:inherit}
 .day-card.is-str{background:#f1f0f7;border-color:#c5c1dd}
 .day-card.is-str .day-card-type,.day-card.is-str .day-card-sub{color:#4a4379}
 .day-card.is-str .day-card-name{color:#4a4379}
+
+.amr-rounds{margin-top:18px;text-align:center}
+.amr-lbl{font-family:ui-monospace,monospace;font-size:9.5px;letter-spacing:.18em;color:#f0b463;margin-bottom:2px}
+.amr-n{font-family:ui-monospace,monospace;font-size:clamp(52px,17vw,76px);font-weight:700;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.amr-target{font-family:ui-monospace,monospace;font-size:12px;color:#8a867d;margin-top:4px;letter-spacing:.04em}
+.amr-target.beat{color:#7fd1a4}
+.amr-tap{display:block;width:100%;margin-top:16px;padding:22px;border:none;border-radius:14px;background:#f0b463;color:#12120f;font-size:19px;font-weight:700;letter-spacing:-.01em;cursor:pointer}
+.amr-tap:active{background:#d99c48}
+.amr-list{margin-top:14px;border:1px solid #2c2b24;border-radius:11px;overflow:hidden;background:#1a1915}
+.amr-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid #26251f;font-size:13.5px}
+.amr-row:last-child{border-bottom:none}
+.amr-row-nm{flex:1;color:#d6d2c8;font-weight:600}
+.amr-row-rp{flex:none;font-family:ui-monospace,monospace;font-size:11.5px;color:#8a867d}
+.amr-undo{background:none;border:none;color:#6d6a62;font-size:12px;text-decoration:underline;cursor:pointer;margin-top:10px;padding:6px}
+.day-card.is-amr{background:#fdf6ee;border-color:#eccfa6}
+.day-card.is-amr .day-card-type,.day-card.is-amr .day-card-sub{color:#9a6212}
+.day-card.is-amr .day-card-name{color:#9a6212}
+.grp-head{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.14em;color:#a09c93;text-transform:uppercase;margin:22px 0 9px;padding-top:4px;border-top:1px solid #eceae4}
+.grp-head:first-of-type{margin-top:4px;border-top:none;padding-top:0}
+.grp-head .grp-sub{color:#c4c0b7;letter-spacing:.06em;text-transform:none}
 </style>
 </head>
 <body>
@@ -519,8 +539,49 @@ const HP_HANG_SUBS = [
   {id:'hph_side_plank_s', name:'Side Plank', bw:true, note:'NO TOWER. Hips stacked and lifted, bottom glute squeezed. 30s a side.'}
 ];
 
+/* ── Crush-grip and odd-object movements ─────────────────────────
+   Borrowed from Garrett Merrill's "20 Minutes. One Kettlebell." The
+   crush-grip work is the cleverest answer to a light bell: the tension
+   comes from how hard you squeeze, not from the weight. */
+const SQUEEZE_SUBS = [
+  {id:'sq_plate_press', name:'Plate / Book Press', bw:true, note:'Two hands crushing anything flat. Same principle, no bell needed.'},
+  {id:'sq_band_fly_s', name:'Band Chest Fly', bw:true, note:'Band round the back, arms slightly bent, hug together and squeeze 1s.'},
+  {id:'sq_cg_pushup_s', name:'Close-Grip Push-Up', bw:true, note:'Hands just inside shoulder width, elbows back along the ribs.'},
+  {id:'sq_floor_press_s', name:'KB Floor Press', note:'Press one bell from the floor. Loaded pressing with no shoulder end range.'}
+];
+const PULLOVER_SUBS = [
+  {id:'po_band_pullover', name:'Band Pullover', bw:true, note:'Band anchored high, arms straight, pull to the hips with the lats only.'},
+  {id:'po_band_pulldown', name:'Band Lat Pulldown', bw:true, note:'Kneel, pull to the collarbone, elbows down and back.'},
+  {id:'po_straight_arm', name:'Straight-Arm Pulldown', bw:true, note:'Arms locked straight, pull to the thighs. Pure lat isolation.'},
+  {id:'po_dead_bug_s', name:'Dead Bug', bw:true, note:'If the overhead position is not happening today. Lower back flat.'}
+];
+const LIFTOFF_SUBS = [
+  {id:'lo_pushup_s', name:'Push-Up', bw:true, note:'Standard. Elbows 45°, chest to the floor, body rigid.'},
+  {id:'lo_knee_s', name:'Knee Push-Up', bw:true, note:'Knees down, chest still touches. Clean reps beat ugly ones.'},
+  {id:'lo_elev_s', name:'Elevated Push-Up', bw:true, note:'Hands on a bench or step. Easier, and infinitely adjustable.'},
+  {id:'lo_floor_press_s', name:'KB Floor Press', note:'Loaded alternative with zero wrist or shoulder end range.'}
+];
+const SHRUG_SUBS = [
+  {id:'sh_farmer_s', name:'Farmer Hold', note:'Just hold the bells at your sides and stand tall. Grip and traps, no movement.'},
+  {id:'sh_band_shrug', name:'Band Shrug', bw:true, note:'Stand on the band. Straight up, pause, no rolling.'},
+  {id:'sh_high_pull_s', name:'High Pull', note:'A swing that stops at chest height, elbow leading. Traps plus hips.'},
+  {id:'sh_suitcase_s', name:'Suitcase Carry', note:'One bell, one hand, walk tall without leaning. Traps under time.'}
+];
+const SITUP_SUBS = [
+  {id:'su_hollow_press', name:'Hollow Hold (bell overhead)', note:'SWAP IF YOUR BACK DISLIKES SIT-UPS. 30s, bell pressed overhead, lower back flat. Same burn, no spinal flexion.'},
+  {id:'su_dead_bug_s', name:'Dead Bug', bw:true, note:'Lower back pressed flat, lower opposite arm and leg slowly.'},
+  {id:'su_crunch_s', name:'KB Crunch', note:'Bell on the chest, crunch the ribs toward the hips. Shorter range than a sit-up.'},
+  {id:'su_vup_s', name:'V-Up', bw:true, note:'Legs and torso meet. Bend the knees to scale it.'}
+];
+const HIGHPULL_SUBS = [
+  {id:'hpl_swing_s', name:'Two-Hand Swing', note:'Drop the pull, just swing. Same hips, less shoulder.'},
+  {id:'hpl_1arm_swing_s2', name:'Single-Arm Swing', note:'Same hinge, one hand. Body stays square.'},
+  {id:'hpl_snatch_pull', name:'Dead-Stop High Pull', note:'Bell returns to the floor each rep. Every rep is a fresh hinge.'},
+  {id:'hpl_row_s2', name:'Supported KB Row', note:'No ballistic at all. Free hand braced, row to the hip.'}
+];
+
 const DEFAULT_PROGRAM = [
-  { id:'upper_a', name:'Upper A', type:'Upper', focus:'Chest + Back + Core', exercises:[
+  { id:'upper_a', name:'Upper A', type:'Upper', focus:'Chest + Back + Core', group:'gym', exercises:[
     {id:'face_pull', name:'Face Pulls', sets:3, reps:'15-20', rest:60, dropSet:true, muscle:'Shoulders',
       note:'FIRST every session — shoulder health. High cable, rope, pull to forehead, externally rotate at the end.', subs:FACE_PULL_SUBS},
     {id:'incline_db', name:'Incline DB Press', sets:4, reps:'8-10', rest:180, dropSet:false, muscle:'Chest',
@@ -536,7 +597,7 @@ const DEFAULT_PROGRAM = [
     {id:'overhead_tricep', name:'Overhead Tricep Ext', sets:3, reps:'10-12', rest:90, dropSet:true, muscle:'Triceps',
       note:'Cable or DB. Elbows stay close to the head. Full stretch at the bottom.', subs:TRICEP_SUBS},
   ]},
-  { id:'upper_b', name:'Upper B', type:'Upper', focus:'Shoulders + Arms + Core', exercises:[
+  { id:'upper_b', name:'Upper B', type:'Upper', focus:'Shoulders + Arms + Core', group:'gym', exercises:[
     {id:'face_pull_b', name:'Face Pulls', sets:3, reps:'15-20', rest:60, dropSet:true, muscle:'Shoulders',
       note:'FIRST every session — shoulder health. High cable, rope, pull to forehead, externally rotate.', subs:FACE_PULL_SUBS},
     {id:'landmine_press', name:'Landmine Press', sets:4, reps:'8-10', rest:180, dropSet:false, muscle:'Shoulders',
@@ -552,7 +613,7 @@ const DEFAULT_PROGRAM = [
     {id:'tricep_pushdown', name:'Tricep Pushdown', sets:3, reps:'12-15', rest:90, dropSet:true, muscle:'Triceps',
       note:'Elbows pinned to the sides. Full extension, squeeze. On rope, flare the wrists at the bottom.', subs:TRICEP_SUBS},
   ]},
-  { id:'upper_c', name:'Upper C', type:'Upper', focus:'Back Width + Chest Detail', exercises:[
+  { id:'upper_c', name:'Upper C', type:'Upper', focus:'Back Width + Chest Detail', group:'gym', exercises:[
     {id:'face_pull_c', name:'Face Pulls', sets:3, reps:'15-20', rest:60, dropSet:true, muscle:'Shoulders',
       note:'FIRST every session — shoulder health. High cable, rope, pull to forehead, externally rotate.', subs:FACE_PULL_SUBS},
     {id:'pallof_press', name:'Pallof Press', sets:3, reps:'10-12', rest:60, dropSet:false, muscle:'Core',
@@ -568,7 +629,7 @@ const DEFAULT_PROGRAM = [
     {id:'tricep_pushdown_c', name:'Tricep Pushdown', sets:3, reps:'12-15', rest:90, dropSet:true, muscle:'Triceps',
       note:'Elbows pinned. Full extension, squeeze at the bottom.', subs:TRICEP_SUBS},
   ]},
-  { id:'conditioning', name:'Conditioning', type:'Active', focus:'Endurance + Tone · 35-45 min', exercises:[
+  { id:'conditioning', name:'Conditioning', type:'Active', focus:'Endurance + Tone · 35-45 min', group:'gym', exercises:[
     {id:'face_pull_d', name:'Face Pulls', sets:3, reps:'20-25', rest:45, dropSet:false, muscle:'Shoulders',
       note:'Shoulder health first, always. Light weight, high rep, perfect form.', subs:FACE_PULL_SUBS},
     {id:'pushup', name:'Push-Ups', sets:4, reps:'15-20', rest:45, dropSet:false, muscle:'Chest',
@@ -589,7 +650,7 @@ const DEFAULT_PROGRAM = [
     {id:'plank', name:'Plank Hold', sets:3, reps:'45-60s', rest:45, dropSet:false, muscle:'Core',
       note:'Forearms down. Squeeze glutes, core, quads. Straight line heels to head. No sag, no pike.', subs:CORE_SUBS},
   ]},
-  { id:'hiit', name:'HIIT', type:'HIIT', focus:'Fat Burn · 40 min · 40s on / 15s off', exercises:[
+  { id:'hiit', name:'HIIT', type:'HIIT', focus:'Fat Burn · 40 min · 40s on / 15s off', group:'gym', exercises:[
     {id:'jump_rope', name:'Jump Rope', sets:2, reps:'40s', rest:15, dropSet:false, muscle:'Cardio',
       note:'Steady pace — your cardio anchor. No rope? High knees.', subs:[
         {id:'high_knees', name:'High Knees', note:'Knees to waist height, alternating, pump the arms. Same effect, no equipment.'},
@@ -640,7 +701,7 @@ const DEFAULT_PROGRAM = [
         {id:'v_up', name:'V-Up', note:'Raise legs and torso to meet. Bend knees if needed.'}
       ]},
   ]},
-  { id:'pyramid', name:'Pyramid', type:'Strength', focus:'Reverse Pyramid · 35 min', exercises:[
+  { id:'pyramid', name:'Pyramid', type:'Strength', focus:'Reverse Pyramid · 35 min', group:'gym', exercises:[
     {id:'pyr_face_pull', name:'Face Pulls', sets:3, reps:'15-20', rest:60, dropSet:false, muscle:'Shoulders',
       note:'Warm the shoulder up properly before anything heavy today. Light, high rep, perfect form.', subs:FACE_PULL_SUBS},
     {id:'pyr_landmine', name:'Landmine Press', scheme:'pyramid', basedOn:'landmine_press',
@@ -661,7 +722,7 @@ const DEFAULT_PROGRAM = [
     {id:'pyr_crunch', name:'Cable Crunches', sets:3, reps:'12-15', rest:60, dropSet:false, muscle:'Core',
       note:'Finisher. Kneel, rope, crunch ribs to hips, hold 1s.', subs:CORE_SUBS},
   ]},
-  { id:'tempo', name:'Tempo', type:'Control', focus:'Time Under Tension · 35 min', exercises:[
+  { id:'tempo', name:'Tempo', type:'Control', focus:'Time Under Tension · 35 min', group:'gym', exercises:[
     {id:'tmp_face_pull', name:'Face Pulls', sets:3, reps:'15-20', rest:45, dropSet:false, muscle:'Shoulders',
       note:'Standard face pulls to open up. Still first, still every session.', subs:FACE_PULL_SUBS},
     {id:'tmp_incline', name:'Incline DB Press', scheme:'tempo', basedOn:'incline_db', loadPct:0.65,
@@ -697,7 +758,7 @@ const DEFAULT_PROGRAM = [
         note:'One movement at the top of every minute. Finish the reps, rest what is left of the minute. Four rounds through. If a minute leaves you under 15 seconds of rest, drop 2 reps next round — do not let form go.'},
       {kind:'sets', label:'Finisher', minutes:5, note:'Grip and trunk under fatigue. Walk tall, breathe shallow.'}
     ],
-    exercises:[
+    group:'cond', exercises:[
       {id:'kbs_halo', name:'Halo', sets:2, reps:'5', rest:30, dropSet:false, muscle:'Cardio', defaultWeight:25, bell:true, block:0,
         repLabel:'5 each direction',
         note:'25lb. Bell by the horns, circle the head close and slow. 5 each way. Best shoulder warm-up there is.', subs:KB_HALO_SUBS},
@@ -731,7 +792,7 @@ const DEFAULT_PROGRAM = [
         ids:['kbc_swing'],
         note:'Five minutes, 15 swings at the top of each. 75 swings to close. Heaviest bell.'}
     ],
-    exercises:[
+    group:'cond', exercises:[
       {id:'kbc_halo', name:'Halo', sets:2, reps:'5', rest:30, dropSet:false, muscle:'Cardio', defaultWeight:25, bell:true, block:0,
         repLabel:'5 each direction',
         note:'25lb. Slow circles, close to the head. Five each direction.', subs:KB_HALO_SUBS},
@@ -755,7 +816,7 @@ const DEFAULT_PROGRAM = [
         note:'Five stations, four times through, 20 straight minutes. This is the hardest day — pace it from round one. If you blow up by round 3 you went too heavy.'},
       {kind:'sets', label:'Finisher', minutes:5, note:'Core, then done.'}
     ],
-    exercises:[
+    group:'cond', exercises:[
       {id:'kbg_halo', name:'Halo', sets:2, reps:'5', rest:20, dropSet:false, muscle:'Cardio', defaultWeight:25, bell:true, block:0,
         repLabel:'5 each direction', note:'25lb. Five each way.', subs:KB_HALO_SUBS},
       {id:'kbg_pry', name:'Prying Goblet Squat', sets:2, reps:'5', rest:20, dropSet:false, muscle:'Legs', defaultWeight:35, bell:true, block:0,
@@ -779,7 +840,7 @@ const DEFAULT_PROGRAM = [
     ]},
 
   { id:'arms_delts', name:'Arms & Delts', type:'Hypertrophy', focus:'Upper Body Density · 28 min', kb:true, tint:'arm',
-    blocks:[
+    group:'short', blocks:[
       {kind:'sets', label:'Shoulder prep', minutes:3, note:'Two minutes here buys you every press that follows. Light, no grinding.'},
       {kind:'clock', label:'Delt EMOM', minutes:9, interval:60, rounds:9,
         ids:['ad_press','ad_lateral','ad_rear'],
@@ -824,20 +885,20 @@ const DEFAULT_PROGRAM = [
      a clock day: the whole point is that the set ends when the muscle
      is done, not when a timer says so. */
   { id:'home_strength', name:'Home Strength', type:'Hypertrophy', focus:'Straight Sets · 35 min', tint:'str',
-    exercises:[
+    group:'build', exercises:[
       {id:'hs_push', name:'Push-Up', sets:4, reps:'10-15', rest:90, dropSet:true, muscle:'Chest',
         note:'Pick the hardest variant you can do for 10 clean reps. Stop each set 1-2 reps short of failure, then take the LAST set all the way. When you hit 15 on every set, move one step up the ladder and start again at 10.', subs:HS_PUSH_SUBS},
       {id:'hs_pull', name:'Row / Pull', sets:4, reps:'8-12', rest:90, dropSet:false, muscle:'Back',
         note:'Same rule: hardest version you can do for 8 clean reps. Squeeze the shoulder blades for a full second at the top of every rep. This is the biggest gap in your week, so do not rush it.', subs:HS_PULL_SUBS},
-      {id:'hs_press', name:'Half-Kneeling Press', sets:3, reps:'6-8', rest:90, dropSet:false, muscle:'Shoulders', defaultWeight:35, bell:true,
-        repLabel:'6-8 each side',
-        note:'35lb. Heaviest pressing you own, so treat it as the strength movement. One knee down, glute squeezed, ribs down. Stop at 1 rep in reserve, no grinding.', subs:ADS_PRESS_SUBS},
+      {id:'hs_press', name:'Half-Kneeling Press', sets:3, reps:'8-12', rest:90, dropSet:false, muscle:'Shoulders', defaultWeight:35, bell:true,
+        repLabel:'8-12 each side',
+        note:'35lb. Heaviest pressing you own, so treat it as the strength movement. One knee down, glute squeezed, ribs down. Stop at 1 rep in reserve, no grinding. LAST SET: max reps, go to real failure and log the number. That number is the data point, it tells us whether this range is right for you.', subs:ADS_PRESS_SUBS},
       {id:'hs_fly', name:'Band Chest Fly', sets:3, reps:'12-15', rest:60, dropSet:true, muscle:'Chest',
         note:'Band round your back, arms slightly bent and FIXED, hug it together and squeeze 1s. Push-ups never load the stretched position properly, this does. Chase the burn, not the resistance.', subs:FLY_SUBS},
-      {id:'hs_curl', name:'KB Curl', sets:3, reps:'10-12', rest:60, dropSet:true, muscle:'Biceps', defaultWeight:25, bell:true,
-        note:'25lb. Elbows pinned, no swing, 3 second lower, full extension at the bottom. Last set to failure, then drop to a band and keep going until you cannot.', subs:ADS_CURL_SUBS},
-      {id:'hs_tri', name:'Overhead Tricep Extension', sets:3, reps:'10-12', rest:60, dropSet:true, muscle:'Triceps', defaultWeight:25, bell:true,
-        note:'25lb, both hands on one bell. Elbows point up and stay by your ears. Deep stretch behind the head, drive up. Last set to failure then drop straight into close-grip push-ups.', subs:ADS_TRI_SUBS},
+      {id:'hs_curl', name:'KB Curl', sets:3, reps:'12-20', rest:60, dropSet:true, muscle:'Biceps', defaultWeight:25, bell:true,
+        note:'25lb. Elbows pinned, no swing, 3 second lower, full extension at the bottom. Last set to failure, then drop to a band and keep going until you cannot. LAST SET: max reps, go to real failure and log the number. That number is the data point, it tells us whether this range is right for you.', subs:ADS_CURL_SUBS},
+      {id:'hs_tri', name:'Overhead Tricep Extension', sets:3, reps:'12-20', rest:60, dropSet:true, muscle:'Triceps', defaultWeight:25, bell:true,
+        note:'25lb, both hands on one bell. Elbows point up and stay by your ears. Deep stretch behind the head, drive up. Last set to failure then drop straight into close-grip push-ups. LAST SET: max reps, go to real failure and log the number. That number is the data point, it tells us whether this range is right for you.', subs:ADS_TRI_SUBS},
       {id:'hs_core', name:'Dead Bug', sets:2, reps:'12', rest:45, dropSet:false, muscle:'Core',
         repLabel:'12 total, alternating',
         note:'Lower back pressed flat and it stays flat. Slow. Builds the bracing your back was missing during the swings, which is the thing that actually gets it stronger.', subs:ADS_CORE_SUBS},
@@ -848,42 +909,135 @@ const DEFAULT_PROGRAM = [
      every set taken to within 1-2 reps of failure and the last set
      all the way. These are the days that build. */
   { id:'home_push', name:'Home Push', type:'Hypertrophy', focus:'Chest · Delts · Triceps · 50 min', tint:'str',
-    exercises:[
+    group:'build', exercises:[
       {id:'hp_dip_main', name:'Dip', sets:4, reps:'6-10', rest:120, dropSet:false, muscle:'Chest',
         note:'YOUR HEAVIEST PRESS. Start with a band under the knees and go to a thinner band as you get stronger. Slight forward lean works the chest, upright works the triceps. STOP when your upper arms reach parallel, never sink below it. No tower yet? Tap Close-Grip Push-Up or KB Floor Press.', subs:HP_DIP_SUBS},
       {id:'hp_push', name:'Push-Up', sets:4, reps:'10-15', rest:90, dropSet:true, muscle:'Chest',
         note:'Hardest variant you can do for 10 clean reps. Stop 1-2 short of failure, last set all the way. Hit 15 on every set and you move one step up the ladder.', subs:HS_PUSH_SUBS},
-      {id:'hp_press', name:'Half-Kneeling Press', sets:4, reps:'6-8', rest:120, dropSet:false, muscle:'Shoulders', defaultWeight:35, bell:true,
-        repLabel:'6-8 each side',
-        note:'35lb. One knee down, glute squeezed, ribs pulled down so the lower back cannot arch. Your main overhead strength work. Stop with 1 rep in reserve.', subs:HP_PRESS_SUBS},
+      {id:'hp_press', name:'Half-Kneeling Press', sets:4, reps:'8-12', rest:120, dropSet:false, muscle:'Shoulders', defaultWeight:35, bell:true,
+        repLabel:'8-12 each side',
+        note:'35lb. One knee down, glute squeezed, ribs pulled down so the lower back cannot arch. Your main overhead strength work. Stop with 1 rep in reserve. LAST SET: max reps, go to real failure and log the number. That number is the data point, it tells us whether this range is right for you.', subs:HP_PRESS_SUBS},
       {id:'hp_fly', name:'Band Chest Fly', sets:3, reps:'12-15', rest:60, dropSet:true, muscle:'Chest',
         note:'Band round your back, arms slightly bent and FIXED. Dips and push-ups never load the stretched position properly. This does. Squeeze 1s in the middle.', subs:FLY_SUBS},
       {id:'hp_lateral', name:'Band Lateral Raise', sets:4, reps:'15-20', rest:45, dropSet:true, muscle:'Shoulders',
         note:'Band underfoot. Thumb up, lead with the elbow, shoulder height only. Side delts are what give you width, and they respond to high reps and constant tension rather than load.', subs:ADS_LATERAL_SUBS},
-      {id:'hp_tri', name:'Overhead Tricep Extension', sets:3, reps:'10-12', rest:60, dropSet:true, muscle:'Triceps', defaultWeight:25, bell:true,
-        note:'25lb, both hands on one bell. Elbows point up and stay by your ears. Deep stretch behind the head. Last set to failure, then drop into close-grip push-ups until you cannot.', subs:ADS_TRI_SUBS},
+      {id:'hp_tri', name:'Overhead Tricep Extension', sets:3, reps:'12-20', rest:60, dropSet:true, muscle:'Triceps', defaultWeight:25, bell:true,
+        note:'25lb, both hands on one bell. Elbows point up and stay by your ears. Deep stretch behind the head. Last set to failure, then drop into close-grip push-ups until you cannot. LAST SET: max reps, go to real failure and log the number. That number is the data point, it tells us whether this range is right for you.', subs:ADS_TRI_SUBS},
       {id:'hp_core', name:'Hanging Knee Raise', sets:3, reps:'12-15', rest:45, dropSet:false, muscle:'Core',
         note:'Hang from the tower, curl the pelvis, knees to chest, control the lower. No swinging. No tower? Tap Hollow Hold or Dead Bug.', subs:HP_HANG_SUBS},
     ]},
 
   { id:'home_pull', name:'Home Pull', type:'Hypertrophy', focus:'Back · Biceps · Rear Delts · 50 min', tint:'str',
-    exercises:[
+    group:'build', exercises:[
       {id:'hpl_chin_main', name:'Assisted Chin-Up', sets:4, reps:'6-10', rest:120, dropSet:false, muscle:'Back',
         note:'Loop a band under your knees or one foot, THICKEST band to start. Underhand grip, dead hang, chin over the bar, 3 second lower. As you get stronger: thinner band, then negatives, then unassisted. Each step is tracked separately so you can see it happening.', subs:HP_CHIN_SUBS},
-      {id:'hpl_row', name:'Supported KB Row', sets:4, reps:'8-12', rest:90, dropSet:false, muscle:'Back', defaultWeight:50, bell:true,
-        repLabel:'8-12 each side',
-        note:'50lb. Free hand braced on a chair or bench so your back is SUPPORTED, never holding a hinge. Row to the hip, elbow back not out, full stretch at the bottom, hard squeeze at the top.', subs:HP_ROW_SUBS},
+      {id:'hpl_row', name:'Supported KB Row', sets:4, reps:'10-15', rest:90, dropSet:false, muscle:'Back', defaultWeight:50, bell:true,
+        repLabel:'10-15 each side',
+        note:'50lb. Free hand braced on a chair or bench so your back is SUPPORTED, never holding a hinge. Row to the hip, elbow back not out, full stretch at the bottom, hard squeeze at the top. LAST SET: max reps, go to real failure and log the number. That number is the data point, it tells us whether this range is right for you.', subs:HP_ROW_SUBS},
       {id:'hpl_pull', name:'Band Lat Pulldown', sets:3, reps:'12-15', rest:60, dropSet:true, muscle:'Back',
         note:'Band anchored high or over the tower. Kneel, pull to the collarbone, drive the elbows DOWN and back. This is the width builder. Zero load on your spine.', subs:HP_ROW_SUBS},
       {id:'hpl_rear', name:'Rear Delt / Face Pull', sets:4, reps:'15-20', rest:45, dropSet:false, muscle:'Shoulders',
         note:'Band at forehead height. Pull to the face, elbows high, rotate so the hands finish behind your ears. Shoulder health and three-dimensional delts in one movement.', subs:ADS_REAR_SUBS},
-      {id:'hpl_curl', name:'KB Curl', sets:3, reps:'10-12', rest:60, dropSet:true, muscle:'Biceps', defaultWeight:25, bell:true,
-        note:'25lb. Elbows pinned, no swing, 3 second lower, full extension at the bottom. Last set to failure then drop straight to a band and keep going.', subs:ADS_CURL_SUBS},
-      {id:'hpl_hammer', name:'Hammer Curl', sets:3, reps:'12-15', rest:60, dropSet:true, muscle:'Biceps',
-        note:'Neutral grip, palms facing each other, a bell per hand or a band. Hits the brachialis, which sits under the bicep and pushes it up as it grows.', subs:ADS_CURL_SUBS},
+      {id:'hpl_curl', name:'KB Curl', sets:3, reps:'12-20', rest:60, dropSet:true, muscle:'Biceps', defaultWeight:25, bell:true,
+        note:'25lb. Elbows pinned, no swing, 3 second lower, full extension at the bottom. Last set to failure then drop straight to a band and keep going. LAST SET: max reps, go to real failure and log the number. That number is the data point, it tells us whether this range is right for you.', subs:ADS_CURL_SUBS},
+      {id:'hpl_hammer', name:'Hammer Curl', sets:3, reps:'12-20', rest:60, dropSet:true, muscle:'Biceps',
+        note:'Neutral grip, palms facing each other, a bell per hand or a band. Hits the brachialis, which sits under the bicep and pushes it up as it grows. LAST SET: max reps, go to real failure and log the number. That number is the data point, it tells us whether this range is right for you.', subs:ADS_CURL_SUBS},
       {id:'hpl_core', name:'Dead Bug', sets:3, reps:'12', rest:45, dropSet:false, muscle:'Core',
         repLabel:'12 total, alternating',
         note:'Lower back pressed flat and it stays flat. Slow. This is the work that makes your back strong enough for everything else.', subs:ADS_CORE_SUBS},
+    ]},
+
+  /* ── THE 20-MINUTE MENU ────────────────────────────────────────
+     AMRAP: one clock, you cycle the list, you tap a round each time
+     you finish it. The ROUND COUNT is the score and the progression:
+     same bell, same 20 minutes, beat last session's number. When the
+     rounds stop climbing, go up a bell. Sweat levels are marked so
+     you know which ones survive a workday. */
+  { id:'amrap_arms', name:'Arms AMRAP', type:'20 min', focus:'Biceps · Triceps · low sweat', tint:'amr', group:'short',
+    blocks:[{kind:'amrap', label:'Arms', minutes:20, ids:['aa_curl','aa_horncurl','aa_tri','aa_cgpush','aa_pullover'],
+      note:'Cycle the list, rest when you need to, tap a round each time you finish all five. Low sweat by design, this one fits between calls. Slow every rep down before you chase more rounds.'}],
+    exercises:[
+      {id:'aa_curl', name:'Curl into Halo', sets:6, reps:'10', rest:0, noRest:true, dropSet:false, muscle:'Biceps', defaultWeight:25, bell:true, block:0,
+        note:'25lb. Curl it clean to the chest, then circle it around your head and back. Two movements, one rep. Do not let the halo turn into a swing.', subs:ADS_CURL_SUBS},
+      {id:'aa_horncurl', name:'Horn Curl', sets:6, reps:'10', rest:0, noRest:true, dropSet:false, muscle:'Biceps', defaultWeight:25, bell:true, block:0,
+        note:'25lb. Grip the HORNS, not the handle, and squeeze them together hard for the whole set. That grip tension is half the exercise and it is why a light bell still bites.', subs:ADS_CURL_SUBS},
+      {id:'aa_tri', name:'Overhead Tricep Extension', sets:6, reps:'10', rest:0, noRest:true, dropSet:false, muscle:'Triceps', defaultWeight:25, bell:true, block:0,
+        note:'25lb, both hands under one bell. Elbows point up and stay by your ears. Deep stretch behind the head.', subs:ADS_TRI_SUBS},
+      {id:'aa_cgpush', name:'Close-Grip Push-Up', sets:6, reps:'10', rest:0, noRest:true, dropSet:false, muscle:'Triceps', block:0,
+        note:'Hands just inside shoulder width, elbows track BACK along the ribs not out. Knees down rather than half reps.', subs:ADS_TRI_SUBS},
+      {id:'aa_pullover', name:'Pullover', sets:6, reps:'10', rest:0, noRest:true, dropSet:false, muscle:'Back', defaultWeight:25, bell:true, block:0,
+        note:'25lb. On your back, bell held over the chest, lower it behind your head with soft elbows. RIBS DOWN, go slow, and stop where your shoulders stop rather than where the floor is.', subs:PULLOVER_SUBS},
+    ]},
+
+  { id:'amrap_push', name:'Push AMRAP', type:'20 min', focus:'Chest · Shoulders · low sweat', tint:'amr', group:'short',
+    blocks:[{kind:'amrap', label:'Push', minutes:20, ids:['ap_hornlift','ap_liftoff','ap_floor','ap_halo','ap_press'],
+      note:'The horn lift into liftoff push-ups is the pairing that makes this day: the squeeze pre-fatigues your chest with pure tension, then the push-up hits it while it is already cooked. Low sweat, high burn.'}],
+    exercises:[
+      {id:'ap_hornlift', name:'Horn Lift', sets:6, reps:'10', rest:0, noRest:true, dropSet:false, muscle:'Chest', defaultWeight:25, bell:true, block:0,
+        note:'25lb. Crush the horns together as hard as you can and press the bell away from your chest. The tension is the SQUEEZE, not the weight. Keep crushing the whole set.', subs:SQUEEZE_SUBS},
+      {id:'ap_liftoff', name:'Liftoff Push-Up', sets:6, reps:'10', rest:0, noRest:true, dropSet:false, muscle:'Chest', block:0,
+        repLabel:'5 each side',
+        note:'One hand on the bell, one on the floor. Lower under control, then lift the FLOOR hand off at the top. Hips stay square, no twisting. 5 a side.', subs:LIFTOFF_SUBS},
+      {id:'ap_floor', name:'Floor Press', sets:6, reps:'10', rest:0, noRest:true, dropSet:false, muscle:'Chest', defaultWeight:35, bell:true, block:0,
+        repLabel:'10 each arm',
+        note:'35lb. Elbow at 45°, triceps touch the floor, then press. Do not flare straight out. The floor stops you short of the risky range.', subs:SQUEEZE_SUBS},
+      {id:'ap_halo', name:'Halo', sets:6, reps:'10', rest:0, noRest:true, dropSet:false, muscle:'Cardio', defaultWeight:25, bell:true, block:0,
+        repLabel:'10 alternating',
+        note:'25lb. Circles close to the head, alternating direction each rep. Everything below the neck stays still. This is the breather movement.', subs:KB_HALO_SUBS},
+      {id:'ap_press', name:'Overhead Press', sets:6, reps:'8', rest:0, noRest:true, dropSet:false, muscle:'Shoulders', defaultWeight:35, bell:true, block:0,
+        repLabel:'8 each arm',
+        note:'35lb. Ribs down, glutes tight, press UP and not forward. If the lower back arches to get it up, the bell is too heavy for this rep count today.', subs:HP_PRESS_SUBS},
+    ]},
+
+  { id:'amrap_pull', name:'Pull AMRAP', type:'20 min', focus:'Back · Traps · low sweat', tint:'amr', group:'short',
+    blocks:[{kind:'amrap', label:'Pull', minutes:20, ids:['au_row','au_bandrow','au_pullover','au_shrug','au_pulldown'],
+      note:'Your back is the thinnest part of your week, so this is the short day to run most often. All of it is supported or seated, nothing holds your spine in a loaded hinge.'}],
+    exercises:[
+      {id:'au_row', name:'Supported KB Row', sets:6, reps:'10', rest:0, noRest:true, dropSet:false, muscle:'Back', defaultWeight:50, bell:true, block:0,
+        repLabel:'10 each arm',
+        note:'50lb. Free hand braced on a chair so the back is supported. Pull to the HIP, not the chest, elbow back not out. Full stretch at the bottom.', subs:HP_ROW_SUBS},
+      {id:'au_bandrow', name:'Seated Band Row', sets:6, reps:'15', rest:0, noRest:true, dropSet:false, muscle:'Back', block:0,
+        note:'Band round the feet, sit tall, row to the belly and squeeze the blades for a full second. Step further into the band to make it harder.', subs:HP_ROW_SUBS},
+      {id:'au_pullover', name:'Pullover', sets:6, reps:'10', rest:0, noRest:true, dropSet:false, muscle:'Back', defaultWeight:25, bell:true, block:0,
+        note:'25lb. Ribs down, soft elbows, lower behind the head slowly. Stop where your shoulders stop. Hits the lats through a range rows never reach.', subs:PULLOVER_SUBS},
+      {id:'au_shrug', name:'Shrug', sets:6, reps:'15', rest:0, noRest:true, dropSet:false, muscle:'Back', defaultWeight:50, bell:true, block:0,
+        note:'50lb. Straight UP, no rolling the shoulders. Pause at the top for a second. Heaviest bell, this one can take it.', subs:SHRUG_SUBS},
+      {id:'au_pulldown', name:'Band Lat Pulldown', sets:6, reps:'15', rest:0, noRest:true, dropSet:false, muscle:'Back', block:0,
+        note:'Band anchored high. Kneel, pull to the collarbone, drive the ELBOWS down and back. This is the width builder.', subs:PULLOVER_SUBS},
+    ]},
+
+  { id:'amrap_core', name:'Core AMRAP', type:'20 min', focus:'Abs · Trunk · low sweat', tint:'amr', group:'short',
+    blocks:[{kind:'amrap', label:'Core', minutes:20, ids:['ac_situp','ac_deadbug','ac_drag','ac_carry','ac_hollow'],
+      note:'The lowest-sweat day on the menu, and the one you can genuinely do in work clothes. Slow is the point here. If sit-ups bother your back, tap the hollow hold sub and lose nothing.'}],
+    exercises:[
+      {id:'ac_situp', name:'Sit-Up to Press', sets:6, reps:'12', rest:0, noRest:true, dropSet:false, muscle:'Core', defaultWeight:25, bell:true, block:0,
+        note:'25lb. Bell at the chest, sit all the way up, press it overhead at the top. Feet stay down. Lower SLOWLY, the way down is where the burn lives.', subs:SITUP_SUBS},
+      {id:'ac_deadbug', name:'Dead Bug', sets:6, reps:'20', rest:0, noRest:true, dropSet:false, muscle:'Core', block:0,
+        repLabel:'10 each side',
+        note:'Lower back pressed flat into the floor and it never leaves. Lower opposite arm and leg slowly. Stop the instant the back wants to arch.', subs:ADS_CORE_SUBS},
+      {id:'ac_drag', name:'Plank Pull-Through', sets:6, reps:'20', rest:0, noRest:true, dropSet:false, muscle:'Core', defaultWeight:35, bell:true, block:0,
+        repLabel:'10 each side',
+        note:'35lb. High plank, bell outside one hand, reach under and drag it across. HIPS STAY LEVEL, that is the whole exercise.', subs:ADS_CORE_SUBS},
+      {id:'ac_carry', name:'Suitcase Carry', sets:6, reps:'60s', rest:0, noRest:true, dropSet:false, muscle:'Core', defaultWeight:50, bell:true, block:0,
+        repLabel:'30s each side',
+        note:'50lb. One bell, one hand, stand DEAD vertical and walk. Refusing to lean is the exercise. Swap hands halfway.', subs:KB_CARRY_SUBS},
+      {id:'ac_hollow', name:'Hollow Hold', sets:6, reps:'30s', rest:0, noRest:true, dropSet:false, muscle:'Core', block:0,
+        note:'Lower back PRESSED into the floor, shoulders and legs just off it. If the back arches, bend the knees. Form is the entire exercise.', subs:ADS_CORE_SUBS},
+    ]},
+
+  { id:'amrap_engine', name:'Engine AMRAP', type:'20 min', focus:'Conditioning · HIGH sweat', tint:'amr', group:'short',
+    blocks:[{kind:'amrap', label:'Engine', minutes:20, ids:['ae_swing','ae_highpull','ae_goblet','ae_pushup'],
+      note:'The sweaty one. Do NOT slot this between meetings, you will need a shower. Swings are the engine. If you only have one short session in a week, make it this one.'}],
+    exercises:[
+      {id:'ae_swing', name:'Two-Hand Swing', sets:6, reps:'20', rest:0, noRest:true, dropSet:false, muscle:'Cardio', defaultWeight:50, bell:true, block:0,
+        note:'50lb. Hips BACK, not down. It is a hinge, not a squat. The bell floats, your arms do not lift it. Stand tall at the top, do not lean back.', subs:KB_SWING_SUBS},
+      {id:'ae_highpull', name:'High Pull', sets:6, reps:'20', rest:0, noRest:true, dropSet:false, muscle:'Cardio', defaultWeight:35, bell:true, block:0,
+        repLabel:'10 each arm',
+        note:'35lb. A swing that stops at chest height with the elbow leading. The hips start it, the arm only finishes it. Never yank with the shoulder.', subs:HIGHPULL_SUBS},
+      {id:'ae_goblet', name:'Goblet Squat', sets:6, reps:'15', rest:0, noRest:true, dropSet:false, muscle:'Legs', defaultWeight:35, bell:true, block:0,
+        note:'35lb. Bell at the chest, knees tracking OUT over the toes. Elbows inside the knees at the bottom, chest tall.', subs:KB_SQUAT_SUBS},
+      {id:'ae_pushup', name:'Push-Up', sets:6, reps:'15', rest:0, noRest:true, dropSet:false, muscle:'Chest', block:0,
+        note:'Elbows 45°, chest to the floor, body rigid. Drop to your knees rather than grinding half reps once the rounds add up.', subs:KB_PUSHUP_SUBS},
     ]},
 ];
 /* ══════════════════════════════════════════════════════════════
@@ -936,6 +1090,62 @@ const LIBRARY = [
    3. FORM CUES — keyed by exercise id (mains AND subs)
    ══════════════════════════════════════════════════════════════ */
 const FORM = {
+  /* ── 20-minute AMRAP menu ───────────────────────────────────── */
+  aa_curl:{c:["25lb. Bell by the handle, elbows pinned to the ribs","Curl it clean to the chest, no swing","From the chest, circle it around your head","Close to the skull, ribs down, no lower-back arch","Back to the chest, then lower under control"],b:"Exhale on the curl, breathe normally on the halo",s:"Two movements welded into one rep. The curl does the biceps, the halo keeps the shoulder moving through range. Do not let the halo become a swing, that is the whole skill of it."},
+  aa_horncurl:{c:["Grip the HORNS of the bell, not the handle","Squeeze them together as hard as you can","Keep squeezing for the entire set","Elbows pinned, curl without them drifting forward","Slow lower, full extension at the bottom"],b:"Exhale on the way up",s:"The crush grip is the clever part. Squeezing hard recruits far more of the arm than the load alone would, which is how a 25lb bell still gives you something to work against. Grip tension is half this exercise."},
+  aa_tri:{c:["Both hands cupped under one bell, pressed overhead","Elbows point UP and stay beside your ears","Lower behind the head until you feel the stretch","Drive up without letting the elbows flare","Keep the ribs down throughout"],b:"Inhale down, exhale on the extension",s:"The long head of the tricep is most of your arm's size and only loads properly overhead. Flaring elbows means too heavy."},
+  aa_cgpush:{c:["Hands just inside shoulder width","Body one rigid line, glutes and abs squeezed","Elbows track BACK along the ribs, not out","Chest to the floor every rep","Knees down rather than half reps"],b:"Inhale down, exhale on the push",s:"Elbows back is what makes this triceps rather than chest, and it keeps the shoulder out of trouble."},
+  aa_pullover:{c:["On your back, knees bent, feet flat","Bell held over the chest with both hands, elbows soft and fixed","Lower it back behind your head slowly","RIBS DOWN, do not let the lower back arch off the floor","Stop where your shoulders stop, not where the floor is","Pull it back over the chest with the lats"],b:"Inhale as it goes back, exhale on the pull",s:"Stop where your shoulders stop. Chasing the floor is how people turn a good lat exercise into a shoulder problem. Go light and slow, this is not a strength movement."},
+
+  ap_hornlift:{c:["Grip the HORNS, bell upside down at the chest","Crush the horns together as hard as you possibly can","Press the bell away from your chest, still crushing","Return to the chest without relaxing the squeeze","Keep crushing for the entire set"],b:"Exhale as you press away",s:"The tension comes from the squeeze, not the weight. Your chest is working to press the hands together while your arms press the bell out. It is the single best answer to a light bell for chest work."},
+  ap_liftoff:{c:["One hand on the bell handle, one flat on the floor","Push-up position, feet wide for stability","Lower under control, chest between the hands","At the top, LIFT the floor hand off the ground","Hips stay square, do not twist","5 reps, then swap hands"],b:"Inhale down, exhale on the push",s:"Lifting the floor hand forces one arm to hold your whole bodyweight for a moment. It is a genuine step toward a one-arm push-up, and the anti-rotation demand hits your core hard. Widen your feet if the hips twist."},
+  ap_floor:{c:["On your back, knees bent, bell in one hand","Elbow at 45° from the body, NOT flared straight out","Lower until the triceps touch the floor","Pause, then press straight up","Wrist stacked over the elbow throughout"],b:"Inhale down, exhale on the press",s:"The floor stops you short of the end range where an unstable shoulder gets into trouble. All the pressing, none of the risk."},
+  ap_halo:{c:["Bell by the horns, upside down, close to the chest","Circle it around the head as close as you can","Alternate direction every rep","Ribs stay DOWN, no lower-back arch","Everything below the neck stays still"],b:"Breathe normally throughout",s:"The breather movement in this block. Use it to get your breath back rather than rushing it."},
+  ap_press:{c:["Bell racked at the shoulder, elbow tucked in","Ribs pulled DOWN, glutes tight","Press UP, not forward","Lock out with the bicep beside your ear","Lower under control back to the rack"],b:"Exhale on the press",s:"If your lower back arches to get the bell up, it is too heavy for this rep count today. Drop to the 25 or tap the push press sub rather than bending backwards around it."},
+
+  au_row:{c:["Free hand braced flat on a chair or bench","Back flat and SUPPORTED, never holding a hinge unaided","Row the bell to the HIP, not the chest","Elbow back along the ribs, not flared out","Full stretch at the bottom, let the shoulder blade travel","Squeeze 1s at the top"],b:"Exhale on the pull",s:"To the hip, not the chest. Rowing high turns it into a rear delt exercise and takes the lats out of it."},
+  au_bandrow:{c:["Sit tall, band looped round your feet","Handles in each hand, arms extended","Row to the belly, elbows back along the ribs","Squeeze the shoulder blades together 1s","Control the return to a full stretch"],b:"Exhale on the pull",s:"Zero spinal load, so it is always available. Step further into the band or shorten it to progress."},
+  au_pullover:{c:["On your back, bell over the chest, elbows soft and fixed","Lower behind the head slowly","Ribs down, lower back stays on the floor","Stop where your shoulders stop","Pull back over with the lats"],b:"Inhale back, exhale on the pull",s:"Reaches the lats through a range no row gets to. Light and slow."},
+  au_shrug:{c:["Bell held at one side, or two bells","Shrug straight UP toward the ears","No rolling the shoulders, ever","Pause at the top for a full second","Lower slowly, let the traps stretch"],b:"Exhale as you shrug up",s:"Rolling the shoulders does nothing useful and grinds the joint. Straight up, pause, straight down. Your 50lb bell is the right one here."},
+  au_pulldown:{c:["Band anchored high, or over the top of a door","Kneel facing it, arms overhead","Pull to the collarbone, driving the ELBOWS down and back","Squeeze the lats 1s","Control the return to a full overhead stretch"],b:"Exhale on the pull",s:"The width builder, and zero load on your spine. Drive with the elbows, not the hands."},
+
+  ac_situp:{c:["On your back, bell held at the chest, feet flat and DOWN","Sit all the way up in one motion","At the top, press the bell overhead","Lower the bell back to the chest","Lower yourself back down SLOWLY"],b:"Exhale as you sit up and press",s:"The way down is where the burn lives, so do not just drop back. If sit-ups bother your lower back at all, tap the hollow hold sub and you lose nothing."},
+  ac_deadbug:{c:["On your back, arms straight up, knees at 90°","Press the lower back FLAT into the floor first","It stays flat for every single rep","Lower opposite arm and leg slowly","Stop the instant the back wants to arch"],b:"Exhale slowly as you extend",s:"Slow and small beats big and fast. The moment your back lifts off the floor the exercise has stopped working."},
+  ac_drag:{c:["High plank, bell just outside one hand","Feet wide for stability","Reach under with the opposite hand and drag the bell across","HIPS STAY LEVEL, no rotation at all","Reset, then drag it back"],b:"Breathe steadily, never hold your breath",s:"Resisting the rotation is the entire exercise. If your hips swing as you reach, widen your feet or go lighter."},
+  ac_carry:{c:["One bell, one hand, hanging at your side","Stand DEAD vertical, do not lean away from it","Shoulder packed down, no shrugging","Ribs down, abs braced, walk normally","30 seconds, swap hands, 30 more"],b:"Short shallow breaths, core stays braced",s:"The whole exercise is refusing to bend sideways. If you are leaning, it is too heavy or you have stopped bracing."},
+  ac_hollow:{c:["On your back, lower back PRESSED into the floor","Shoulders and legs lifted just off the ground","The back never leaves the floor","Bend the knees to make it easier","Arms overhead to make it harder"],b:"Short controlled breaths, stay braced",s:"If the lower back arches off the floor, shorten the lever by bending the knees. Form is the entire exercise here."},
+
+  ae_swing:{c:["Feet shoulder width, bell a foot in front","HIPS BACK, not down. A hinge, not a squat","Chest proud, back flat, eyes on the horizon","Hips snap forward hard, glutes and abs lock","The bell floats to chest height on its own","Stand TALL at the top, do not lean back"],b:"Sharp exhale at the top of every rep",s:"Leaning back at the top is the number one cause of a sore lower back from swings. Stand tall and squeeze the glutes instead. Your arms are rope, the hips do everything."},
+  ae_highpull:{c:["Set up exactly like a swing","Hips start it, the bell comes up","Stop it at chest height with the ELBOW leading","The arm only finishes what the hips started","Guide it back down into the next hinge"],b:"Sharp exhale at the top",s:"Never yank with the shoulder. If your arm is doing the lifting rather than the steering, drop to a plain swing until the hinge is driving it."},
+  ae_goblet:{c:["Bell at the chest by the horns, elbows tucked","Feet shoulder width or slightly wider","Sit straight DOWN, knees tracking out over the toes","Elbows inside the knees at the bottom, chest tall","Drive up through the whole foot"],b:"Inhale down, exhale on the drive up",s:"Knees out, not in. Holding the load in front automatically encourages that, which is why this one is corrective for you."},
+  ae_pushup:{c:["Hands slightly wider than the shoulders","Body one rigid line, glutes and abs squeezed","Elbows 45° from the ribs, NOT flared","Chest to the floor every rep","Knees down rather than half reps as the rounds add up"],b:"Inhale down, exhale on the push",s:"By round four these get ugly. Drop to your knees and keep the reps clean rather than grinding half reps."},
+
+  /* ── AMRAP substitutions ────────────────────────────────────── */
+  sq_plate_press:{c:["Two hands crushing a plate, book or anything flat","Press it away from the chest","Keep crushing the whole set"],b:"Exhale as you press away",s:"Same crush-grip principle with no bell at all."},
+  sq_band_fly_s:{c:["Band round the back, a handle in each hand","Arms slightly bent and FIXED","Hug together, squeeze 1s in the middle"],b:"Exhale as the hands meet",s:"Loads the stretched position that push-ups miss."},
+  sq_cg_pushup_s:{c:["Hands just inside shoulder width","Elbows track back along the ribs","Chest to the floor"],b:"Inhale down, exhale up",s:"No equipment, straight chest and tricep work."},
+  sq_floor_press_s:{c:["On your back, bell in one hand","Elbow 45°, triceps to the floor, press","Wrist stacked over the elbow"],b:"Inhale down, exhale on the press",s:"The floor caps the range, so the shoulder stays safe."},
+  po_band_pullover:{c:["Band anchored high, arms straight","Pull down to the hips with the lats only","Elbows stay locked"],b:"Exhale on the pull",s:"Pure lat isolation with no elbow involvement."},
+  po_band_pulldown:{c:["Kneel facing a high band","Pull to the collarbone, elbows down and back"],b:"Exhale on the pull",s:"The width builder, zero spinal load."},
+  po_straight_arm:{c:["Arms locked straight throughout","Pull from overhead to the thighs","Only the shoulders move"],b:"Exhale on the pull",s:"The purest lat isolation there is."},
+  po_dead_bug_s:{c:["Lower back flat into the floor","Lower opposite arm and leg slowly"],b:"Exhale as you extend",s:"Use it when the overhead position is not happening today."},
+  lo_pushup_s:{c:["Hands slightly wider than shoulders","Elbows 45°, chest to the floor","Body one rigid line"],b:"Inhale down, exhale up",s:"The standard version. Still excellent."},
+  lo_knee_s:{c:["Knees down, body straight from knees to head","Chest still touches the floor"],b:"Inhale down, exhale up",s:"Clean reps beat ugly ones every time."},
+  lo_elev_s:{c:["Hands on a bench, step or couch","Body rigid, chest to the surface","Lower the surface over time to progress"],b:"Inhale down, exhale up",s:"Infinitely adjustable, which makes it a good long-term progression."},
+  lo_floor_press_s:{c:["On your back, bell in one hand","Elbow 45°, triceps to the floor, press"],b:"Inhale down, exhale on the press",s:"Loaded alternative with no wrist strain."},
+  sh_farmer_s:{c:["A bell in each hand, or one","Stand tall, shoulders packed down","Just hold and breathe"],b:"Short shallow breaths",s:"No movement at all, pure grip and trap endurance."},
+  sh_band_shrug:{c:["Stand on the band, handles at your sides","Shrug straight up, pause","No rolling"],b:"Exhale as you shrug",s:"Constant tension, easy on the joints."},
+  sh_high_pull_s:{c:["Hinge like a swing","Stop the bell at chest height, elbow leading"],b:"Sharp exhale at the top",s:"Traps plus hips. More conditioning cost than a shrug."},
+  sh_suitcase_s:{c:["One bell at your side, stand dead vertical","Walk without leaning away from it"],b:"Short shallow breaths",s:"Traps and anti-lean core under time."},
+  su_hollow_press:{c:["On your back, bell pressed straight overhead","Lower back PRESSED into the floor","Shoulders and legs just off the ground","Hold 30 seconds"],b:"Short controlled breaths",s:"The swap if sit-ups bother your back. Same burn, zero spinal flexion. Bend the knees if the back lifts."},
+  su_dead_bug_s:{c:["Lower back flat and it stays flat","Lower opposite arm and leg slowly"],b:"Exhale as you extend",s:"Low load, genuinely good for a back that is still catching up."},
+  su_crunch_s:{c:["Bell held on the chest","Crunch the ribs toward the hips","Shorter range than a sit-up"],b:"Exhale on the crunch",s:"Less hip flexor, less spinal flexion, still loaded."},
+  su_vup_s:{c:["Legs and torso rise to meet","Bend the knees to scale it down"],b:"Exhale as you fold",s:"No bell needed. Scale with knee bend."},
+  hpl_swing_s:{c:["Standard two-hand swing","Hinge, snap, float","Stand tall at the top"],b:"Sharp exhale at the top",s:"Drop the pull entirely when the shoulder has had enough."},
+  hpl_1arm_swing_s2:{c:["Same hinge, one hand","Free arm mirrors the working arm","Body stays square"],b:"Sharp exhale at the top",s:"Adds an anti-rotation demand. One bell lighter."},
+  hpl_snatch_pull:{c:["Bell starts on the floor every rep","Hinge, hike, pull to chest height","Park it back down and reset"],b:"Exhale at the top",s:"No rebound, so every rep is a fresh honest hinge."},
+  hpl_row_s2:{c:["Free hand braced on a chair","Row to the hip, elbow back"],b:"Exhale on the pull",s:"No ballistic at all. Use it when the back or shoulder wants a quieter day."},
+
   kbs_pushup:{c:["Hands slightly wider than the shoulders","Body one rigid line, glutes and abs squeezed","Elbows 45° from the ribs, NOT flared to 90°","Chest to the floor every rep","Drop to your knees rather than grinding half reps"],b:"Inhale down, exhale on the push",s:"This minute used to be a second set of swings. It is a push-up now so the session has one hinging station instead of two, which halves what your lower back absorbs. Same rule as always on elbows: 45°, never flared."},
 
   /* ── Home Push / Home Pull ──────────────────────────────────── */
@@ -1671,11 +1881,12 @@ function normalizeSession(){
   if(s.clock){
     const c=s.clock, b=((day.blocks||[])[c&&c.bi]);
     if(!c || typeof c!=='object' || typeof c.startTs!=='number' || !isFinite(c.startTs)
-       || !b || b.kind!=='clock') s.clock=null;
+       || !b || (b.kind!=='clock'&&b.kind!=='amrap')) s.clock=null;
     else {
       if(typeof c.pauseAcc!=='number'||!isFinite(c.pauseAcc)) c.pauseAcc=0;
       if(typeof c.pausedAt!=='number') c.pausedAt=null;
       if(typeof c.lastRound!=='number') c.lastRound=-1;
+      if(typeof c.rounds!=='number'||c.rounds<0) c.rounds=0;
     }
   } else s.clock=null;
 
@@ -1857,7 +2068,22 @@ function exById(id){ const d=curDay(); return d?(d.exercises||[]).find(e=>e.id==
 function blockOf(i){ const d=curDay(); return ((d&&d.blocks)||[])[i]||null; }
 function blockExercises(bi){ const d=curDay(); return d?(d.exercises||[]).filter(e=>e.block===bi):[]; }
 function clockRounds(b){ return Math.max(1, b.rounds || Math.round((b.minutes*60)/(b.interval||60))); }
-function clockKind(b){ const i=b.interval||60; return i===60?'EMOM':i===120?'E2MOM':i===180?'E3MOM':i+'s intervals'; }
+function clockKind(b){
+  if(b.kind==='amrap') return 'AMRAP';
+  const i=b.interval||60; return i===60?'EMOM':i===120?'E2MOM':i===180?'E3MOM':i+'s intervals';
+}
+/* How many rounds you managed last time you ran this block. That number is
+   the entire progression model for an AMRAP: same bell, same clock, beat it. */
+function lastAmrapRounds(b){
+  const id=(b.ids||[])[0]; if(!id) return 0;
+  const ex=exById(id); if(!ex) return 0;
+  const last=getLastPerf(activeIdFor(ex));
+  return Array.isArray(last)?last.filter(s=>s&&s.done).length:0;
+}
+function amrapCap(b){
+  const id=(b.ids||[])[0], ex=id?exById(id):null;
+  return ex?Math.max(1,ex.sets|0):6;
+}
 function dispName(ex){ const s=activeSubFor(ex); return s?s.name:(ex?ex.name:''); }
 
 function clockElapsed(){
@@ -1867,7 +2093,21 @@ function clockElapsed(){
 }
 function clockInfo(){
   const c=S.session&&S.session.clock; if(!c) return null;
-  const b=blockOf(c.bi); if(!b||b.kind!=='clock') return null;
+  const b=blockOf(c.bi); if(!b) return null;
+
+  /* AMRAP: one countdown for the whole block, and YOU tell it when a round
+     is done. No fixed rotation, no auto-logging on a minute boundary. */
+  if(b.kind==='amrap'){
+    const total=Math.max(60,(b.minutes|0)*60), el=clockElapsed();
+    return {amrap:true,b,ids:b.ids||[],total,elapsed:el,
+      rem:Math.max(0,total-el),
+      finished: el>=total,
+      rounds: c.rounds||0,
+      cap: amrapCap(b),
+      target: lastAmrapRounds(b),
+      paused: !!c.pausedAt};
+  }
+  if(b.kind!=='clock') return null;
   const iv=Math.max(5,b.interval||60), rounds=clockRounds(b), ids=b.ids||[], n=ids.length||1;
   const el=clockElapsed(), r=Math.floor(el/iv);
   return {b,iv,rounds,ids,n,elapsed:el,round:r,
@@ -1897,9 +2137,9 @@ function logRound(b,r){
 
 function startClock(bi){
   if(!S.session) return;
-  const b=blockOf(bi); if(!b||b.kind!=='clock') return;
+  const b=blockOf(bi); if(!b||(b.kind!=='clock'&&b.kind!=='amrap')) return;
   unlockAudio();
-  S.session.clock={bi,startTs:Date.now(),pauseAcc:0,pausedAt:null,lastBeep:null,lastRound:-1,painted:-1};
+  S.session.clock={bi,startTs:Date.now(),pauseAcc:0,pausedAt:null,lastBeep:null,lastRound:-1,painted:-1,rounds:0};
   saveSession(S.session);
   tone(980,0.2,1); setTimeout(()=>tone(1320,0.34,1),210);
   runClock(); go('clock');
@@ -1912,6 +2152,18 @@ function clockTick(){
   if(!c){ stopClockTimer(); return; }
   if(c.pausedAt) return;
   const i=clockInfo(); if(!i){ stopClockTimer(); return; }
+
+  if(i.amrap){
+    if(i.finished){ finishClock(); return; }
+    const k='a'+i.rem;
+    if(c.lastBeep!==k){
+      c.lastBeep=k;
+      if(i.rem===3||i.rem===2||i.rem===1) tone(760,0.15,0.95);
+      if(i.rem===60) tone(680,0.25,0.8);          // one minute to go
+    }
+    paintAmrap(i);
+    return;
+  }
 
   // log every round that has fully elapsed since the last tick
   const upTo=Math.min(i.round,i.rounds)-1;
@@ -1927,6 +2179,46 @@ function clockTick(){
   }
   paintClock(i);
 }
+/* One tap = one completed round, logged across every movement in the block. */
+function amrapRound(){
+  const c=S.session&&S.session.clock; if(!c) return;
+  const b=blockOf(c.bi); if(!b||b.kind!=='amrap') return;
+  const r=c.rounds||0, cap=amrapCap(b);
+  if(r>=cap){
+    alert('That is '+cap+' rounds, which is the top of what this block tracks.\n\nGo up a bell next time, or slow every rep down.');
+    return;
+  }
+  (b.ids||[]).forEach(id=>{
+    const ex=exById(id); if(!ex) return;
+    const arr=S.session.setData[activeIdFor(ex)]; if(!Array.isArray(arr)) return;
+    const s=arr[r]; if(!s||s.done) return;
+    s.done=true; s.pre=false;
+    if(!s.reps) s.reps=repsForSet(ex,r);
+    if(!s.weight && ex.defaultWeight) s.weight=String(ex.defaultWeight);
+  });
+  c.rounds=r+1; saveSession(S.session);
+  tone(920,0.12,0.9);
+  render();
+}
+function amrapUndo(){
+  const c=S.session&&S.session.clock; if(!c||!(c.rounds>0)) return;
+  const b=blockOf(c.bi); if(!b||b.kind!=='amrap') return;
+  const r=c.rounds-1;
+  (b.ids||[]).forEach(id=>{
+    const ex=exById(id); if(!ex) return;
+    const arr=S.session.setData[activeIdFor(ex)]; if(!Array.isArray(arr)) return;
+    const s=arr[r]; if(s){ s.done=false; }
+  });
+  c.rounds=r; saveSession(S.session); render();
+}
+function paintAmrap(i){
+  const t=document.getElementById('clk-time');
+  if(t){ t.textContent=fmtTime(i.rem); t.classList.toggle('hot',i.rem<=10); }
+  const rg=document.getElementById('clk-ring');
+  if(rg) rg.style.strokeDashoffset=String(CLK_C*(1-i.rem/i.total));
+  const el=document.getElementById('clk-elapsed');
+  if(el) el.textContent=fmtTime(i.elapsed)+' / '+fmtTime(i.total);
+}
 function paintClock(i){
   const c=S.session.clock;
   if(c.painted!==i.round){ c.painted=i.round; render(); return; }   // new station, full repaint
@@ -1941,7 +2233,9 @@ function finishClock(){
   stopClockTimer();
   const c=S.session&&S.session.clock; if(!c) return;
   const b=blockOf(c.bi);
-  if(b){ const R=clockRounds(b); for(let r=0;r<R;r++) logRound(b,r); }
+  // An EMOM backfills: the clock ran, so the work happened. An AMRAP must NOT,
+  // because only the rounds you actually tapped were actually done.
+  if(b && b.kind!=='amrap'){ const R=clockRounds(b); for(let r=0;r<R;r++) logRound(b,r); }
   S.session.clock=null; saveSession(S.session);
   tone(880,0.3,1); setTimeout(()=>tone(660,0.55,1),330);
   go('workout');
@@ -2339,19 +2633,21 @@ function countClockDone(b){
 }
 function blockCard(b,bi){
   const exs=blockExercises(bi);
-  const isClock=b.kind==='clock';
+  const isAmrap=b.kind==='amrap';
+  const isClock=b.kind==='clock'||isAmrap;
   const live=S.session.clock&&S.session.clock.bi===bi;
   let h=`<div class="blk${isClock?' blk-clock':''}">
     <div class="blk-head">
       <div><div class="blk-title">${esc(b.label)}</div>
-      <div class="blk-meta">${isClock?`${clockKind(b)} · ${b.minutes} min · ${clockRounds(b)} rounds`:`${b.minutes} min`}</div></div>
+      <div class="blk-meta">${isAmrap?`AMRAP · ${b.minutes} min · as many rounds as you can`
+        :isClock?`${clockKind(b)} · ${b.minutes} min · ${clockRounds(b)} rounds`:`${b.minutes} min`}</div></div>
       <div class="blk-num">${bi+1}</div>
     </div>`;
   if(b.note) h+=`<div class="blk-note">${esc(b.note)}</div>`;
 
   if(isClock){
     const ids=b.ids||[];
-    if(ids.length>1){
+    if(ids.length>1&&!isAmrap){
       h+=`<div class="blk-order">`;
       ids.forEach((id,k)=>{
         const e=exById(id); if(!e) return;
@@ -2365,6 +2661,14 @@ function blockCard(b,bi){
     if(live){
       h+=`<div class="clk-run-banner" onclick="go('clock')">
         <div class="clk-run-t">Clock running — tap to return</div><div class="clk-run-a">→</div></div>`;
+    }else if(isAmrap){
+      const done=countClockDone(b), per=(b.ids||[]).length||1;
+      const rounds=Math.round(done/per), best=lastAmrapRounds(b);
+      h+=`<button class="btn-clock" onclick="startClock(${bi})">▶ Start ${b.minutes}-minute AMRAP</button>`;
+      h+=`<div class="blk-done-lbl"${rounds?'':' style="color:#a09c93"'}>${
+        rounds ? rounds+' round'+(rounds>1?'s':'')+' logged this session'
+               : (best ? 'Last time you got '+best+' rounds. Beat it.' : 'Rounds are the score. Set a number to beat.')
+      }</div>`;
     }else{
       const done=countClockDone(b), R=clockRounds(b);
       h+=`<button class="btn-clock" onclick="startClock(${bi})">▶ ${done>=R?'Run again':'Start'} ${b.minutes}-minute clock</button>`;
@@ -2381,6 +2685,7 @@ function clockView(){
   const i=clockInfo();
   if(!i) return `<div class="pad"><div class="card">This block isn't running.</div>
     <button class="btn-secondary" style="margin-top:12px" onclick="go('workout')">Back to workout</button></div>`;
+  if(i.amrap) return amrapView(i);
   const st=i.station;
   const id=st?activeIdFor(st):'';
   const sd=(st&&S.session.setData[id])||[];
@@ -2429,6 +2734,57 @@ function clockView(){
       <div class="clk-next-lbl">${nx?(single?'THEN':'UP<br>NEXT'):'DONE'}</div>
       <div class="clk-next-nm">${nx?(single?'Rest, then round '+(i.round+2):esc(dispName(nx))):'Last round — finish it'}</div>
       <div class="clk-next-rp">${nx?(single?'of '+i.rounds:esc(nrp)):'—'}</div></div>
+    <div class="clk-btns">
+      <button class="clk-btn" onclick="pauseClock()"><span class="pausebars"><i></i><i></i></span>Pause</button>
+      <button class="clk-btn end" onclick="endClockEarly()">End block</button></div>`;
+  }
+  return h+`</div>`;
+}
+
+/* ── the AMRAP screen ─────────────────────────────────────────── */
+function amrapView(i){
+  const beat = i.target>0 && i.rounds>i.target;
+  let h=`<div class="clk">
+    <div class="clk-top">
+      <div class="clk-blk">${esc(i.b.label)} · AMRAP</div>
+      <div class="clk-elapsed" id="clk-elapsed">${fmtTime(i.elapsed)} / ${fmtTime(i.total)}</div>
+    </div>
+    <div class="clk-dial">
+      <svg class="clk-svg" viewBox="0 0 200 200" aria-hidden="true">
+        <circle class="clk-trk" cx="100" cy="100" r="${CLK_R}"></circle>
+        <circle class="clk-arc" id="clk-ring" cx="100" cy="100" r="${CLK_R}"
+          style="stroke-dashoffset:${CLK_C*(1-i.rem/i.total)}"></circle>
+      </svg>
+      <div class="clk-ctr">
+        <div class="clk-time${i.rem<=10?' hot':''}" id="clk-time">${fmtTime(i.rem)}</div>
+        <div class="clk-round">time left</div>
+      </div>
+    </div>
+    <div class="amr-rounds">
+      <div class="amr-lbl">ROUNDS COMPLETE</div>
+      <div class="amr-n">${i.rounds}</div>
+      <div class="amr-target${beat?' beat':''}">${
+        i.target>0 ? (beat?'past your best of '+i.target:'last time: '+i.target) : 'first time through, set the number'
+      }</div>
+    </div>`;
+
+  if(i.paused){
+    h+=`<div class="clk-paused">
+      <div class="clk-paused-t"><span class="pausebars"><i></i><i></i></span>Paused</div>
+      <div class="clk-paused-s">Clock stopped. Your rounds are safe.</div></div>
+    <div class="clk-btns">
+      <button class="clk-btn go" onclick="resumeClock()">▶ Resume</button>
+      <button class="clk-btn end" onclick="endClockEarly()">End block</button></div>`;
+  }else{
+    h+=`<button class="amr-tap" onclick="amrapRound()">+ 1 ROUND</button>`;
+    if(i.rounds>0) h+=`<div style="text-align:center"><button class="amr-undo" onclick="amrapUndo()">undo last round</button></div>`;
+    h+=`<div class="amr-list">`;
+    (i.ids||[]).forEach(id=>{
+      const e=exById(id); if(!e) return;
+      h+=`<div class="amr-row"><span class="amr-row-nm">${esc(dispName(e))}</span>
+        <span class="amr-row-rp">${esc(e.repLabel||e.reps)}</span></div>`;
+    });
+    h+=`</div>
     <div class="clk-btns">
       <button class="clk-btn" onclick="pauseClock()"><span class="pausebars"><i></i><i></i></span>Pause</button>
       <button class="clk-btn end" onclick="endClockEarly()">End block</button></div>`;
@@ -2698,6 +3054,14 @@ function historyView(){
 }
 
 /* ── main view ───────────────────────────────────────────────── */
+const DAY_GROUPS=[
+  ['build','Build',      'long sessions, straight sets, real rest'],
+  ['short','20 minutes', 'squeeze in anywhere'],
+  ['cond', 'Conditioning','kettlebell circuits, bring a towel'],
+  ['gym',  'Gym',        'needs machines, cables or dumbbells'],
+];
+function groupOf(d){ return d.group || (d.kb?'cond':'gym'); }
+
 function view(){
   if(!S.ready) return `<div style="display:flex;align-items:center;justify-content:center;height:70vh;color:#b0ada6" class="mono">LOADING</div>`;
 
@@ -2736,14 +3100,13 @@ function view(){
   let body='';
 
   if(S.screen==='home'){
-    body=`<div class="pad">${navTabs('home')}${sessionBanner()}
-      <div class="sec-label">Days</div><div class="day-grid">`;
-    getProgram().forEach(d=>{
+    const prog=getProgram();
+    const dayCard=d=>{
       const last=[...S.history].reverse().find(e=>e.dayId===d.id);
       const active=S.session&&S.session.dayId===d.id;
       const tint = d.tint?(' is-'+d.tint) : d.kb?' is-kb' : d.id==='hiit'?' is-hiit' : d.id==='pyramid'?' is-pyr' : d.id==='tempo'?' is-tmp' : '';
       const cls=active?' is-active':(tint&&!last)?tint:last?' has-history':(tint||'');
-      body+=`<div class="day-card${cls}" onclick="handleDayTap('${d.id}')">
+      return `<div class="day-card${cls}" onclick="handleDayTap('${d.id}')">
         ${last&&!active?'<div class="green-dot"></div>':''}
         <div class="day-card-type">${esc(d.type)}</div>
         <div class="day-card-name">${esc(d.name)}</div>
@@ -2751,8 +3114,19 @@ function view(){
         ${last&&!active?`<div class="day-card-last">Last ${fmtShort(last.date)}</div>`:''}
         ${active?`<div class="day-card-last">Tap to resume →</div>`:''}
       </div>`;
+    };
+    body=`<div class="pad">${navTabs('home')}${sessionBanner()}`;
+    const seen={};
+    DAY_GROUPS.forEach(([key,label,sub])=>{
+      const list=prog.filter(d=>groupOf(d)===key);
+      if(!list.length) return;
+      list.forEach(d=>seen[d.id]=1);
+      body+=`<div class="grp-head">${esc(label)} <span class="grp-sub">· ${esc(sub)}</span></div>
+        <div class="day-grid">${list.map(dayCard).join('')}</div>`;
     });
-    body+=`</div></div>`;
+    const rest=prog.filter(d=>!seen[d.id]);
+    if(rest.length) body+=`<div class="grp-head">Other</div><div class="day-grid">${rest.map(dayCard).join('')}</div>`;
+    body+=`</div>`;
   }
 
   else if(S.screen==='workout'&&S.session&&day){
