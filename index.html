@@ -296,6 +296,10 @@ button{outline:none;cursor:pointer;font-family:inherit}
 .grp-head{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.14em;color:#a09c93;text-transform:uppercase;margin:22px 0 9px;padding-top:4px;border-top:1px solid #eceae4}
 .grp-head:first-of-type{margin-top:4px;border-top:none;padding-top:0}
 .grp-head .grp-sub{color:#c4c0b7;letter-spacing:.06em;text-transform:none}
+
+.day-card.is-flow{background:#f0f4ef;border-color:#c3d6c0}
+.day-card.is-flow .day-card-type,.day-card.is-flow .day-card-sub{color:#4a6b47}
+.day-card.is-flow .day-card-name{color:#4a6b47}
 </style>
 </head>
 <body>
@@ -580,6 +584,42 @@ const HIGHPULL_SUBS = [
   {id:'hpl_row_s2', name:'Supported KB Row', note:'No ballistic at all. Free hand braced, row to the hip.'}
 ];
 
+/* ── Flow substitutions ──────────────────────────────────────────
+   Every one of these has a gentler version and a seated version, because
+   the whole point of this session is that it is always available. */
+const FLOW_BOUNCE_SUBS = [
+  {id:'fl_heel_drop', name:'Heel Drops', bw:true, note:'Rise onto the toes and drop the heels. Feet never leave the floor. Zero impact, same pumping effect.'},
+  {id:'fl_march', name:'Marching on the Spot', bw:true, note:'Knees up, arms swinging. Gentler than bouncing and easier on the shins.'},
+  {id:'fl_shake', name:'Full-Body Shake', bw:true, note:'Shake out the hands, arms, legs, everything, for a full minute. Looks ridiculous, feels great.'},
+  {id:'fl_seated_bounce', name:'Seated Heel Pumps', bw:true, note:'Sitting down, pump the heels up and down fast. The version you can do at a desk.'}
+];
+const FLOW_ROTATE_SUBS = [
+  {id:'fl_seated_twist', name:'Seated Twist', bw:true, note:'Sitting tall, rotate side to side from the ribs. Hands on opposite shoulders.'},
+  {id:'fl_standing_chop', name:'Unloaded Wood Chop', bw:true, note:'Same path as your loaded chop, no bell. Hip to opposite shoulder, smooth.'},
+  {id:'fl_open_book', name:'Open Book', bw:true, note:'On your side, knees bent, top arm sweeps open across the body. Best thoracic opener there is.'}
+];
+const FLOW_SHOULDER_SUBS = [
+  {id:'fl_wall_slide', name:'Wall Slides', bw:true, note:'Back to the wall, arms up and down keeping contact. Brilliant for posture and shoulder mechanics.'},
+  {id:'fl_pass_through', name:'Towel Pass-Through', bw:true, note:'Towel or band, wide grip, overhead and behind. Only as far as the elbows stay straight.'},
+  {id:'fl_doorway', name:'Doorway Chest Stretch', bw:true, note:'Forearm on the frame, step through gently. Hold and breathe, both sides.'}
+];
+const FLOW_SPINE_SUBS = [
+  {id:'fl_standing_roll', name:'Standing Roll-Down', bw:true, note:'Chin to chest, roll down one vertebra at a time, hang, roll back up. Slow.'},
+  {id:'fl_childs', name:"Child's Pose + Reach", bw:true, note:'Sit back on the heels, walk the hands out and over to each side. Opens the lats and lower back.'},
+  {id:'fl_thread', name:'Thread the Needle', bw:true, note:'On all fours, thread one arm under the other and rest the shoulder down. Thoracic rotation.'}
+];
+const FLOW_LOWER_SUBS = [
+  {id:'fl_hip_cars', name:'Hip Circles (standing)', bw:true, note:'Knee up, draw the biggest slow circle you can with it. Hold something for balance.'},
+  {id:'fl_90_90', name:'90-90 Hip Switch', bw:true, note:'Seated, knees at 90°, rotate both to one side then the other. Superb for hips.'},
+  {id:'fl_couch', name:'Couch Stretch', bw:true, note:'Back foot up on the sofa, square the hips, squeeze the glute. Hip flexors, which sitting all day shortens.'},
+  {id:'fl_calf_wall', name:'Calf Stretch at a Wall', bw:true, note:'Hands on the wall, back leg straight, heel down. Directly useful given the shin splints.'}
+];
+const FLOW_BREATH_SUBS = [
+  {id:'fl_box_breath', name:'Box Breathing', bw:true, note:'In 4, hold 4, out 4, hold 4. Settles the nervous system fast.'},
+  {id:'fl_legs_wall', name:'Legs Up the Wall', bw:true, note:'Lie down, legs vertical against the wall, breathe. Gravity does the draining for you.'},
+  {id:'fl_physio_sigh', name:'Physiological Sigh', bw:true, note:'Two inhales through the nose, one long slow exhale through the mouth. Repeat. The fastest way to drop your heart rate.'}
+];
+
 const DEFAULT_PROGRAM = [
   { id:'upper_a', name:'Upper A', type:'Upper', focus:'Chest + Back + Core', group:'gym', exercises:[
     {id:'face_pull', name:'Face Pulls', sets:3, reps:'15-20', rest:60, dropSet:true, muscle:'Shoulders',
@@ -851,8 +891,9 @@ const DEFAULT_PROGRAM = [
       {kind:'sets', label:'Core finisher', minutes:4, note:'Anti-extension only. Nothing here bends or loads your lower back.'}
     ],
     exercises:[
-      {id:'ad_bandpull', name:'Band Pull-Apart', sets:2, reps:'15', rest:30, dropSet:false, muscle:'Cardio', block:0,
-        note:'Band at chest height, arms straight, pull apart and squeeze the shoulder blades. Wakes up everything that holds the shoulder back where it belongs.', subs:ADS_REAR_SUBS},
+      {id:'ad_bandpull', name:'KB Around-the-World', sets:2, reps:'10', rest:30, dropSet:false, muscle:'Cardio', defaultWeight:25, bell:true, block:0,
+        repLabel:'5 each direction',
+        note:'25lb. Bell circles the waist, hand to hand behind your back. Warms the shoulders and the grip with the bell in your hands rather than a band. Stay upright, do not sway with it.', subs:ADS_REAR_SUBS},
       {id:'ad_halo', name:'Halo', sets:2, reps:'5', rest:30, dropSet:false, muscle:'Cardio', defaultWeight:25, bell:true, block:0,
         repLabel:'5 each direction',
         note:'25lb. Slow circles close to the head, ribs down. Five each way.', subs:KB_HALO_SUBS},
@@ -860,10 +901,12 @@ const DEFAULT_PROGRAM = [
       {id:'ad_press', name:'Half-Kneeling Press', sets:3, reps:'8', rest:0, noRest:true, dropSet:false, muscle:'Shoulders', defaultWeight:35, bell:true, block:1,
         repLabel:'8 each side',
         note:'35lb. One knee down, squeeze that glute, ribs pulled DOWN. The stance makes it impossible to arch your lower back to get the bell up, which is exactly why it is the press you want right now.', subs:ADS_PRESS_SUBS},
-      {id:'ad_lateral', name:'Lateral Raise', sets:3, reps:'15', rest:0, noRest:true, dropSet:false, muscle:'Shoulders', block:1,
-        note:'BAND or light dumbbells, 10-15lb. Your lightest bell is far too heavy for this one. Thumb up, lead with the elbow, stop at shoulder height. If you can swing it up, it is too heavy.', subs:ADS_LATERAL_SUBS},
-      {id:'ad_rear', name:'Rear Delt / Face Pull', sets:3, reps:'15-20', rest:0, noRest:true, dropSet:false, muscle:'Shoulders', block:1,
-        note:'Band at home, cable at the gym. Pull to the forehead, elbows high, externally rotate at the end. Rear delts are what make shoulders look three-dimensional from the side.', subs:ADS_REAR_SUBS},
+      {id:'ad_lateral', name:'KB High Pull', sets:3, reps:'16', rest:0, noRest:true, dropSet:false, muscle:'Shoulders', defaultWeight:35, bell:true, block:1,
+        repLabel:'8 each arm',
+        note:'35lb. A swing that stops at chest height with the ELBOW leading high and wide. Hips start it, the arm only finishes it. This is the bell answer to a lateral raise: it loads the side and rear delt hard AND spikes your heart rate, which a band never will.', subs:ADS_LATERAL_SUBS},
+      {id:'ad_rear', name:'Renegade Row', sets:3, reps:'16', rest:0, noRest:true, dropSet:false, muscle:'Shoulders', defaultWeight:25, bell:true, block:1,
+        repLabel:'8 each side',
+        note:'25lb. Plank on the bell, row it to the hip, hips DEAD level. Rear delts, lats and anti-rotation core in one movement, and holding the plank between reps keeps your heart rate where a face pull never would. Feet wider if the hips twist.', subs:ADS_REAR_SUBS},
 
       {id:'ad_curl', name:'KB Curl', sets:3, reps:'12', rest:0, noRest:true, dropSet:false, muscle:'Biceps', defaultWeight:25, bell:true, block:2,
         note:'25lb, one bell in both hands or one per side. Elbows pinned to the ribs, no swinging. The bell hangs below the hands so the bottom of the rep is harder than a dumbbell.', subs:ADS_CURL_SUBS},
@@ -893,8 +936,8 @@ const DEFAULT_PROGRAM = [
       {id:'hs_press', name:'Half-Kneeling Press', sets:3, reps:'8-12', rest:90, dropSet:false, muscle:'Shoulders', defaultWeight:35, bell:true,
         repLabel:'8-12 each side',
         note:'35lb. Heaviest pressing you own, so treat it as the strength movement. One knee down, glute squeezed, ribs down. Stop at 1 rep in reserve, no grinding. LAST SET: max reps, go to real failure and log the number. That number is the data point, it tells us whether this range is right for you.', subs:ADS_PRESS_SUBS},
-      {id:'hs_fly', name:'Band Chest Fly', sets:3, reps:'12-15', rest:60, dropSet:true, muscle:'Chest',
-        note:'Band round your back, arms slightly bent and FIXED, hug it together and squeeze 1s. Push-ups never load the stretched position properly, this does. Chase the burn, not the resistance.', subs:FLY_SUBS},
+      {id:'hs_fly', name:'Horn Lift (crush press)', sets:3, reps:'12-15', rest:60, dropSet:true, muscle:'Chest', defaultWeight:25, bell:true,
+        note:'25lb. Crush the HORNS together as hard as you physically can and press the bell away from your chest, still crushing. The tension comes from the squeeze, not the load, which is exactly why a light bell still works here. Never stop squeezing mid-set.', subs:SQUEEZE_SUBS},
       {id:'hs_curl', name:'KB Curl', sets:3, reps:'12-20', rest:60, dropSet:true, muscle:'Biceps', defaultWeight:25, bell:true,
         note:'25lb. Elbows pinned, no swing, 3 second lower, full extension at the bottom. Last set to failure, then drop to a band and keep going until you cannot. LAST SET: max reps, go to real failure and log the number. That number is the data point, it tells us whether this range is right for you.', subs:ADS_CURL_SUBS},
       {id:'hs_tri', name:'Overhead Tricep Extension', sets:3, reps:'12-20', rest:60, dropSet:true, muscle:'Triceps', defaultWeight:25, bell:true,
@@ -917,10 +960,11 @@ const DEFAULT_PROGRAM = [
       {id:'hp_press', name:'Half-Kneeling Press', sets:4, reps:'8-12', rest:120, dropSet:false, muscle:'Shoulders', defaultWeight:35, bell:true,
         repLabel:'8-12 each side',
         note:'35lb. One knee down, glute squeezed, ribs pulled down so the lower back cannot arch. Your main overhead strength work. Stop with 1 rep in reserve. LAST SET: max reps, go to real failure and log the number. That number is the data point, it tells us whether this range is right for you.', subs:HP_PRESS_SUBS},
-      {id:'hp_fly', name:'Band Chest Fly', sets:3, reps:'12-15', rest:60, dropSet:true, muscle:'Chest',
-        note:'Band round your back, arms slightly bent and FIXED. Dips and push-ups never load the stretched position properly. This does. Squeeze 1s in the middle.', subs:FLY_SUBS},
-      {id:'hp_lateral', name:'Band Lateral Raise', sets:4, reps:'15-20', rest:45, dropSet:true, muscle:'Shoulders',
-        note:'Band underfoot. Thumb up, lead with the elbow, shoulder height only. Side delts are what give you width, and they respond to high reps and constant tension rather than load.', subs:ADS_LATERAL_SUBS},
+      {id:'hp_fly', name:'Horn Lift (crush press)', sets:3, reps:'12-15', rest:60, dropSet:true, muscle:'Chest', defaultWeight:25, bell:true,
+        note:'25lb. Crush the horns together and press the bell away from the chest, squeezing the whole time. Dips and push-ups load the lockout, this loads the squeeze. Two different jobs, both needed.', subs:SQUEEZE_SUBS},
+      {id:'hp_lateral', name:'Bottoms-Up Press', sets:4, reps:'6-8', rest:45, dropSet:false, muscle:'Shoulders', defaultWeight:25, bell:true,
+        repLabel:'6-8 each side',
+        note:'25lb, bell UPSIDE DOWN, handle squeezed as hard as you can. It will feel absurdly heavy and that is the point: every stabiliser in the shoulder fires at once to keep it balanced. Rehab-grade cuff work that still builds delts. Press slowly, speed dumps it.', subs:ADS_LATERAL_SUBS},
       {id:'hp_tri', name:'Overhead Tricep Extension', sets:3, reps:'12-20', rest:60, dropSet:true, muscle:'Triceps', defaultWeight:25, bell:true,
         note:'25lb, both hands on one bell. Elbows point up and stay by your ears. Deep stretch behind the head. Last set to failure, then drop into close-grip push-ups until you cannot. LAST SET: max reps, go to real failure and log the number. That number is the data point, it tells us whether this range is right for you.', subs:ADS_TRI_SUBS},
       {id:'hp_core', name:'Hanging Knee Raise', sets:3, reps:'12-15', rest:45, dropSet:false, muscle:'Core',
@@ -934,10 +978,11 @@ const DEFAULT_PROGRAM = [
       {id:'hpl_row', name:'Supported KB Row', sets:4, reps:'10-15', rest:90, dropSet:false, muscle:'Back', defaultWeight:50, bell:true,
         repLabel:'10-15 each side',
         note:'50lb. Free hand braced on a chair or bench so your back is SUPPORTED, never holding a hinge. Row to the hip, elbow back not out, full stretch at the bottom, hard squeeze at the top. LAST SET: max reps, go to real failure and log the number. That number is the data point, it tells us whether this range is right for you.', subs:HP_ROW_SUBS},
-      {id:'hpl_pull', name:'Band Lat Pulldown', sets:3, reps:'12-15', rest:60, dropSet:true, muscle:'Back',
-        note:'Band anchored high or over the tower. Kneel, pull to the collarbone, drive the elbows DOWN and back. This is the width builder. Zero load on your spine.', subs:HP_ROW_SUBS},
-      {id:'hpl_rear', name:'Rear Delt / Face Pull', sets:4, reps:'15-20', rest:45, dropSet:false, muscle:'Shoulders',
-        note:'Band at forehead height. Pull to the face, elbows high, rotate so the hands finish behind your ears. Shoulder health and three-dimensional delts in one movement.', subs:ADS_REAR_SUBS},
+      {id:'hpl_pull', name:'KB Pullover', sets:3, reps:'12-15', rest:60, dropSet:true, muscle:'Back', defaultWeight:25, bell:true,
+        note:'25lb. On your back, bell over the chest with both hands, elbows soft and FIXED. Lower behind the head slowly, ribs down, stop where your shoulders stop rather than where the floor is. Reaches the lats through a range no row gets to.', subs:PULLOVER_SUBS},
+      {id:'hpl_rear', name:'KB High Pull', sets:4, reps:'16', rest:45, dropSet:false, muscle:'Shoulders', defaultWeight:35, bell:true,
+        repLabel:'8 each arm',
+        note:'35lb. A swing stopped at chest height, elbow leading high and wide. Rear delts, traps and hips together, and it keeps your heart rate up through what would otherwise be a quiet accessory slot.', subs:ADS_REAR_SUBS},
       {id:'hpl_curl', name:'KB Curl', sets:3, reps:'12-20', rest:60, dropSet:true, muscle:'Biceps', defaultWeight:25, bell:true,
         note:'25lb. Elbows pinned, no swing, 3 second lower, full extension at the bottom. Last set to failure then drop straight to a band and keep going. LAST SET: max reps, go to real failure and log the number. That number is the data point, it tells us whether this range is right for you.', subs:ADS_CURL_SUBS},
       {id:'hpl_hammer', name:'Hammer Curl', sets:3, reps:'12-20', rest:60, dropSet:true, muscle:'Biceps',
@@ -996,14 +1041,16 @@ const DEFAULT_PROGRAM = [
       {id:'au_row', name:'Supported KB Row', sets:6, reps:'10', rest:0, noRest:true, dropSet:false, muscle:'Back', defaultWeight:50, bell:true, block:0,
         repLabel:'10 each arm',
         note:'50lb. Free hand braced on a chair so the back is supported. Pull to the HIP, not the chest, elbow back not out. Full stretch at the bottom.', subs:HP_ROW_SUBS},
-      {id:'au_bandrow', name:'Seated Band Row', sets:6, reps:'15', rest:0, noRest:true, dropSet:false, muscle:'Back', block:0,
-        note:'Band round the feet, sit tall, row to the belly and squeeze the blades for a full second. Step further into the band to make it harder.', subs:HP_ROW_SUBS},
+      {id:'au_bandrow', name:'Gorilla Row', sets:6, reps:'16', rest:0, noRest:true, dropSet:false, muscle:'Back', defaultWeight:50, bell:true, block:0,
+        repLabel:'8 each arm',
+        note:'50lb. Wide stance, hinge with a FLAT back, bell between the feet. Row one to the hip while the other hand braces on the floor or your knee. Bracing on the opposite side lets you row heavier than single-arm, and the hinge hold is what keeps your heart rate up.', subs:HP_ROW_SUBS},
       {id:'au_pullover', name:'Pullover', sets:6, reps:'10', rest:0, noRest:true, dropSet:false, muscle:'Back', defaultWeight:25, bell:true, block:0,
         note:'25lb. Ribs down, soft elbows, lower behind the head slowly. Stop where your shoulders stop. Hits the lats through a range rows never reach.', subs:PULLOVER_SUBS},
       {id:'au_shrug', name:'Shrug', sets:6, reps:'15', rest:0, noRest:true, dropSet:false, muscle:'Back', defaultWeight:50, bell:true, block:0,
         note:'50lb. Straight UP, no rolling the shoulders. Pause at the top for a second. Heaviest bell, this one can take it.', subs:SHRUG_SUBS},
-      {id:'au_pulldown', name:'Band Lat Pulldown', sets:6, reps:'15', rest:0, noRest:true, dropSet:false, muscle:'Back', block:0,
-        note:'Band anchored high. Kneel, pull to the collarbone, drive the ELBOWS down and back. This is the width builder.', subs:PULLOVER_SUBS},
+      {id:'au_pulldown', name:'Renegade Row', sets:6, reps:'16', rest:0, noRest:true, dropSet:false, muscle:'Back', defaultWeight:35, bell:true, block:0,
+        repLabel:'8 each side',
+        note:'35lb. Plank on the bell, row to the hip, hips DEAD level, no twisting. Back and anti-rotation core at once, and holding a plank between every rep is what turns a row into conditioning.', subs:HP_ROW_SUBS},
     ]},
 
   { id:'amrap_core', name:'Core AMRAP', type:'20 min', focus:'Abs · Trunk · low sweat', tint:'amr', group:'short',
@@ -1038,6 +1085,38 @@ const DEFAULT_PROGRAM = [
         note:'35lb. Bell at the chest, knees tracking OUT over the toes. Elbows inside the knees at the bottom, chest tall.', subs:KB_SQUAT_SUBS},
       {id:'ae_pushup', name:'Push-Up', sets:6, reps:'15', rest:0, noRest:true, dropSet:false, muscle:'Chest', block:0,
         note:'Elbows 45°, chest to the floor, body rigid. Drop to your knees rather than grinding half reps once the rounds add up.', subs:KB_PUSHUP_SUBS},
+    ]},
+
+  /* ── THE 10-MINUTE FLOW ────────────────────────────────────────
+     One minute per movement, ten movements, no equipment. A quiet clock:
+     one soft chime on the turn, no 3-2-1. This is the rest-day session
+     and the between-meetings reset. Nothing here counts toward your
+     training volume, which is the point of it. */
+  { id:'flow_10', name:'Flow', type:'10 min', focus:'Mobility · Circulation · no kit', tint:'flow', group:'short',
+    blocks:[{kind:'clock', label:'Flow', minutes:10, interval:60, rounds:10, quiet:true,
+      ids:['fl_bounce','fl_armswing','fl_trunk','fl_shoulder','fl_neck','fl_hips','fl_spine','fl_legswing','fl_calf','fl_breath'],
+      note:'One minute each, ten movements, one soft chime when it turns over. No counting, no reps, no score. Move slowly and keep breathing. If a minute feels long, you are doing it right.'}],
+    exercises:[
+      {id:'fl_bounce', name:'Gentle Bounce', sets:1, reps:'60s', rest:0, noRest:true, dropSet:false, muscle:'Cardio', block:0,
+        note:'Soft knees, bounce on the spot with the heels barely leaving the floor, or not leaving at all. Let the arms hang and jiggle. This is the classic one for a reason: the calf and foot muscles squeezing rhythmically is what moves fluid back up your legs.', subs:FLOW_BOUNCE_SUBS},
+      {id:'fl_armswing', name:'Dead Arm Swings', sets:1, reps:'60s', rest:0, noRest:true, dropSet:false, muscle:'Cardio', block:0,
+        note:'Feet planted, arms completely LIMP. Rotate the torso side to side and let the arms whip around and slap your back and belly. The arms do nothing, the trunk does everything. Straight out of qigong and it feels superb after a day at a desk.', subs:FLOW_ROTATE_SUBS},
+      {id:'fl_trunk', name:'Trunk Rotations', sets:1, reps:'60s', rest:0, noRest:true, dropSet:false, muscle:'Cardio', block:0,
+        note:'Hands on hips or crossed on the chest, feet planted. Rotate slowly and deliberately from the RIBS, not the lower back. Go a little further each rep. Pair it with the breath: exhale as you turn.', subs:FLOW_ROTATE_SUBS},
+      {id:'fl_shoulder', name:'Shoulder Rolls & Arm Circles', sets:1, reps:'60s', rest:0, noRest:true, dropSet:false, muscle:'Cardio', block:0,
+        note:'Big slow shoulder rolls back for 20 seconds, then forward. Then arm circles, small to large. Your shoulder has been the fragile joint, and this is free maintenance for it.', subs:FLOW_SHOULDER_SUBS},
+      {id:'fl_neck', name:'Neck & Jaw Release', sets:1, reps:'60s', rest:0, noRest:true, dropSet:false, muscle:'Cardio', block:0,
+        note:'Ear toward shoulder, hold and breathe, both sides. Then slow HALF circles through the front only, never roll the head backwards. Finish by unclenching the jaw. There is a dense cluster of lymph nodes in the neck and this is where desk tension collects.', subs:FLOW_SHOULDER_SUBS},
+      {id:'fl_hips', name:'Hip Circles', sets:1, reps:'60s', rest:0, noRest:true, dropSet:false, muscle:'Cardio', block:0,
+        note:'Hands on hips, feet shoulder width, draw big slow circles with the pelvis. Thirty seconds each direction. Tai chi pace, no rushing. Then a few slow figure-eights if you want.', subs:FLOW_LOWER_SUBS},
+      {id:'fl_spine', name:'Cat-Cow / Spinal Wave', sets:1, reps:'60s', rest:0, noRest:true, dropSet:false, muscle:'Cardio', block:0,
+        note:'On all fours. Inhale and drop the belly, lift the chest and tailbone. Exhale and round the whole spine, chin to chest. Move one vertebra at a time rather than hinging in the middle. This is the single best thing for a lower back that sits all day.', subs:FLOW_SPINE_SUBS},
+      {id:'fl_legswing', name:'Leg Swings', sets:1, reps:'60s', rest:0, noRest:true, dropSet:false, muscle:'Cardio', block:0,
+        note:'Hold a wall. Swing one leg front to back, loose and relaxed, 20 seconds. Then side to side across the body. Swap legs. Hips and hamstrings without stretching anything cold.', subs:FLOW_LOWER_SUBS},
+      {id:'fl_calf', name:'Calf Pumps & Ankle Circles', sets:1, reps:'60s', rest:0, noRest:true, dropSet:false, muscle:'Cardio', block:0,
+        note:'Slow calf raises, full range, right up onto the toes and right back down. Then ankle circles each way. Your calves are called the second heart for a reason, and this one is directly useful for the shin splints.', subs:FLOW_LOWER_SUBS},
+      {id:'fl_breath', name:'Diaphragmatic Breathing', sets:1, reps:'60s', rest:0, noRest:true, dropSet:false, muscle:'Cardio', block:0,
+        note:'Lie down or sit tall, one hand on the chest and one on the belly. Breathe so only the BELLY hand moves. In through the nose for 4, out through the mouth for 6. Of everything in this ten minutes, this is the one with the most behind it: the diaphragm moving is what pumps the main lymphatic duct in your chest.', subs:FLOW_BREATH_SUBS},
     ]},
 ];
 /* ══════════════════════════════════════════════════════════════
@@ -1090,6 +1169,52 @@ const LIBRARY = [
    3. FORM CUES — keyed by exercise id (mains AND subs)
    ══════════════════════════════════════════════════════════════ */
 const FORM = {
+  /* ── the 10-minute Flow ─────────────────────────────────────── */
+  fl_bounce:{c:["Stand tall, knees soft and unlocked","Bounce gently on the spot","Heels barely leave the floor, or do not leave at all","Let the arms hang completely loose and jiggle","Relax the jaw and shoulders","Keep it going the whole minute"],b:"Easy nose breathing, do not hold your breath",s:"Low impact by design. Your heels staying down is what keeps this off your shins. The calf and foot muscles squeezing rhythmically is the mechanism that pushes fluid back up the legs, since there is no pump down there doing it for you."},
+  fl_armswing:{c:["Feet planted shoulder width, knees soft","Arms completely LIMP, like rope","Rotate the torso side to side","Let the arms whip around and slap the back and belly","The arms do nothing, the trunk does everything","Build up speed slowly, then settle into a rhythm"],b:"Natural breathing, let it find its own rhythm",s:"Straight out of qigong, where it is one of the oldest drills there is. The point is the total relaxation of the arms. If you are actively swinging them, you are doing it wrong. Feels superb after a day at a desk."},
+  fl_trunk:{c:["Feet planted, hands on hips or crossed on the chest","Rotate SLOWLY from the ribs, not the lower back","Hips stay facing forward as much as you can","Go a little further each rep","Pause at the end of each turn and breathe"],b:"Exhale as you rotate, inhale back to centre",s:"Rotating from the ribs rather than the lower back is the whole technique. Your thoracic spine is built to rotate and your lumbar spine mostly is not, and desk work stiffens the first one."},
+  fl_shoulder:{c:["Big slow shoulder rolls BACKWARD for 20 seconds","Then forward for 20","Then arm circles, starting small and growing","Finish with a few big backward circles","Keep the ribs down throughout"],b:"Steady easy breathing",s:"Free maintenance for the joint that has given you the most trouble. Costs nothing, takes a minute, and it is the sort of thing people only start doing after an injury rather than before."},
+  fl_neck:{c:["Ear toward one shoulder, hold and breathe, then the other","Slow HALF circles through the FRONT only","Never roll the head backwards","Chin to chest, hold and breathe","Finish by letting the jaw hang slack"],b:"Slow nose breathing throughout",s:"Half circles through the front only. Rolling the head back compresses the joints at the top of the neck and it is a habit worth dropping. The jaw matters more than people think, it holds a lot of desk tension."},
+  fl_hips:{c:["Hands on hips, feet shoulder width","Draw the biggest slow circle you can with the pelvis","30 seconds one way, 30 the other","Tai chi pace, no rushing","Keep the upper body quiet"],b:"Slow natural breathing",s:"Slow is the whole point. If you are whipping through these you have turned a mobility drill into a warm-up. Big, slow, deliberate circles."},
+  fl_spine:{c:["On all fours, hands under shoulders, knees under hips","Inhale: drop the belly, lift the chest and the tailbone","Exhale: round the whole spine, chin to chest, push the floor away","Move one vertebra at a time","Do not just hinge in the middle"],b:"The breath drives it: inhale down, exhale round",s:"The single best thing you can do for a lower back that sits all day, and it pairs perfectly with the dead bug work you are already doing. Segment by segment, not one big bend in the middle."},
+  fl_legswing:{c:["Hold a wall or a doorframe for balance","Swing one leg front to back, completely loose","20 seconds, then side to side across the body","Swap legs","Let momentum do it, do not force the range"],b:"Easy breathing",s:"Dynamic rather than held, which is what you want before or after training rather than cold static stretching. Loose and relaxed, never forced."},
+  fl_calf:{c:["Slow calf raises, full range","All the way up onto the toes, all the way back down","Pause at the top for a second","Then slow ankle circles, both directions","Barefoot if you can"],b:"Exhale as you rise",s:"Your calves get called the second heart because the muscle pump there is a major driver of return circulation from the legs. Directly useful for the shin splints too: strong, mobile calves and ankles are most of that problem."},
+  fl_breath:{c:["Lie on your back, or sit tall","One hand on the chest, one on the belly","Breathe so only the BELLY hand moves","In through the nose for 4","Out through the mouth for 6","Keep the shoulders still and relaxed"],b:"4 in through the nose, 6 out through the mouth",s:"Of everything in this ten minutes, this is the one with the most actual physiology behind it. The diaphragm moving up and down is what pumps the thoracic duct, which is the main lymphatic vessel in your chest. The longer exhale also pulls you into a parasympathetic state, which is why you feel calmer after a minute of it."},
+
+  /* ── Flow substitutions ─────────────────────────────────────── */
+  fl_heel_drop:{c:["Rise onto the toes","Drop the heels down","Feet never leave the floor","Steady rhythm"],b:"Easy breathing",s:"Zero impact, same calf pump. The version for sore shins."},
+  fl_march:{c:["March on the spot, knees up","Arms swinging naturally","Steady rhythm for the minute"],b:"Easy breathing",s:"Gentler than bouncing, easier on the shins, still gets things moving."},
+  fl_shake:{c:["Shake out the hands and arms","Then the legs, one at a time","Then everything at once","Keep it going the whole minute"],b:"Loose, uncontrolled breathing is fine",s:"Looks ridiculous and feels great. Genuinely used in dance and martial arts warm-ups to drop tension fast."},
+  fl_seated_bounce:{c:["Sitting down, feet flat","Pump the heels up and down fast","Keep it going"],b:"Normal breathing",s:"The one you can do at a desk mid-call without anyone noticing."},
+  fl_seated_twist:{c:["Sit tall, hands crossed on the chest","Rotate side to side from the ribs","Slow and controlled"],b:"Exhale as you turn",s:"Same rotation, no standing required."},
+  fl_standing_chop:{c:["Same path as a loaded wood chop, no bell","Hip to opposite shoulder","Pivot the back foot","Smooth and continuous"],b:"Exhale on the way up",s:"Grooves the pattern you use loaded, with nothing in your hands."},
+  fl_open_book:{c:["On your side, knees bent up at 90°","Arms stretched out in front, palms together","Sweep the top arm open across the body","Follow the hand with your eyes","Let the chest rotate toward the ceiling"],b:"Exhale as the arm opens",s:"The best thoracic rotation drill there is. Keep the knees down and stacked, that is what forces the rotation into the upper back."},
+  fl_wall_slide:{c:["Back to the wall, arms up in a goalpost","Slide the arms up and down","Keep the wrists, elbows and lower back in contact","Only go as far as contact holds"],b:"Exhale as the arms go up",s:"Brilliant for posture and shoulder mechanics, and it shows you immediately how restricted you are."},
+  fl_pass_through:{c:["Towel or band in both hands, wide grip","Arms straight, lift overhead and behind","Only as far as the elbows stay locked","Return on the same path","Narrow the grip as it gets easier"],b:"Exhale as the arms go back",s:"Pure shoulder mobility, no load. Widen the grip if it is tight."},
+  fl_doorway:{c:["Forearm flat on the doorframe, elbow at shoulder height","Step gently through the doorway","Feel the stretch across the chest, not in the shoulder joint","Hold and breathe, then the other side"],b:"Slow deep breaths in the stretch",s:"Opens the chest that pressing and desk work both tighten. Gentle: if you feel it in the front of the shoulder joint rather than across the chest, back off."},
+  fl_standing_roll:{c:["Stand tall, chin to chest","Roll down one vertebra at a time","Hang loose at the bottom, knees soft","Roll back up the same way, head last"],b:"Exhale rolling down, inhale coming up",s:"Decompresses the spine and teaches segmental control. Slow is the point."},
+  fl_childs:{c:["Sit back on the heels, knees wide","Walk the hands forward and rest the forehead down","Then walk the hands over to one side, then the other","Breathe into the back of the ribs"],b:"Slow deep breathing into the back",s:"Opens the lats and the lower back. The side-to-side walk is where most of the value is."},
+  fl_thread:{c:["On all fours","Thread one arm underneath the other","Let the shoulder and side of the head rest down","Hold and breathe, then swap"],b:"Slow breathing in the position",s:"Thoracic rotation with the floor doing the work for you."},
+  fl_hip_cars:{c:["Hold something for balance","Lift one knee up","Draw the biggest slow circle you can with it","Both directions, then swap legs"],b:"Steady breathing",s:"Takes the hip through its full range under control. Slow and big beats fast and small."},
+  fl_90_90:{c:["Seated, both knees bent at 90°, one in front one to the side","Rotate both knees over to the other side","Keep the chest tall","Slow and controlled"],b:"Exhale as you switch sides",s:"Superb for hip rotation, which is what sitting all day takes away first."},
+  fl_couch:{c:["Back foot up on the sofa or a chair, shin vertical","Front foot planted","Square the hips and SQUEEZE the back glute","Stay tall, do not arch the lower back","30 seconds each side"],b:"Slow deep breathing, do not hold your breath",s:"Hip flexors, which shorten from sitting and then pull on your lower back. Squeezing the glute is what makes it work. Back off if the knee complains."},
+  fl_calf_wall:{c:["Hands on the wall, one leg back","Back leg straight, heel pressed DOWN","Lean in until you feel the calf","Then bend the back knee slightly for the lower calf","30 seconds each"],b:"Slow breathing in the stretch",s:"Directly relevant to the shin splints. Tight calves are a big part of that problem, and the bent-knee version gets the soleus which the straight-leg one misses."},
+  fl_box_breath:{c:["In through the nose for 4","Hold for 4","Out through the mouth for 4","Hold empty for 4","Repeat for the minute"],b:"4 in, 4 hold, 4 out, 4 hold",s:"Settles the nervous system quickly. Used by people who need to be calm under pressure, which is most of the appeal."},
+  fl_legs_wall:{c:["Lie on your back with your bottom near a wall","Legs straight up, resting against it","Arms out to the sides, palms up","Breathe slowly and stay there"],b:"Slow deep belly breathing",s:"Gravity does the draining. The easiest possible version of this whole session and genuinely restorative after a hard day."},
+  fl_physio_sigh:{c:["Two inhales through the nose, the second one short and sharp on top of the first","One long slow exhale through the mouth","Repeat for the minute"],b:"Double inhale through the nose, long exhale out the mouth",s:"The double inhale reinflates collapsed air sacs and the long exhale drops your heart rate. The fastest deliberate way to calm down that has actually been studied."},
+
+  /* ── bell-first replacements ────────────────────────────────── */
+  ad_bandpull:{c:["25lb. Bell in one hand, standing tall","Pass it around the waist, hand to hand behind your back","Keep it close to the body and keep it moving","Stay upright, do not sway with it","Change direction halfway"],b:"Breathe normally throughout",s:"Warms the shoulders, the grip and the trunk with the bell in your hands instead of a band. Nothing goes overhead, so it is safe on any day the shoulder feels off."},
+  ad_lateral:{c:["35lb. Set up exactly like a swing: feet shoulder width, bell a foot in front","Hinge, hike, and let the hips drive the bell up","Stop it at CHEST height with the elbow leading high and wide","The arm only steers, the hips do the lifting","Guide it back down into the next hinge","8 a side, switch at the top"],b:"Sharp exhale at the top of every rep",s:"This is the bell's answer to a lateral raise. The side and rear delt have to decelerate the bell at the top, which loads them hard, and because the hips are driving it your heart rate goes somewhere a band raise never takes it. Never yank with the shoulder: if your arm is lifting rather than steering, go lighter."},
+  ad_rear:{c:["25lb. High plank with one hand gripping the bell","Feet WIDE, this is what stops you twisting","Row the bell to the hip, elbow back not out","Hips stay DEAD level throughout","Set it down, then the other side"],b:"Exhale on each row, never hold your breath",s:"Rear delts, lats and anti-rotation core in one movement. The plank you hold between reps is what keeps the heart rate up, which is the whole reason it replaced a face pull here. Go lighter than you think, the stability is the hard part."},
+  hs_fly:{c:["25lb. Grip the HORNS, bell upside down at the chest","Crush the horns together as hard as you physically can","Press the bell away from the chest, still crushing","Return to the chest without relaxing the squeeze","Never stop squeezing mid-set"],b:"Exhale as you press away",s:"The tension is the squeeze, not the weight. Your chest works to drive the hands together while your arms press the bell out, which is why 25lb is plenty. This is the single best answer to a light bell for chest work."},
+  hp_fly:{c:["25lb. Crush the horns together, bell upside down at the chest","Press it away from the chest, squeezing throughout","Slow back to the chest, still crushing","Keep the elbows in, shoulders down"],b:"Exhale as you press away",s:"Dips and push-ups load the lockout. This loads the squeeze. Two different jobs and you want both, which is why it sits here rather than a band fly."},
+  hp_lateral:{c:["25lb, bell UPSIDE DOWN, handle squeezed as hard as you can","Wrist dead straight, forearm vertical","Press slowly, speed will dump it","Everything from your hand to your shoulder is fighting to balance it","Lower just as slowly","6-8 a side"],b:"Exhale on the press, brace hard",s:"Rehab-grade rotator cuff work disguised as a press, and it still builds delts. 25lb will feel absurdly heavy and that is correct. If the bell tips, the set is over, that is your form cue built in."},
+  hpl_pull:{c:["25lb. On your back, knees bent, feet flat","Bell over the chest in both hands, elbows soft and FIXED","Lower it behind your head slowly","RIBS DOWN, lower back stays on the floor","Stop where your SHOULDERS stop, not where the floor is","Pull back over the chest with the lats"],b:"Inhale as it goes back, exhale on the pull",s:"Reaches the lats through a range no row gets to. Stop where your shoulders stop: chasing the floor is how a good lat exercise becomes a shoulder problem. Light and slow, this is not a strength movement."},
+  hpl_rear:{c:["35lb. Set up like a swing","Hips drive the bell up, elbow leads high and wide","Stop it at chest height","Arm steers, hips lift","8 a side"],b:"Sharp exhale at the top",s:"Rear delts, traps and hips together. It also keeps your heart rate up through what would otherwise be a quiet accessory slot at the end of a long session."},
+  au_bandrow:{c:["50lb. Wide stance, bell between the feet","Hinge with a FLAT back, chest proud","Brace your free hand on the opposite knee or the floor","Row the bell to the hip, elbow back not out","Alternate sides, keeping the torso still"],b:"Exhale on each row",s:"Bracing the free hand lets you row heavier than single-arm, so this is your heaviest pulling movement. Holding the hinge between reps is what keeps the heart rate up. If your back rounds at any point, the set is over."},
+  au_pulldown:{c:["35lb. High plank gripping the bell, feet WIDE","Row the bell to the hip, elbow back","Hips stay DEAD level, no rotation at all","Set it down under control","8 a side"],b:"Exhale on each row, breathe between",s:"Holding a plank between every single rep is what turns a row into conditioning. Widen your feet if the hips twist. Lighter than you think."},
+
   /* ── 20-minute AMRAP menu ───────────────────────────────────── */
   aa_curl:{c:["25lb. Bell by the handle, elbows pinned to the ribs","Curl it clean to the chest, no swing","From the chest, circle it around your head","Close to the skull, ribs down, no lower-back arch","Back to the chest, then lower under control"],b:"Exhale on the curl, breathe normally on the halo",s:"Two movements welded into one rep. The curl does the biceps, the halo keeps the shoulder moving through range. Do not let the halo become a swing, that is the whole skill of it."},
   aa_horncurl:{c:["Grip the HORNS of the bell, not the handle","Squeeze them together as hard as you can","Keep squeezing for the entire set","Elbows pinned, curl without them drifting forward","Slow lower, full extension at the bottom"],b:"Exhale on the way up",s:"The crush grip is the clever part. Squeezing hard recruits far more of the arm than the load alone would, which is how a 25lb bell still gives you something to work against. Grip tension is half this exercise."},
@@ -2070,6 +2195,8 @@ function blockExercises(bi){ const d=curDay(); return d?(d.exercises||[]).filter
 function clockRounds(b){ return Math.max(1, b.rounds || Math.round((b.minutes*60)/(b.interval||60))); }
 function clockKind(b){
   if(b.kind==='amrap') return 'AMRAP';
+  // a mobility block is not an EMOM, and calling it one sets the wrong tone
+  if(b.quiet) return (b.ids||[]).length+' × '+Math.round((b.interval||60)/60)+' min';
   const i=b.interval||60; return i===60?'EMOM':i===120?'E2MOM':i===180?'E3MOM':i+'s intervals';
 }
 /* How many rounds you managed last time you ran this block. That number is
@@ -2171,11 +2298,20 @@ function clockTick(){
 
   if(i.finished){ finishClock(); return; }
 
-  const key=i.round+':'+i.rem;
-  if(c.lastBeep!==key){
-    c.lastBeep=key;
-    if(i.rem===3||i.rem===2||i.rem===1) tone(760,0.15,0.95);
-    if(i.rem===i.iv&&i.round>0){ tone(980,0.2,1); setTimeout(()=>tone(1320,0.34,1),210); }
+  /* A quiet block (mobility, breathing) gets one soft chime on the turn
+     and no countdown at all. Barking 3-2-1 at someone who is trying to
+     breathe slowly defeats the point of the session. This changes the
+     AUDIO only: the logging and the finish above are identical. */
+  if(i.b.quiet){
+    const qk='q'+i.round;
+    if(c.lastBeep!==qk && i.rem===i.iv){ c.lastBeep=qk; if(i.round>0) tone(528,0.5,0.35); }
+  }else{
+    const key=i.round+':'+i.rem;
+    if(c.lastBeep!==key){
+      c.lastBeep=key;
+      if(i.rem===3||i.rem===2||i.rem===1) tone(760,0.15,0.95);
+      if(i.rem===i.iv&&i.round>0){ tone(980,0.2,1); setTimeout(()=>tone(1320,0.34,1),210); }
+    }
   }
   paintClock(i);
 }
@@ -2640,6 +2776,7 @@ function blockCard(b,bi){
     <div class="blk-head">
       <div><div class="blk-title">${esc(b.label)}</div>
       <div class="blk-meta">${isAmrap?`AMRAP · ${b.minutes} min · as many rounds as you can`
+        :b.quiet?`${b.minutes} min · one minute each · no counting`
         :isClock?`${clockKind(b)} · ${b.minutes} min · ${clockRounds(b)} rounds`:`${b.minutes} min`}</div></div>
       <div class="blk-num">${bi+1}</div>
     </div>`;
@@ -2709,7 +2846,7 @@ function clockView(){
       </svg>
       <div class="clk-ctr">
         <div class="clk-time${i.rem<=3?' hot':''}" id="clk-time">${fmtTime(i.rem)}</div>
-        <div class="clk-round" id="clk-round">Round ${i.round+1} / ${i.rounds}</div>
+        <div class="clk-round" id="clk-round">${i.b.quiet?`${i.round+1} of ${i.rounds}`:`Round ${i.round+1} / ${i.rounds}`}</div>
       </div>
     </div>
     <div class="clk-now">
